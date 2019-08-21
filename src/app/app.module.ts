@@ -10,10 +10,13 @@ import {ReactiveFormsModule} from '@angular/forms';
 import { AlertComponent } from './components/alert/alert.component';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { CreateUserComponent } from './components/create-user/create-user.component';
+import {JwtInterceptor} from "./interceptors/jwt.interceptor";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'forgotPassword', component: ForgotPasswordComponent },
+  { path: 'createUser', component: CreateUserComponent },
   { path: 'home', component: HomeComponent},
   { path: '**', redirectTo: 'home'}
 ];
@@ -24,7 +27,8 @@ const routes: Routes = [
     LoginComponent,
     HomeComponent,
     AlertComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    CreateUserComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +37,8 @@ const routes: Routes = [
     ReactiveFormsModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

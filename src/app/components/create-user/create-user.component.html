@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-sm-6 offset-sm-3">
+    <h2>Create User</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit();">
+
+      <div class="form-group">
+
+        <label>Email</label>
+
+        <input type="text" formControlName="username"
+               class="form-control" placeholder="pippo@gmail.com"
+               [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+
+        <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+          <div *ngIf="f.username.errors.required">Email is required</div>
+          <div *ngIf="f.username.errors.email">Email format is wrong</div>
+          <div *ngIf="f.username.errors.minlength">Email too short</div>
+          <div *ngIf="f.username.errors.maxlength">Email too long</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <div class="row">
+          <div class="col">
+            <label >Parent
+              <input type="checkbox" formControlName="parent" class="form-control" />
+            </label>
+          </div>
+          <div class="col">
+            <label >Escort
+              <input type="checkbox" formControlName="escort" class="form-control" />
+            </label>
+          </div>
+          <div class="col">
+            <label >Admin
+              <input type="checkbox" formControlName="admin" class="form-control" />
+            </label>
+          </div>
+          <div class="col">
+            <label >SysAdmin
+              <input type="checkbox" formControlName="sysAdmin" class="form-control" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button *ngIf="!loading" class="btn btn-primary">Create</button>
+        <div *ngIf="loading" class="spinner-border text-info" role="status"></div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
