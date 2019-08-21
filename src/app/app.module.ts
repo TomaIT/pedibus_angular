@@ -9,9 +9,11 @@ import { HomeComponent } from './components/home/home.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import { AlertComponent } from './components/alert/alert.component';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'forgotPassword', component: ForgotPasswordComponent },
   { path: 'home', component: HomeComponent},
   { path: '**', redirectTo: 'home'}
 ];
@@ -21,7 +23,8 @@ const routes: Routes = [
     AppComponent,
     LoginComponent,
     HomeComponent,
-    AlertComponent
+    AlertComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,

@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {AuthenticationService} from '../../services/authentication.service';
-import {AlertService} from '../../services/alert.service';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Router} from "@angular/router";
+import {AuthenticationService} from "../../services/authentication.service";
+import {AlertService} from "../../services/alert.service";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-forgot-password',
+  templateUrl: './forgot-password.component.html',
+  styleUrls: ['./forgot-password.component.css']
 })
-export class LoginComponent implements OnInit {
+export class ForgotPasswordComponent implements OnInit {
 
   loginForm: FormGroup;
   loading = false;
@@ -37,14 +37,6 @@ export class LoginComponent implements OnInit {
           Validators.minLength(6),
           Validators.maxLength(128)
         ]
-      )],
-      password: ['', Validators.compose(
-        [
-          Validators.required,
-          Validators.minLength(8),
-          Validators.maxLength(32),
-          Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')
-        ]
       )]
     });
     // this.authenticationService.logout();
@@ -62,10 +54,11 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    this.authenticationService.login(this.f.username.value, this.f.password.value)
+    this.authenticationService.recovery(this.f.username.value)
       .subscribe(
         (data) => {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/login']);
+          this.alertService.success('Please confirm your recovery in email.');
         },
         (error) => {
           this.alertService.error(error);
@@ -73,4 +66,5 @@ export class LoginComponent implements OnInit {
         }
       );
   }
+
 }
