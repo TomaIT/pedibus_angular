@@ -1,13 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AlertService} from './alert.service';
-import {User} from '../models/user';
+import {Role} from '../models/user';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 import {Login} from '../models/login';
-import {Log} from '@angular/core/testing/src/logger';
-import {log} from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -66,5 +64,22 @@ export class AuthenticationService {
   recovery(email: string): Observable<any> {
     return this.httpClient.post<any>(`${environment.apiUrl}/authentications/recover`, {email});
   }
+
+  isParent(): boolean {
+    return this.isAuthenticated() && this.currentUserValue.user.roles.findIndex(x => x === Role.parent) >= 0;
+  }
+
+  isEscort(): boolean {
+    return this.isAuthenticated() && this.currentUserValue.user.roles.findIndex(x => x === Role.escort) >= 0;
+  }
+
+  isAdmin(): boolean {
+    return this.isAuthenticated() && this.currentUserValue.user.roles.findIndex(x => x === Role.admin) >= 0;
+  }
+
+  isSysAdmin(): boolean {
+    return this.isAuthenticated() && this.currentUserValue.user.roles.findIndex(x => x === Role.sysAdmin) >= 0;
+  }
+
 
 }

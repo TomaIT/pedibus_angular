@@ -1,6 +1,6 @@
 export enum Gender {
-  Male,
-  Female
+  male = 'Male',
+  female = 'Female'
 }
 
 export class Child {

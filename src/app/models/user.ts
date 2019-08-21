@@ -2,10 +2,10 @@ import {Log} from '@angular/core/testing/src/logger';
 import {Login} from './login';
 
 export enum Role {
-  ROLE_SYS_ADMIN,
-  ROLE_ADMIN,
-  ROLE_ESCORT,
-  ROLE_PARENT
+  parent = 'ROLE_PARENT',
+  escort = 'ROLE_ESCORT',
+  admin = 'ROLE_ADMIN',
+  sysAdmin = 'ROLE_SYS_ADMIN'
 }
 
 export class User {
