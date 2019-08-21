@@ -1,3 +1,6 @@
+import {Log} from '@angular/core/testing/src/logger';
+import {Login} from './login';
+
 export enum Role {
   ROLE_SYS_ADMIN,
   ROLE_ADMIN,
