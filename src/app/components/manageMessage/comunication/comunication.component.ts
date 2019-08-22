@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertService} from '../../services/alert.service';
-import {ChildService} from '../../services/child.service';
-import {AuthenticationService} from '../../services/authentication.service';
+import {AlertService} from '../../../services/alert.service';
+import {ChildService} from '../../../services/child.service';
+import {AuthenticationService} from '../../../services/authentication.service';
 import {Router} from '@angular/router';
-import {MessageService} from '../../services/message.service';
-import {Message} from '../../models/message';
+import {MessageService} from '../../../services/message.service';
+import {Message} from '../../../models/message';
 
 @Component({
   selector: 'app-comunication',

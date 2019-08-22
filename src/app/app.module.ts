@@ -16,9 +16,9 @@ import {ChildrenComponent} from './components/manageChild/children/children.comp
 import { RegisterChildComponent } from './components/manageChild/register-child/register-child.component';
 import { UpdateChildComponent } from './components/manageChild/update-child/update-child.component';
 import { ReservationComponent } from './components/reservation/reservation.component';
-import { ComunicationComponent } from './components/comunication/comunication.component';
+import { ComunicationComponent } from './components/manageMessage/comunication/comunication.component';
 import {Message} from './models/message';
-import { MessageComponent } from './components/message/message.component';
+import { MessageComponent } from './components/manageMessage/message/message.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
