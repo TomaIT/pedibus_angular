@@ -34,4 +34,8 @@ export class ChildService {
   updateChildById(idChild: string, body: ChildPOST): Observable<Child> {
     return this.httpClient.put<Child>(`${environment.apiUrl}/children/${idChild}`, body);
   }
+
+  findByIdUser(idUser: string): Observable<Array<Child>> {
+    return this.httpClient.get<Array<Child>>(`${environment.apiUrl}/users/${idUser}/children`);
+  }
 }

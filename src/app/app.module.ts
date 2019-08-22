@@ -6,7 +6,7 @@ import {LoginComponent} from './components/login/login.component';
 import {RouterModule, Routes} from '@angular/router';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {HomeComponent} from './components/home/home.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AlertComponent} from './components/alert/alert.component';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
 import {ForgotPasswordComponent} from './components/forgot-password/forgot-password.component';
@@ -54,6 +54,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {enableTracing: true}),
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
