@@ -15,8 +15,8 @@
     <tr *ngFor="let a of children;">
       <td>{{a.firstname || '-' }}</td>
       <td>{{a.surname || '-' }}</td>
-      <td>{{a.nameStopBusOutDef || '-' }}</td>
-      <td>{{a.nameStopBusRetDef || '-' }}</td>
+      <td>{{a.stopBusOutDef.name || '-' }} ({{a.stopBusOutDef.lineName || '-'}})</td>
+      <td>{{a.stopBusRetDef.name || '-' }} ({{a.stopBusRetDef.lineName || '-'}})</td>
       <td>
         <img routerLink="/children/update/{{a.id}}" src="../../../../assets/images/edit-document.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
       </td>

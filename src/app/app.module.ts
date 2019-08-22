@@ -15,12 +15,14 @@ import {JwtInterceptor} from './interceptors/jwt.interceptor';
 import {ChildrenComponent} from './components/manageChild/children/children.component';
 import { RegisterChildComponent } from './components/manageChild/register-child/register-child.component';
 import { UpdateChildComponent } from './components/manageChild/update-child/update-child.component';
+import { ReservationComponent } from './components/reservation/reservation.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'forgotPassword', component: ForgotPasswordComponent},
   {path: 'createUser', component: CreateUserComponent},
   {path: 'children', component: ChildrenComponent},
+  {path: 'reservation', component: ReservationComponent},
   {path: 'children/register', component: RegisterChildComponent},
   {path: 'children/update/:id', component: UpdateChildComponent},
   {path: 'home', component: HomeComponent},
@@ -37,7 +39,8 @@ const routes: Routes = [
     CreateUserComponent,
     ChildrenComponent,
     RegisterChildComponent,
-    UpdateChildComponent
+    UpdateChildComponent,
+    ReservationComponent
   ],
   imports: [
     BrowserModule,

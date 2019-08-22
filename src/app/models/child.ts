@@ -1,3 +1,5 @@
+import {StopBus} from './stopbus';
+
 export enum Gender {
   male = 'Male',
   female = 'Female'
@@ -12,9 +14,9 @@ export class Child {
   gender: Gender;
   blobBase64: string; // Photo ??
   idStopBusOutDef: string;
-  nameStopBusOutDef: string;
+  stopBusOutDef: StopBus;
   idStopBusRetDef: string;
-  nameStopBusRetDef: string;
+  stopBusRetDef: StopBus;
   isDeleted: boolean;
 }
 

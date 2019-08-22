@@ -16,4 +16,6 @@ export class StopBus {
   location: GeoJsonPoint;
   name: string;
   stopBusType: StopBusType;
+  lineName: string;
+  idLine: string;
 }
