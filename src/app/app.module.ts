@@ -14,6 +14,7 @@ import {CreateUserComponent} from './components/create-user/create-user.componen
 import {JwtInterceptor} from './interceptors/jwt.interceptor';
 import {ChildrenComponent} from './components/children/children.component';
 import { RegisterChildComponent } from './components/register-child/register-child.component';
+import { UpdateChildComponent } from './components/update-child/update-child.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -21,6 +22,7 @@ const routes: Routes = [
   {path: 'createUser', component: CreateUserComponent},
   {path: 'children', component: ChildrenComponent},
   {path: 'children/register', component: RegisterChildComponent},
+  {path: 'children/update/:id', component: UpdateChildComponent},
   {path: 'home', component: HomeComponent},
   {path: '**', redirectTo: 'home'}
 ];
@@ -34,7 +36,8 @@ const routes: Routes = [
     ForgotPasswordComponent,
     CreateUserComponent,
     ChildrenComponent,
-    RegisterChildComponent
+    RegisterChildComponent,
+    UpdateChildComponent
   ],
   imports: [
     BrowserModule,
