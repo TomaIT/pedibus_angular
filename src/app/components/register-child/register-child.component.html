@@ -1,0 +1,108 @@
+<div class="row">
+  <div class="col-sm-6 offset-sm-3">
+    <h2>Child Register</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit();">
+
+      <div class="form-group">
+
+        <label>Firstname</label>
+
+        <input type="text" formControlName="firstname"
+               class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }" />
+
+        <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
+          <div *ngIf="f.firstname.errors.required">Firstname is required</div>
+          <div *ngIf="f.firstname.errors.maxlength">Firstname too long</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label >Surname</label>
+
+        <input type="text" formControlName="surname" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.surname.errors }" />
+
+        <div *ngIf="submitted && f.surname.errors" class="invalid-feedback">
+          <div *ngIf="f.surname.errors.required">Surname is required</div>
+          <div *ngIf="f.surname.errors.maxlength">Surname too long</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label >Birth</label>
+
+        <input type="date" formControlName="birth" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.birth.errors }" />
+
+        <div *ngIf="submitted && f.birth.errors" class="invalid-feedback">
+          <div *ngIf="f.birth.errors.required">Birth is required</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label >Gender</label>
+
+        <select class="form-control" formControlName="gender"
+               [ngClass]="{ 'is-invalid': submitted && f.gender.errors }" >
+          <option disabled selected value> -- select an option -- </option>
+          <option [value]="gender" *ngFor="let gender of genders">
+            {{gender}}
+          </option>
+        </select>
+
+        <div *ngIf="submitted && f.gender.errors" class="invalid-feedback">
+          <div *ngIf="f.gender.errors.required">Gender is required</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label >Default Outward Stop Bus</label>
+
+        <select class="form-control" formControlName="outwardStopBus"
+                [ngClass]="{ 'is-invalid': submitted && f.outwardStopBus.errors }" >
+          <option disabled selected value> -- select an option -- </option>
+          <option [value]="a.id" *ngFor="let a of outStopBuses">
+            {{a.name}}
+          </option>
+        </select>
+
+        <div *ngIf="submitted && f.outwardStopBus.errors" class="invalid-feedback">
+          <div *ngIf="f.outwardStopBus.errors.required">Default Outward Stop Bus is required</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label >Default Return Stop Bus</label>
+
+        <select class="form-control" formControlName="returnStopBus"
+                [ngClass]="{ 'is-invalid': submitted && f.returnStopBus.errors }" >
+          <option disabled selected value> -- select an option -- </option>
+          <option [value]="a.id" *ngFor="let a of retStopBuses">
+            {{a.name}}
+          </option>
+        </select>
+
+        <div *ngIf="submitted && f.returnStopBus.errors" class="invalid-feedback">
+          <div *ngIf="f.returnStopBus.errors.required">Default Return Stop Bus is required</div>
+        </div>
+
+      </div>
+
+
+
+      <div class="form-group">
+        <button *ngIf="!loading" class="btn btn-primary">Register</button>
+        <div *ngIf="loading" class="spinner-border text-info" role="status"></div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+

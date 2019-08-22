@@ -12,6 +12,19 @@ export class Child {
   gender: Gender;
   blobBase64: string; // Photo ??
   idStopBusOutDef: string;
+  nameStopBusOutDef: string;
   idStopBusRetDef: string;
+  nameStopBusRetDef: string;
   isDeleted: boolean;
+}
+
+export class ChildPOST {
+  firstname: string;
+  surname: string;
+  // @DateTimeFormat(pattern = "yyyy-MM-dd")
+  birth: Date;
+  gender: Gender;
+  blobBase64: string; // Photo ??
+  idStopBusOutDef: string;
+  idStopBusRetDef: string;
 }

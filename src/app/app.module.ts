@@ -1,24 +1,28 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppComponent } from './app.component';
-import { LoginComponent } from './components/login/login.component';
+import {AppComponent} from './app.component';
+import {LoginComponent} from './components/login/login.component';
 import {RouterModule, Routes} from '@angular/router';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import { HomeComponent } from './components/home/home.component';
+import {HomeComponent} from './components/home/home.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import { AlertComponent } from './components/alert/alert.component';
+import {AlertComponent} from './components/alert/alert.component';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
-import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
-import { CreateUserComponent } from './components/create-user/create-user.component';
-import {JwtInterceptor} from "./interceptors/jwt.interceptor";
+import {ForgotPasswordComponent} from './components/forgot-password/forgot-password.component';
+import {CreateUserComponent} from './components/create-user/create-user.component';
+import {JwtInterceptor} from './interceptors/jwt.interceptor';
+import {ChildrenComponent} from './components/children/children.component';
+import { RegisterChildComponent } from './components/register-child/register-child.component';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'forgotPassword', component: ForgotPasswordComponent },
-  { path: 'createUser', component: CreateUserComponent },
-  { path: 'home', component: HomeComponent},
-  { path: '**', redirectTo: 'home'}
+  {path: 'login', component: LoginComponent},
+  {path: 'forgotPassword', component: ForgotPasswordComponent},
+  {path: 'createUser', component: CreateUserComponent},
+  {path: 'children', component: ChildrenComponent},
+  {path: 'children/register', component: RegisterChildComponent},
+  {path: 'home', component: HomeComponent},
+  {path: '**', redirectTo: 'home'}
 ];
 
 @NgModule({
@@ -28,7 +32,9 @@ const routes: Routes = [
     HomeComponent,
     AlertComponent,
     ForgotPasswordComponent,
-    CreateUserComponent
+    CreateUserComponent,
+    ChildrenComponent,
+    RegisterChildComponent
   ],
   imports: [
     BrowserModule,
@@ -37,9 +43,10 @@ const routes: Routes = [
     ReactiveFormsModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

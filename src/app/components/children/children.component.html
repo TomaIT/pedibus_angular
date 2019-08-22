@@ -1,0 +1,33 @@
+<h2 align="center">Bambini Registrati</h2>
+<div class="row">
+  <table class="table table-striped" style="font-family: Lato;">
+    <thead>
+    <tr>
+      <th scope="col" width="auto">Nome</th>
+      <th scope="col" width="auto">Cognome</th>
+      <th scope="col" width="auto">Fermata Di Andata</th>
+      <th scope="col" width="auto">Fermata Di Ritorno</th>
+      <th scope="col" width="8%">Update</th>
+      <th scope="col" width="8%">Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let a of children;">
+      <td>{{a.firstname || '-' }}</td>
+      <td>{{a.surname || '-' }}</td>
+      <td>{{a.nameStopBusOutDef || '-' }}</td>
+      <td>{{a.nameStopBusRetDef || '-' }}</td>
+      <td>
+        <img src="../../../assets/images/edit-document.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+      </td>
+      <td>
+        <img (click)="deleteChild(a)" src="../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-primary" routerLink="/children/register" >Aggiungi Bambino</button>
+</div>
+
+
+<!--<app-register-child></app-register-child>-->

@@ -17,7 +17,11 @@
       </li>
 
       <li *ngIf="authenticationService.isAdmin()||authenticationService.isSysAdmin()" [routerLinkActive]="['active']" class="nav-item">
-        <a class="nav-link" routerLink="/createUser">New User</a>
+        <a class="nav-link" routerLink="/createUser">Register</a>
+      </li>
+
+      <li *ngIf="authenticationService.isParent()" [routerLinkActive]="['active']" class="nav-item">
+        <a class="nav-link" routerLink="/children">Children</a>
       </li>
 
     </ul>
