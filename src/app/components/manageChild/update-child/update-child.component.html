@@ -67,7 +67,7 @@
                 [ngClass]="{ 'is-invalid': submitted && f.outwardStopBus.errors }" >
           <option disabled selected value> -- select an option -- </option>
           <option [value]="a.id" *ngFor="let a of outStopBuses">
-            {{a.name}}
+            {{a.name}} ({{a.lineName}})
           </option>
         </select>
 
@@ -84,7 +84,7 @@
                 [ngClass]="{ 'is-invalid': submitted && f.returnStopBus.errors }" >
           <option disabled selected value> -- select an option -- </option>
           <option [value]="a.id" *ngFor="let a of retStopBuses">
-            {{a.name}}
+            {{a.name}} ({{a.lineName}})
           </option>
         </select>
 
