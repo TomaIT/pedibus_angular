@@ -4,6 +4,7 @@ import {interval, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {AuthenticationService} from './authentication.service';
 import {AlertService} from './alert.service';
+import {Message} from '../models/message';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,10 @@ export class MessageService implements OnDestroy {
 
   getCounterMessageNotRead(idUser: string): Observable<number> {
     return this.httpClient.get<number>(`${environment.apiUrl}/users/${idUser}/messages/notReadCounter`);
+  }
+
+  findMessageByIdUser(idUser: string): Observable<Array<Message>> {
+    return this.httpClient.get<Array<Message>>(`${environment.apiUrl}/users/${idUser}/messages`);
   }
 
 

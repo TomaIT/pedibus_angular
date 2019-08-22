@@ -1,3 +1,33 @@
-<p>
-  comunication works!
-</p>
+<h2 align="center">Messaggi</h2>
+<div class="row">
+  <table class="table table-striped" style="font-family: Lato;">
+    <thead>
+    <tr>
+      <th scope="col" width="auto">From</th>
+      <th scope="col" width="auto">To</th>
+      <th scope="col" width="auto">Subject</th>
+      <th scope="col" width="auto">Creation Date</th>
+      <th scope="col" width="auto">Confirm Read</th>
+
+      <th scope="col" width="8%">Open</th>
+      <th scope="col" width="8%">Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let a of messages;">
+      <td>{{a.idUserFrom || '-' }}</td>
+      <td>{{a.idUserTo || '-' }}</td>
+      <td>{{a.subject || '-' }}</td>
+      <td>{{getDate(a.creationTime) || '-' }}</td>
+      <td><input class="form-control" type="checkbox" [value]="a.readConfirm" disabled></td>
+      <td>
+        <img src="../../../../assets/images/edit-document.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+      </td>
+      <td>
+        <img src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

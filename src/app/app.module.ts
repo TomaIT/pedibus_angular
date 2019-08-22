@@ -24,6 +24,7 @@ const routes: Routes = [
   {path: 'createUser', component: CreateUserComponent},
   {path: 'children', component: ChildrenComponent},
   {path: 'reservation', component: ReservationComponent},
+  {path: 'messages', component: ComunicationComponent},
   {path: 'children/register', component: RegisterChildComponent},
   {path: 'children/update/:id', component: UpdateChildComponent},
   {path: 'home', component: HomeComponent},
