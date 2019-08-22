@@ -28,7 +28,7 @@ export class ComunicationComponent implements OnInit {
     this.messageService.findMessageByIdUser(this.authenticationService.currentUserValue.username)
       .subscribe(
         (data) => {
-          this.messages = data;
+          this.messages = data.sort((a, b) => b.creationTime - a.creationTime);
         },
         (error) => {
           this.alertService.error(error);
@@ -38,5 +38,21 @@ export class ComunicationComponent implements OnInit {
 
   getDate(creationTime: number) {
     return new Date(creationTime).toLocaleString();
+  }
+
+  deleteMessage(a: Message) {
+    this.messageService.deleteMessageById(a.id)
+      .subscribe(
+        (data) => {
+          const index = this.messages.findIndex(x => x.id === a.id);
+          if (index >= 0) {
+            this.messages.splice(index, 1);
+          }
+          this.alertService.success('Messaggio cancellato.');
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
   }
 }

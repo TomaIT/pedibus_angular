@@ -47,5 +47,9 @@ export class MessageService implements OnDestroy {
     return this.httpClient.get<Array<Message>>(`${environment.apiUrl}/users/${idUser}/messages`);
   }
 
+  deleteMessageById(idMessage: string): Observable<any> {
+    return this.httpClient.delete<any>(`${environment.apiUrl}/messages/${idMessage}`);
+  }
+
 
 }

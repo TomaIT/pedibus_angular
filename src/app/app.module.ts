@@ -17,6 +17,8 @@ import { RegisterChildComponent } from './components/manageChild/register-child/
 import { UpdateChildComponent } from './components/manageChild/update-child/update-child.component';
 import { ReservationComponent } from './components/reservation/reservation.component';
 import { ComunicationComponent } from './components/comunication/comunication.component';
+import {Message} from './models/message';
+import { MessageComponent } from './components/message/message.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -25,6 +27,7 @@ const routes: Routes = [
   {path: 'children', component: ChildrenComponent},
   {path: 'reservation', component: ReservationComponent},
   {path: 'messages', component: ComunicationComponent},
+  {path: 'messages/:id', component: MessageComponent},
   {path: 'children/register', component: RegisterChildComponent},
   {path: 'children/update/:id', component: UpdateChildComponent},
   {path: 'home', component: HomeComponent},
@@ -43,7 +46,8 @@ const routes: Routes = [
     RegisterChildComponent,
     UpdateChildComponent,
     ReservationComponent,
-    ComunicationComponent
+    ComunicationComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule,
