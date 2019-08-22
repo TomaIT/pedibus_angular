@@ -1,3 +1,24 @@
-<p>
-  message works!
-</p>
+<div *ngIf="message" class="row">
+  <div class="col">
+    <label>Mittente
+      <input type="text" class="form-control" size="{{message.idUserFrom.length*1.1}}" value="{{message.idUserFrom}}" disabled>
+    </label>
+  </div>
+  <div class="col">
+    <label>Destinatario
+      <input type="text" class="form-control" size="{{message.idUserTo.length*1.1}}" value="{{message.idUserTo}}" disabled>
+    </label>
+  </div>
+  <div class="col">
+    <label>Oggetto
+      <input type="text" class="form-control" size="{{message.subject.length*1.1}}" value="{{message.subject}}" disabled>
+    </label>
+  </div>
+</div>
+<div *ngIf="message" class="row" style="padding-top: 5px;">
+  <label>Messaggio:</label>
+  <textarea class="form-control" rows="10" disabled>{{message.message}}</textarea>
+</div>
+<div *ngIf="message" class="row" style="padding-top: 5px;">
+  <button class="btn btn-info" type="button" (click)="confirmRead()">Conferma</button>
+</div>
