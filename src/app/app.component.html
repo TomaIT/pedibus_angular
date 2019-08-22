@@ -28,6 +28,10 @@
         <a class="nav-link" routerLink="/reservation">Prenotazioni</a>
       </li>
 
+      <li *ngIf="authenticationService.isAuthenticated()" [routerLinkActive]="['active']" class="nav-item">
+        <a class="nav-link" routerLink="/messages">Messaggi ({{messageService.counterMessageNotRead}})</a>
+      </li>
+
     </ul>
     <ul class="navbar-nav ml-auto">
       <li *ngIf="isAuthenticated()" [routerLinkActive]="['active']" class="nav-item">
