@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertService} from '../../services/alert.service';
-import {ChildService} from '../../services/child.service';
-import {AuthenticationService} from '../../services/authentication.service';
+import {AlertService} from '../../../services/alert.service';
+import {ChildService} from '../../../services/child.service';
+import {AuthenticationService} from '../../../services/authentication.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {StopBusService} from '../../services/stop-bus.service';
-import {Child, ChildPOST} from '../../models/child';
-import {StopBus, StopBusType} from '../../models/stopbus';
+import {StopBusService} from '../../../services/stop-bus.service';
+import {Child, ChildPOST} from '../../../models/child';
+import {StopBus, StopBusType} from '../../../models/stopbus';
 
 @Component({
   selector: 'app-update-child',

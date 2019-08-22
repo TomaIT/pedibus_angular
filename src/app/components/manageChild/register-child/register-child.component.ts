@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AlertService} from '../../services/alert.service';
-import {ChildService} from '../../services/child.service';
-import {AuthenticationService} from '../../services/authentication.service';
+import {AlertService} from '../../../services/alert.service';
+import {ChildService} from '../../../services/child.service';
+import {AuthenticationService} from '../../../services/authentication.service';
 import {Router} from '@angular/router';
-import {ChildPOST, Gender} from '../../models/child';
-import {StopBus, StopBusType} from '../../models/stopbus';
-import {StopBusService} from '../../services/stop-bus.service';
+import {ChildPOST, Gender} from '../../../models/child';
+import {StopBus, StopBusType} from '../../../models/stopbus';
+import {StopBusService} from '../../../services/stop-bus.service';
 
 @Component({
   selector: 'app-register-child',

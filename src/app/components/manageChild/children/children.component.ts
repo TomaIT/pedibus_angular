@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from '../../services/authentication.service';
-import {AlertService} from '../../services/alert.service';
-import {ChildService} from '../../services/child.service';
+import {AuthenticationService} from '../../../services/authentication.service';
+import {AlertService} from '../../../services/alert.service';
+import {ChildService} from '../../../services/child.service';
 import {Router} from '@angular/router';
-import {Child} from '../../models/child';
+import {Child} from '../../../models/child';
 
 @Component({
   selector: 'app-children',

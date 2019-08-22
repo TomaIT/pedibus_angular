@@ -12,9 +12,9 @@ import {ErrorInterceptor} from './interceptors/error.interceptor';
 import {ForgotPasswordComponent} from './components/forgot-password/forgot-password.component';
 import {CreateUserComponent} from './components/create-user/create-user.component';
 import {JwtInterceptor} from './interceptors/jwt.interceptor';
-import {ChildrenComponent} from './components/children/children.component';
-import { RegisterChildComponent } from './components/register-child/register-child.component';
-import { UpdateChildComponent } from './components/update-child/update-child.component';
+import {ChildrenComponent} from './components/manageChild/children/children.component';
+import { RegisterChildComponent } from './components/manageChild/register-child/register-child.component';
+import { UpdateChildComponent } from './components/manageChild/update-child/update-child.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
