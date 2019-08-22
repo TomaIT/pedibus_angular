@@ -1,19 +1,33 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AlertService} from '../../../services/alert.service';
 import {ChildService} from '../../../services/child.service';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {Router} from '@angular/router';
 import {MessageService} from '../../../services/message.service';
 import {Message} from '../../../models/message';
+import {interval, Observer, Subscriber} from 'rxjs';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-comunication',
   templateUrl: './comunication.component.html',
   styleUrls: ['./comunication.component.css']
 })
-export class ComunicationComponent implements OnInit {
+export class ComunicationComponent implements OnInit, OnDestroy {
   messages: Array<Message>;
+  pollingData: any;
 
+  private refreshMessages() {
+    this.messageService.findMessageByIdUser(this.authenticationService.currentUserValue.username)
+      .subscribe(
+        (data) => {
+          this.messages = data.sort((a, b) => b.creationTime - a.creationTime);
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+  }
 
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
@@ -24,16 +38,16 @@ export class ComunicationComponent implements OnInit {
     }
   }
 
+
+
+  ngOnDestroy(): void {
+    this.pollingData.unsubscribe();
+  }
+
   ngOnInit() {
-    this.messageService.findMessageByIdUser(this.authenticationService.currentUserValue.username)
-      .subscribe(
-        (data) => {
-          this.messages = data.sort((a, b) => b.creationTime - a.creationTime);
-        },
-        (error) => {
-          this.alertService.error(error);
-        }
-      );
+    this.refreshMessages();
+    this.pollingData = interval(environment.intervalTimePolling + 5000)
+      .subscribe((data) => this.refreshMessages());
   }
 
   getDate(creationTime: number) {
