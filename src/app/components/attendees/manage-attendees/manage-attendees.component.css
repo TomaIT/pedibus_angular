@@ -1,0 +1,15 @@
+.button {
+  border-radius: 3px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+}
+
+.green {
+  background-color: #4CAF50;
+}
+.red {
+  background-color: #f44336;
+}

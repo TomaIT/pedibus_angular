@@ -1,0 +1,12 @@
+<h2 align="center">List of children</h2>
+<div class="list">
+  <ul>
+    <li *ngFor="let res of reservations">
+      {{res.child.firstname}} {{res.child.surname}} <button class="button green" (click)="clickPresent()">Presente</button><button class="button red" (click)="clickAbsent()">Assente</button>
+      <!-- Presente e Assente va bene per quanto sale, ma non per quando deve scendere -->
+    </li>
+    <li *ngIf="reservations.length === 0">Nessuna prenotazione!</li>
+  </ul>
+
+</div>
+<button (click)="clickNextStop()">PROSSIMA FERMATA</button>

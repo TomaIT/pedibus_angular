@@ -19,6 +19,8 @@ import { ReservationComponent } from './components/reservation/reservation.compo
 import { ComunicationComponent } from './components/manageMessage/comunication/comunication.component';
 import {Message} from './models/message';
 import { MessageComponent } from './components/manageMessage/message/message.component';
+import {ManageAttendeesComponent} from './components/attendees/manage-attendees/manage-attendees.component';
+import {EscortBusridesComponent} from './components/escort-busrides/escort-busrides.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -30,7 +32,9 @@ const routes: Routes = [
   {path: 'messages/:id', component: MessageComponent},
   {path: 'children/register', component: RegisterChildComponent},
   {path: 'children/update/:id', component: UpdateChildComponent},
+  {path: 'attendees/manage/:idBusRide/:idCurrentStopBus', component: ManageAttendeesComponent},
   {path: 'home', component: HomeComponent},
+  {path: 'busridesEscort', component: EscortBusridesComponent},
   {path: '**', redirectTo: 'home'}
 ];
 
@@ -47,7 +51,9 @@ const routes: Routes = [
     UpdateChildComponent,
     ReservationComponent,
     ComunicationComponent,
-    MessageComponent
+    MessageComponent,
+    ManageAttendeesComponent,
+    EscortBusridesComponent
   ],
   imports: [
     BrowserModule,

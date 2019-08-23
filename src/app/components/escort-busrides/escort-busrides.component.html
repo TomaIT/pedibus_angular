@@ -1,0 +1,6 @@
+<h2 align="center">List of confirmed BusRides</h2>
+<div>
+  <ul>
+    <li *ngFor="let ca of confirmedAvailabilities" (click)="clickOnBusRide(ca)">{{ca.idBusRide}} {{ca.idStopBus}}</li>
+  </ul>
+</div>

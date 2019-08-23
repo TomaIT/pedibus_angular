@@ -28,9 +28,15 @@
         <a class="nav-link" routerLink="/reservation">Prenotazioni</a>
       </li>
 
+      <li *ngIf="authenticationService.isEscort()" [routerLinkActive]="['active']" class="nav-item">
+        <a class="nav-link" routerLink="/busridesEscort">Corse</a>
+      </li>
+
       <li *ngIf="authenticationService.isAuthenticated()" [routerLinkActive]="['active']" class="nav-item">
         <a class="nav-link" routerLink="/messages">Messaggi ({{messageService.counterMessageNotRead}})</a>
       </li>
+
+
 
     </ul>
     <ul class="navbar-nav ml-auto">
