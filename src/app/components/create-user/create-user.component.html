@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-6 offset-sm-3">
-    <h2>Register</h2>
+    <h2>Registra Nuovo Utente</h2>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit();">
 
       <div class="form-group">
@@ -46,7 +46,7 @@
       </div>
 
       <div class="form-group">
-        <button *ngIf="!loading" class="btn btn-primary">Register</button>
+        <button *ngIf="!loading" class="btn btn-primary">Registra</button>
         <div *ngIf="loading" class="spinner-border text-info" role="status"></div>
       </div>
 

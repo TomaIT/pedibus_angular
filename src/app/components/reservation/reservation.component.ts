@@ -97,8 +97,13 @@ export class ReservationComponent implements OnInit {
   private getBusRides() {
     if (this.dataSelected && this.idOutStopBusSelected && this.idRetStopBusSelected) {
       const temp = new Date(this.dataSelected);
-      const now = new Date();
-      temp.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
+      const nowT = new Date();
+      nowT.setHours(0, 0, 0, 0);
+      temp.setHours(0, 0, 0, 0);
+      if (temp.getTime() === nowT.getTime()) {
+        const now = new Date();
+        temp.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
+      }
       this.busRideService.getBusRidesFromStartDate(this.idOutStopBusSelected, temp)
         .subscribe(
           (data) => {
