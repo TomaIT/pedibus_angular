@@ -37,4 +37,18 @@ export class UserService {
   findById(idUser: string): Observable<User> {
     return this.httpClient.get<User>(`${environment.apiUrl}/users/${idUser}`);
   }
+
+  addRole(idUser: string, role: Role): Observable<User> {
+    return this.httpClient.put<User>(`${environment.apiUrl}/users/${idUser}/addRole?role=${role}`, {});
+  }
+  removeRole(idUser: string, role: Role): Observable<User> {
+    return this.httpClient.put<User>(`${environment.apiUrl}/users/${idUser}/removeRole?role=${role}`, {});
+  }
+
+  addLine(idUser: string, idLine: string): Observable<User> {
+    return this.httpClient.put<User>(`${environment.apiUrl}/users/${idUser}/addLine?idLine=${idLine}`, {});
+  }
+  removeLine(idUser: string, idLine: string): Observable<User> {
+    return this.httpClient.put<User>(`${environment.apiUrl}/users/${idUser}/removeLine?idLine=${idLine}`, {});
+  }
 }

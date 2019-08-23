@@ -1,4 +1,5 @@
-<div class="row">
+<h1 *ngIf="user" align="center">Utente: {{user.username}}</h1>
+<div class="row" style="margin-top: 30px;">
   <div class="col">
     <label>
       Seleziona il ruolo da rimuovere
@@ -11,7 +12,7 @@
       </select>
         </div>
         <div class="col-4">
-      <button type="button" class="btn btn-info">Rimuovi</button>
+      <button (click)="removeRole()" type="button" class="btn btn-danger">Rimuovi</button>
         </div>
       </div>
     </label>
@@ -28,9 +29,46 @@
           </select>
         </div>
         <div class="col-4">
-          <button type="button" class="btn btn-info">Aggiungi</button>
+          <button (click)="addRole()" type="button" class="btn btn-success">Aggiungi</button>
         </div>
       </div>
     </label>
   </div>
 </div>
+<div class="row" style="margin-top: 30px;">
+  <div class="col">
+    <label>
+      Seleziona la linea da rimuovere
+      <div class="row">
+        <div class="col-8">
+          <select class="form-control" [(ngModel)]="idLineToRemove">
+            <option [ngValue]="a.idLine" *ngFor="let a of getLinesRemovable();">
+              {{a.lineName}}
+            </option>
+          </select>
+        </div>
+        <div class="col-4">
+          <button (click)="removeLine()" type="button" class="btn btn-danger">Rimuovi</button>
+        </div>
+      </div>
+    </label>
+  </div>
+  <div class="col">
+    <label>
+      Seleziona la linea da aggiungere
+      <div class="row">
+        <div class="col-8">
+          <select class="form-control" [(ngModel)]="idLineToAdd">
+            <option [ngValue]="a.idLine" *ngFor="let a of getLinesAddable();">
+              {{a.lineName}}
+            </option>
+          </select>
+        </div>
+        <div class="col-4">
+          <button (click)="addLine()" type="button" class="btn btn-success">Aggiungi</button>
+        </div>
+      </div>
+    </label>
+  </div>
+</div>
+

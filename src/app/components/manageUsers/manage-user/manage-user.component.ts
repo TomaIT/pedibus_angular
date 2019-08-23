@@ -4,6 +4,8 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {AlertService} from '../../../services/alert.service';
 import {UserService} from '../../../services/user.service';
 import {Role, User} from '../../../models/user';
+import {LineService} from '../../../services/line.service';
+import {LineEnum} from '../../../models/line';
 
 @Component({
   selector: 'app-manage-user',
@@ -12,15 +14,19 @@ import {Role, User} from '../../../models/user';
 })
 export class ManageUserComponent implements OnInit {
   allRoles: Array<Role>;
+  linesEnum: Array<LineEnum>;
   user: User;
   roleToRemove: Role;
   roleToAdd: Role;
+  idLineToRemove: string;
+  idLineToAdd: string;
 
   constructor(private authenticationService: AuthenticationService,
               private router: Router,
               private activatedRoute: ActivatedRoute,
               private alertService: AlertService,
-              private userService: UserService) {
+              private userService: UserService,
+              private lineService: LineService) {
     if (!(this.authenticationService.isSysAdmin() || this.authenticationService.isAdmin())) {
       this.router.navigate(['/home']);
     }
@@ -29,10 +35,34 @@ export class ManageUserComponent implements OnInit {
     this.allRoles.push(Role.admin);
     this.allRoles.push(Role.escort);
     this.allRoles.push(Role.parent);
+    this.lineService.getLinesEnum()
+      .subscribe(
+        (data) => {
+          this.linesEnum = data;
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
   }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe((params: ParamMap) => this.onChangePath(params));
+  }
+
+  private refreshNgModel() {
+    if (this.getRolesRemovable().length > 0) {
+      this.roleToRemove = this.getRolesRemovable()[0];
+    }
+    if (this.getRolesAddable().length > 0) {
+      this.roleToAdd = this.getRolesAddable()[0];
+    }
+    if (this.getLinesRemovable().length > 0) {
+      this.idLineToRemove = this.getLinesRemovable()[0].idLine;
+    }
+    if (this.getLinesAddable().length > 0) {
+      this.idLineToAdd = this.getLinesAddable()[0].idLine;
+    }
   }
 
   private onChangePath(params: ParamMap) {
@@ -41,12 +71,7 @@ export class ManageUserComponent implements OnInit {
       .subscribe(
         (data) => {
           this.user = data;
-          if (this.getRolesRemovable().length > 0) {
-            this.roleToRemove = this.getRolesRemovable()[0];
-          }
-          if (this.getRolesAddable().length > 0) {
-            this.roleToAdd = this.getRolesAddable()[0];
-          }
+          this.refreshNgModel();
         },
         (error) => {
           this.alertService.error(error);
@@ -67,5 +92,77 @@ export class ManageUserComponent implements OnInit {
     }
     return this.allRoles.filter(x => this.user.roles.findIndex(y => y === x) < 0)
       .filter(x => x !== Role.sysAdmin);
+  }
+
+  getLinesRemovable(): Array<LineEnum> {
+    const temp = new Array<LineEnum>();
+    if (this.user && this.linesEnum) {
+      for (const a of this.user.idLines) {
+        const index = this.linesEnum.findIndex(x => x.idLine === a);
+        if (index >= 0) {
+          temp.push(this.linesEnum[index]);
+        }
+      }
+    }
+    return temp;
+  }
+
+  getLinesAddable(): Array<LineEnum> {
+    if (this.user && this.linesEnum) {
+      return this.linesEnum.filter(x => this.user.idLines.findIndex(y => y === x.idLine) < 0);
+    }
+    return null;
+  }
+
+  removeRole() {
+    this.userService.removeRole(this.user.username, this.roleToRemove)
+      .subscribe(
+        (data) => {
+          this.user = data;
+          this.refreshNgModel();
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+  }
+
+  addRole() {
+    this.userService.addRole(this.user.username, this.roleToAdd)
+      .subscribe(
+        (data) => {
+          this.user = data;
+          this.refreshNgModel();
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+  }
+
+  removeLine() {
+    this.userService.removeLine(this.user.username, this.idLineToRemove)
+      .subscribe(
+        (data) => {
+          this.user = data;
+          this.refreshNgModel();
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+  }
+
+  addLine() {
+    this.userService.addLine(this.user.username, this.idLineToAdd)
+      .subscribe(
+        (data) => {
+          this.user = data;
+          this.refreshNgModel();
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
   }
 }
