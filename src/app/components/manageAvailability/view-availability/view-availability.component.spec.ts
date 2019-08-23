@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ViewAvailabilityComponent } from './view-availability.component';
+import {ViewAvailabilityComponent} from './view-availability.component';
 
 describe('ViewAvailabilityComponent', () => {
   let component: ViewAvailabilityComponent;

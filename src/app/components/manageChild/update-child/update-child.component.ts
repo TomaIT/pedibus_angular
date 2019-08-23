@@ -126,7 +126,7 @@ export class UpdateChildComponent implements OnInit {
               return a.hours - b.hours;
             }
             return a.idLine.localeCompare(b.idLine);
-          });;
+          });
         },
         (error) => {
           this.alertService.error(error);
@@ -140,7 +140,7 @@ export class UpdateChildComponent implements OnInit {
               return a.hours - b.hours;
             }
             return a.idLine.localeCompare(b.idLine);
-          });;
+          });
         },
         (error) => {
           this.alertService.error(error);

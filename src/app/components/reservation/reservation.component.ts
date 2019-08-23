@@ -1,8 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AlertService} from '../../services/alert.service';
 import {ChildService} from '../../services/child.service';
 import {AuthenticationService} from '../../services/authentication.service';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {Child} from '../../models/child';
 import {BusRideService} from '../../services/bus-ride.service';
 import {BusRide} from '../../models/busride';
@@ -10,7 +10,6 @@ import {Reservation, ReservationPOST} from '../../models/reservation';
 import {ReservationService} from '../../services/reservation.service';
 import {StopBus, StopBusType} from '../../models/stopbus';
 import {StopBusService} from '../../services/stop-bus.service';
-import {insertView} from '@angular/core/src/render3/node_manipulation';
 
 @Component({
   selector: 'app-reservation',

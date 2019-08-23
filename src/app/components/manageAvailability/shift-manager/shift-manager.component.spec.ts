@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ShiftManagerComponent } from './shift-manager.component';
+import {ShiftManagerComponent} from './shift-manager.component';
 
 describe('ShiftManagerComponent', () => {
   let component: ShiftManagerComponent;

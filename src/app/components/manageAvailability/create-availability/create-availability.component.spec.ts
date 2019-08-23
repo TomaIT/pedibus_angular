@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CreateAvailabilityComponent } from './create-availability.component';
+import {CreateAvailabilityComponent} from './create-availability.component';
 
 describe('CreateAvailabilityComponent', () => {
   let component: CreateAvailabilityComponent;

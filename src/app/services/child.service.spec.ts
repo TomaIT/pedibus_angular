@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { ChildService } from './child.service';
+import {ChildService} from './child.service';
 
 describe('ChildService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

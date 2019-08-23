@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {StopBus, StopBusType} from '../models/stopbus';
 import {Observable} from 'rxjs';
-import {Line} from '../models/line';
 import {environment} from '../../environments/environment';
 
 @Injectable({

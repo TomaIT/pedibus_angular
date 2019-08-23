@@ -4,7 +4,7 @@ import {AlertService} from '../../../services/alert.service';
 import {ChildService} from '../../../services/child.service';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {Router} from '@angular/router';
-import {ChildPOST, Gender} from '../../../models/child';
+import {ChildPOST} from '../../../models/child';
 import {StopBus, StopBusType} from '../../../models/stopbus';
 import {StopBusService} from '../../../services/stop-bus.service';
 
@@ -87,7 +87,7 @@ export class RegisterChildComponent implements OnInit {
               return a.hours - b.hours;
             }
             return a.idLine.localeCompare(b.idLine);
-          });;
+          });
         },
         (error) => {
           this.alertService.error(error);

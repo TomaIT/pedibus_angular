@@ -1,6 +1,3 @@
-import {Log} from '@angular/core/testing/src/logger';
-import {Login} from './login';
-
 export enum Role {
   parent = 'ROLE_PARENT',
   escort = 'ROLE_ESCORT',

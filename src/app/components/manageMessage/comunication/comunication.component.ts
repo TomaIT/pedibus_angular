@@ -1,11 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AlertService} from '../../../services/alert.service';
-import {ChildService} from '../../../services/child.service';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {Router} from '@angular/router';
 import {MessageService} from '../../../services/message.service';
 import {Message} from '../../../models/message';
-import {interval, Observer, Subscriber} from 'rxjs';
+import {interval} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 
 @Component({

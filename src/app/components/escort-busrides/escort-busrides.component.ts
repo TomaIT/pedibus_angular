@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BusRide} from '../../models/busride';
 import {AlertService} from '../../services/alert.service';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ReservationService} from '../../services/reservation.service';
 import {AvailabilityService} from '../../services/availability.service';
 import {Availability} from '../../models/availability';
 
