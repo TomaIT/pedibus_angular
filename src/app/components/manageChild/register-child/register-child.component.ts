@@ -82,7 +82,12 @@ export class RegisterChildComponent implements OnInit {
     this.stopBusService.getStopBusByType(StopBusType.ourward)
       .subscribe(
         (data) => {
-          this.outStopBuses = data;
+          this.outStopBuses = data.sort((a, b) => {
+            if (a.idLine === b.idLine) {
+              return a.hours - b.hours;
+            }
+            return a.idLine.localeCompare(b.idLine);
+          });;
         },
         (error) => {
           this.alertService.error(error);
@@ -91,7 +96,12 @@ export class RegisterChildComponent implements OnInit {
     this.stopBusService.getStopBusByType(StopBusType.return)
       .subscribe(
         (data) => {
-          this.retStopBuses = data;
+          this.retStopBuses = data.sort((a, b) => {
+            if (a.idLine === b.idLine) {
+              return a.hours - b.hours;
+            }
+            return a.idLine.localeCompare(b.idLine);
+          });
         },
         (error) => {
           this.alertService.error(error);

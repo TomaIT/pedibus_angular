@@ -121,7 +121,12 @@ export class UpdateChildComponent implements OnInit {
     this.stopBusService.getStopBusByType(StopBusType.ourward)
       .subscribe(
         (data) => {
-          this.outStopBuses = data;
+          this.outStopBuses = data.sort((a, b) => {
+            if (a.idLine === b.idLine) {
+              return a.hours - b.hours;
+            }
+            return a.idLine.localeCompare(b.idLine);
+          });;
         },
         (error) => {
           this.alertService.error(error);
@@ -130,7 +135,12 @@ export class UpdateChildComponent implements OnInit {
     this.stopBusService.getStopBusByType(StopBusType.return)
       .subscribe(
         (data) => {
-          this.retStopBuses = data;
+          this.retStopBuses = data.sort((a, b) => {
+            if (a.idLine === b.idLine) {
+              return a.hours - b.hours;
+            }
+            return a.idLine.localeCompare(b.idLine);
+          });;
         },
         (error) => {
           this.alertService.error(error);
@@ -180,7 +190,7 @@ export class UpdateChildComponent implements OnInit {
       .subscribe(
         (data) => {
           this.loading = false;
-          this.alertService.success('Bambino, ' + data.firstname + ' ' + data.surname + ', aggiunto con successo.');
+          this.alertService.success('Bambino, ' + data.firstname + ' ' + data.surname + ', aggiornato con successo.');
         },
         (error) => {
           this.loading = false;

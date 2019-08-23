@@ -21,20 +21,33 @@
 <div class="row" style="margin-top: 30px;">
   <div class="col">
     <h4>Andata</h4>
+    <label>
+      Seleziona la fermata
+      <select class="form-control" [(ngModel)]="idOutStopBusSelected" (ngModelChange)="outStopBusSelectedChange()">
+        <option [ngValue]="a.id" *ngFor="let a of outStopBuses;">
+          {{a.name}} ({{a.lineName}})
+        </option>
+      </select>
+    </label>
     <ul class="timeline">
       <li *ngFor="let a of outBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.lineName}}</label>
         <label style="font-style: italic;" class="float-right">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
         <p>
-          {{childSelected.stopBusOutDef.name}}
+          {{getOutStopBusSelected().name}}
         </p>
         <p>
-          {{getTimeDefaultStopBusOut() | date: 'medium'}}
+          {{getTimeStopBus(a,getOutStopBusSelected()) | date: 'medium'}}
         </p>
         <p *ngIf="!loading">
-          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,childSelected.idStopBusOutDef)" class="btn btn-primary" type="button">Prenota</button>
-          <button *ngIf="isBooked(a)" (click)="delete(isBooked(a))" class="btn btn-danger" type="button">Cancella Prenotazione</button>
+          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,idOutStopBusSelected)" class="btn btn-primary" type="button">Prenota</button>
+          <button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button">
+            Cancella Prenotazione
+
+          <!--<label *ngIf="isBooked(a)">-->
+            ({{getStopBus(isBooked(a).idStopBus).lineName}} - {{getStopBus(isBooked(a).idStopBus).name}})
+          </button>
         </p>
 
         <div *ngIf="loading" class="spinner-border text-info" role="status"></div>
@@ -43,20 +56,32 @@
   </div>
   <div class="col">
     <h4>Ritorno</h4>
+    <label>
+      Seleziona la fermata
+      <select class="form-control" [(ngModel)]="idRetStopBusSelected" (ngModelChange)="retStopBusSelectedChange()">
+        <option [ngValue]="a.id" *ngFor="let a of retStopBuses;">
+          {{a.name}} ({{a.lineName}})
+        </option>
+      </select>
+    </label>
     <ul class="timeline">
       <li *ngFor="let a of retBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.lineName}}</label>
         <label style="font-style: italic;" class="float-right">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
         <p>
-          {{childSelected.stopBusRetDef.name}}
+          {{getRetStopBusSelected().name}}
         </p>
         <p>
-          {{getTimeDefaultStopBusRet() | date: 'medium'}}
+          {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'medium'}}
         </p>
         <p *ngIf="!loading">
-          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,childSelected.idStopBusRetDef)" class="btn btn-primary" type="button">Prenota</button>
-          <button *ngIf="isBooked(a)" (click)="delete(isBooked(a))" class="btn btn-danger" type="button">Cancella Prenotazione</button>
+          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,idRetStopBusSelected)" class="btn btn-primary" type="button">Prenota</button>
+          <button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button">
+            Cancella Prenotazione
+            <!--<label *ngIf="isBooked(a)">-->
+            ({{getStopBus(isBooked(a).idStopBus).lineName}} - {{getStopBus(isBooked(a).idStopBus).name}})
+          </button>
         </p>
 
         <div *ngIf="loading" class="spinner-border text-info" role="status"></div>

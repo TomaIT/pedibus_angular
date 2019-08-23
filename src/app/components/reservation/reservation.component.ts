@@ -8,6 +8,9 @@ import {BusRideService} from '../../services/bus-ride.service';
 import {BusRide} from '../../models/busride';
 import {Reservation, ReservationPOST} from '../../models/reservation';
 import {ReservationService} from '../../services/reservation.service';
+import {StopBus, StopBusType} from '../../models/stopbus';
+import {StopBusService} from '../../services/stop-bus.service';
+import {insertView} from '@angular/core/src/render3/node_manipulation';
 
 @Component({
   selector: 'app-reservation',
@@ -21,7 +24,11 @@ export class ReservationComponent implements OnInit {
   outBusRides: Array<BusRide>;
   retBusRides: Array<BusRide>;
   reservations: Array<Reservation>;
+  outStopBuses: Array<StopBus>;
+  retStopBuses: Array<StopBus>;
   loading = false;
+  idOutStopBusSelected: string;
+  idRetStopBusSelected: string;
 
 
   constructor(private alertService: AlertService,
@@ -29,7 +36,8 @@ export class ReservationComponent implements OnInit {
               private authenticationService: AuthenticationService,
               private router: Router,
               private busRideService: BusRideService,
-              private reservationService: ReservationService) {
+              private reservationService: ReservationService,
+              private stopBusService: StopBusService) {
     if (!this.authenticationService.isParent()) {
       this.router.navigate(['/home']);
     }
@@ -51,18 +59,47 @@ export class ReservationComponent implements OnInit {
       );
     this.dataSelected = this.today();
     this.dataSelectedChange();
+    this.stopBusService.getStopBusByType(StopBusType.ourward)
+      .subscribe(
+        (data) => {
+          this.outStopBuses = data.sort((a, b) => {
+            if (a.idLine === b.idLine) {
+              return a.hours - b.hours;
+            }
+            return a.idLine.localeCompare(b.idLine);
+          });
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+    this.stopBusService.getStopBusByType(StopBusType.return)
+      .subscribe(
+        (data) => {
+          this.retStopBuses = data.sort((a, b) => {
+            if (a.idLine === b.idLine) {
+              return a.hours - b.hours;
+            }
+            return a.idLine.localeCompare(b.idLine);
+          });
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
   }
 
   today() {
     return (new Date()).toISOString().split('T')[0];
   }
 
+  // Depend from dateSelected and idStopBusesSelected
   private getBusRides() {
-    if (this.dataSelected && this.childSelected) {
+    if (this.dataSelected && this.idOutStopBusSelected && this.idRetStopBusSelected) {
       const temp = new Date(this.dataSelected);
       const now = new Date();
       temp.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
-      this.busRideService.getBusRidesFromStartDate(this.childSelected.idStopBusOutDef, temp)
+      this.busRideService.getBusRidesFromStartDate(this.idOutStopBusSelected, temp)
         .subscribe(
           (data) => {
             this.outBusRides = data;
@@ -71,7 +108,7 @@ export class ReservationComponent implements OnInit {
             this.alertService.error(error);
           }
         );
-      this.busRideService.getBusRidesFromStartDate(this.childSelected.idStopBusRetDef, temp)
+      this.busRideService.getBusRidesFromStartDate(this.idRetStopBusSelected, temp)
         .subscribe(
           (data) => {
             this.retBusRides = data;
@@ -84,7 +121,10 @@ export class ReservationComponent implements OnInit {
   }
 
   childSelectedChange() {
-    this.getBusRides();
+    this.idOutStopBusSelected = this.childSelected.idStopBusOutDef;
+    this.outStopBusSelectedChange();
+    this.idRetStopBusSelected = this.childSelected.idStopBusRetDef;
+    this.retStopBusSelectedChange();
     this.reservationService.getReservationsByIdChild(this.childSelected.id)
       .subscribe(
         (data) => {
@@ -106,32 +146,31 @@ export class ReservationComponent implements OnInit {
     }
   }
 
-  getTimeDefaultStopBusOut(): Date {
-    if (this.childSelected && this.outBusRides.length > 0) {
-      const temp = new Date(this.outBusRides[0].startTime);
+  getTimeStopBus(busRide: BusRide, stopBus: StopBus): Date {
+    if (busRide && stopBus) {
+      const temp = new Date(busRide.startTime);
       temp.setHours(0);
-      temp.setMinutes(this.childSelected.stopBusOutDef.hours);
+      temp.setMinutes(stopBus.hours);
       return temp;
     }
     return null;
   }
 
-  getTimeDefaultStopBusRet(): Date {
-    if (this.childSelected && this.retBusRides.length > 0) {
-      const temp = new Date(this.retBusRides[0].startTime);
-      temp.setHours(0);
-      temp.setMinutes(this.childSelected.stopBusRetDef.hours);
-      return temp;
-    }
-    return null;
-  }
-
-  isBooked(busRide: BusRide): string {
-    for (const temp of this.reservations) {
-      const index = busRide.idReservations.findIndex(x => x === temp.id);
+  // Nota se cambia la costruzione di idReservation bisogna cambiare il metodo
+  isBooked(busRide: BusRide): Reservation {
+    if (busRide) {
+      const idR = this.childSelected.id + '.' + busRide.stopBusType +
+        '.' + busRide.year + '.' + busRide.month + '.' + busRide.day;
+      const index = this.reservations.findIndex(x => x.id === idR);
       if (index >= 0) {
-        return busRide.idReservations[index];
+        return this.reservations[index];
       }
+      /*for (const temp of this.reservations) {
+        const index = busRide.idReservations.findIndex(x => x === temp.id);
+        if (index >= 0) {
+          return busRide.idReservations[index];
+        }
+      }*/
     }
     return null;
   }
@@ -157,6 +196,30 @@ export class ReservationComponent implements OnInit {
       );
   }
 
+  getReservation(idReservation: string): Reservation {
+    if (idReservation) {
+      const index = this.reservations.findIndex(x => x.id === idReservation);
+      if (index >= 0) {
+        return this.reservations[index];
+      }
+    }
+    return null;
+  }
+
+  getStopBus(idStopBus: string): StopBus {
+    if (idStopBus) {
+      let index = this.outStopBuses.findIndex(x => x.id === idStopBus);
+      if (index >= 0) {
+        return this.outStopBuses[index];
+      }
+      index = this.retStopBuses.findIndex(x => x.id === idStopBus);
+      if (index >= 0) {
+        return this.retStopBuses[index];
+      }
+    }
+    return null;
+  }
+
   delete(idReservation: string) {
     this.loading = true;
     this.reservationService.deleteReservation(idReservation)
@@ -175,4 +238,33 @@ export class ReservationComponent implements OnInit {
         }
       );
   }
+
+  getOutStopBusSelected(): StopBus {
+    if (this.idOutStopBusSelected) {
+      const index = this.outStopBuses.findIndex(x => x.id === this.idOutStopBusSelected);
+      if (index >= 0) {
+        return this.outStopBuses[index];
+      }
+    }
+    return null;
+  }
+
+  getRetStopBusSelected(): StopBus {
+    if (this.idRetStopBusSelected) {
+      const index = this.retStopBuses.findIndex(x => x.id === this.idRetStopBusSelected);
+      if (index >= 0) {
+        return this.retStopBuses[index];
+      }
+    }
+    return null;
+  }
+
+  outStopBusSelectedChange() {
+    this.getBusRides();
+  }
+
+  retStopBusSelectedChange() {
+    this.getBusRides();
+  }
+
 }
