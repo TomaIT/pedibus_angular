@@ -31,6 +31,7 @@ export class ReservationComponent implements OnInit {
           this.children = data.filter(x => !x.isDeleted);
           if (this.children.length > 0) {
             this.childSelected = this.children[0];
+            this.childSelectedChange();
           }
         },
         (error) => {
@@ -40,6 +41,6 @@ export class ReservationComponent implements OnInit {
   }
 
   childSelectedChange() {
-    alert(this.childSelected.surname);
+
   }
 }
