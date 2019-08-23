@@ -1,10 +1,15 @@
-<h2 align="center">List of children</h2>
+<h2 align="center">{{currentStopBus.name}}</h2>
 <div class="list">
+  <h5 align="left">Bambini prenotati:</h5>
   <ul>
-    <li *ngFor="let res of reservations">
-      {{res.child.firstname}} {{res.child.surname}} <button class="button green" (click)="clickPresent()">Presente</button><button class="button red" (click)="clickAbsent()">Assente</button>
-      <!-- Presente e Assente va bene per quanto sale, ma non per quando deve scendere -->
-    </li>
+    <div *ngFor="let res of reservations" class="element" [class.green]="res.isGetIn" [class.orange]="res.isGetOut" [class.red]="res.isAbsent">
+      <span style="vertical-align: middle;">{{res.child.firstname}} {{res.child.surname}}</span>
+      <div class="container_buttons">
+        <button class="button green" (click)="clickGetIn(res)" *ngIf="(isOutwardStop&&!isLastStop)||(isReturnStop&&isFirstStop)">Salito</button>
+        <button class="button orange" (click)="clickGetOut(res)" *ngIf="(isOutwardStop&&isLastStop)||(isReturnStop&&!isFirstStop)">Sceso</button>
+        <button class="button red" (click)="clickAbsent(res)" *ngIf="(isOutwardStop&&!isLastStop)||(isReturnStop&&isFirstStop)">Assente</button>
+      </div>
+    </div>
     <li *ngIf="reservations.length === 0">Nessuna prenotazione!</li>
   </ul>
 

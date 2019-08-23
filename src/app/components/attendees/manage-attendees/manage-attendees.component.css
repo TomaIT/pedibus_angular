@@ -4,12 +4,28 @@
   text-align: center;
   text-decoration: none;
   display: inline-block;
+  overflow: auto;
   border: none;
+  padding: 2px 5px 2px 5px;
+  margin: 3px;
 }
-
+.container_buttons {
+  display: inline-block;
+  float: right;
+}
 .green {
   background-color: #4CAF50;
 }
 .red {
   background-color: #f44336;
+}
+.orange {
+  background-color: orange;
+}
+.element {
+  border: 2px solid dimgrey;
+  border-radius: 12px;
+  padding: 5px 10px 5px 10px;
+  margin: 5px;
+  overflow: hidden;
 }

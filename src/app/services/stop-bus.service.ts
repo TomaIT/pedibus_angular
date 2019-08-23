@@ -13,4 +13,8 @@ export class StopBusService {
   getStopBusByType(stopBusType: StopBusType): Observable<Array<StopBus>> {
     return this.httpClient.get<Array<StopBus>>(`${environment.apiUrl}/stopbuses/withType/${stopBusType}`);
   }
+
+  getStobBusById(idStopBus: string): Observable<StopBus> {
+    return this.httpClient.get<StopBus>(`${environment.apiUrl}/stopbuses/${idStopBus}`);
+  }
 }

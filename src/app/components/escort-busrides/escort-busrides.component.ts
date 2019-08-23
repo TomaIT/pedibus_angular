@@ -5,6 +5,8 @@ import {AuthenticationService} from '../../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AvailabilityService} from '../../services/availability.service';
 import {Availability} from '../../models/availability';
+import {BusRideService} from '../../services/bus-ride.service';
+import {StopBusType} from '../../models/stopbus';
 
 @Component({
   selector: 'app-escort-busrides',
@@ -20,7 +22,8 @@ export class EscortBusridesComponent implements OnInit {
               private authenticationService: AuthenticationService,
               private router: Router,
               private activatedRoute: ActivatedRoute,
-              private availabilityService: AvailabilityService) {
+              private availabilityService: AvailabilityService,
+              private busRideService: BusRideService) {
     if (!this.authenticationService.isEscort()) {
       this.router.navigate(['/home']);
     }
@@ -39,7 +42,23 @@ export class EscortBusridesComponent implements OnInit {
   }
 
   clickOnBusRide(ca: Availability) {
-    this.router.navigate(
-      [`/attendees/manage/${ca.idBusRide}/${ca.idStopBus}`]);
+    let busRide: BusRide;
+    let idStartStopBus: string;
+    this.busRideService.getBusRideById(ca.idBusRide)
+      .subscribe(
+        (data) => {
+          busRide = data;
+          if (busRide.stopBusType === StopBusType.ourward) {
+            idStartStopBus = ca.idStopBus;
+          } else {
+            idStartStopBus = busRide.stopBuses[0].id;
+          }
+          this.router.navigate(
+            [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
   }
 }
