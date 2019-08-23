@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Reservation, ReservationPOST} from '../models/reservation';
+import {Reservation, ReservationPOST, ReservationPUT} from '../models/reservation';
 import {environment} from '../../environments/environment';
-import {Observable} from 'rxjs';
+import {forkJoin, from, Observable} from 'rxjs';
+import {Child, ChildPOST} from '../models/child';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,10 @@ export class ReservationService {
     return this.httpClient.get<Array<Reservation>>(`${environment.apiUrl}/busrides/${idBusRide}/${idStopBus}/reservations`);
   }
 
+  getReservationsByBusRide(idBusRide: string): Observable<Array<Reservation>> {
+    return this.httpClient.get<Array<Reservation>>(`${environment.apiUrl}/busrides/${idBusRide}/reservations`);
+  }
+
   getReservationsByIdChild(idChild: string): Observable<Array<Reservation>> {
     return this.httpClient.get<Array<Reservation>>(`${environment.apiUrl}/children/${idChild}/reservations`);
   }
@@ -27,4 +32,9 @@ export class ReservationService {
   deleteReservation(idReservation: string): Observable<any> {
     return this.httpClient.delete<any>(`${environment.apiUrl}/reservations/${idReservation}`);
   }
+
+  updateReservationById(idReservation: string, body: ReservationPUT): Observable<Reservation> {
+    return this.httpClient.put<Reservation>(`${environment.apiUrl}/reservations/${idReservation}`, body);
+  }
+
 }

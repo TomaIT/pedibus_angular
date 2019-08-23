@@ -1,6 +1,6 @@
 <h2 align="center">List of confirmed BusRides</h2>
 <div>
   <ul>
-    <li *ngFor="let ca of confirmedAvailabilities" (click)="clickOnBusRide(ca)">{{ca.idBusRide}} {{ca.idStopBus}}</li>
+    <li *ngFor="let ca of confirmedAvailabilities">{{ca.idBusRide}} {{ca.idStopBus}} <button (click)="clickOnBusRide(ca)">Effettua corsa</button></li>
   </ul>
 </div>

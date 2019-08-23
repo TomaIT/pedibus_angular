@@ -14,4 +14,8 @@ export class BusRideService {
   getBusRidesFromStartDate(idStopBus: string, startDate: Date): Observable<Array<BusRide>> {
     return this.httpClient.get<Array<BusRide>>(`${environment.apiUrl}/busrides/${idStopBus}/${startDate}`);
   }
+
+  getBusRideById(idBusRide: string): Observable<BusRide> {
+    return this.httpClient.get<BusRide>(`${environment.apiUrl}/busrides/${idBusRide}`);
+  }
 }
