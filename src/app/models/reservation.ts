@@ -16,3 +16,9 @@ export class Reservation {
   getIn: ReservationState;
   getOut: ReservationState;
 }
+
+export class ReservationPOST {
+  idBusRide: string;
+  idChild: string;
+  idStopBus: string;
+}

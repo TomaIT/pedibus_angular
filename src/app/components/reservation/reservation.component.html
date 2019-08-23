@@ -1,53 +1,65 @@
 <div class="row">
-  <label>
-    Seleziona il bambino
-    <select class="form-control" [(ngModel)]="childSelected" (ngModelChange)="childSelectedChange()">
-      <option [ngValue]="a" *ngFor="let a of children;">
-        {{a.firstname}} {{a.surname}}
-      </option>
-    </select>
-  </label>
+  <div class="col">
+    <label>
+      Seleziona il bambino
+      <select class="form-control" [(ngModel)]="childSelected" (ngModelChange)="childSelectedChange()">
+        <option [ngValue]="a" *ngFor="let a of children;">
+          {{a.firstname}} {{a.surname}}
+        </option>
+      </select>
+    </label>
+  </div>
+  <div class="col">
+    <label>
+      Seleziona la data
+      <input type="date" class="form-control" [min]="today()"
+             [(ngModel)]="dataSelected" (ngModelChange)="dataSelectedChange()">
+    </label>
+  </div>
 </div>
 
-
-<div class="row">
+<div class="row" style="margin-top: 30px;">
   <div class="col">
     <h4>Andata</h4>
     <ul class="timeline">
-      <li>
-        <a target="_blank" href="https://www.totoprayogo.com/#">New Web Design</a>
-        <a href="#" class="float-right">21 March, 2014</a>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque scelerisque diam non nisi semper, et elementum lorem ornare. Maecenas placerat facilisis mollis. Duis sagittis ligula in sodales vehicula....</p>
-      </li>
-      <li>
-        <a href="#">21 000 Job Seekers</a>
-        <a href="#" class="float-right">4 March, 2014</a>
-        <p>Curabitur purus sem, malesuada eu luctus eget, suscipit sed turpis. Nam pellentesque felis vitae justo accumsan, sed semper nisi sollicitudin...</p>
-      </li>
-      <li>
-        <a href="#">Awesome Employers</a>
-        <a href="#" class="float-right">1 April, 2014</a>
-        <p>Fusce ullamcorper ligula sit amet quam accumsan aliquet. Sed nulla odio, tincidunt vitae nunc vitae, mollis pharetra velit. Sed nec tempor nibh...</p>
+      <li *ngFor="let a of outBusRides">
+        <label style="font-style: italic;color: #22c0e8;">{{a.lineName}}</label>
+        <label style="font-style: italic;" class="float-right">{{a.startTime | date:'fullDate'}}</label>
+        <p></p>
+        <p>
+          {{childSelected.stopBusOutDef.name}}
+        </p>
+        <p>
+          {{getTimeDefaultStopBusOut() | date: 'medium'}}
+        </p>
+        <p *ngIf="!loading">
+          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,childSelected.idStopBusOutDef)" class="btn btn-primary" type="button">Prenota</button>
+          <button *ngIf="isBooked(a)" (click)="delete(isBooked(a))" class="btn btn-danger" type="button">Cancella Prenotazione</button>
+        </p>
+
+        <div *ngIf="loading" class="spinner-border text-info" role="status"></div>
       </li>
     </ul>
   </div>
   <div class="col">
     <h4>Ritorno</h4>
     <ul class="timeline">
-      <li>
-        <a target="_blank" href="https://www.totoprayogo.com/#">New Web Design</a>
-        <a href="#" class="float-right">21 March, 2014</a>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque scelerisque diam non nisi semper, et elementum lorem ornare. Maecenas placerat facilisis mollis. Duis sagittis ligula in sodales vehicula....</p>
-      </li>
-      <li>
-        <a href="#">21 000 Job Seekers</a>
-        <a href="#" class="float-right">4 March, 2014</a>
-        <p>Curabitur purus sem, malesuada eu luctus eget, suscipit sed turpis. Nam pellentesque felis vitae justo accumsan, sed semper nisi sollicitudin...</p>
-      </li>
-      <li>
-        <a href="#">Awesome Employers</a>
-        <a href="#" class="float-right">1 April, 2014</a>
-        <p>Fusce ullamcorper ligula sit amet quam accumsan aliquet. Sed nulla odio, tincidunt vitae nunc vitae, mollis pharetra velit. Sed nec tempor nibh...</p>
+      <li *ngFor="let a of retBusRides">
+        <label style="font-style: italic;color: #22c0e8;">{{a.lineName}}</label>
+        <label style="font-style: italic;" class="float-right">{{a.startTime | date:'fullDate'}}</label>
+        <p></p>
+        <p>
+          {{childSelected.stopBusRetDef.name}}
+        </p>
+        <p>
+          {{getTimeDefaultStopBusRet() | date: 'medium'}}
+        </p>
+        <p *ngIf="!loading">
+          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,childSelected.idStopBusRetDef)" class="btn btn-primary" type="button">Prenota</button>
+          <button *ngIf="isBooked(a)" (click)="delete(isBooked(a))" class="btn btn-danger" type="button">Cancella Prenotazione</button>
+        </p>
+
+        <div *ngIf="loading" class="spinner-border text-info" role="status"></div>
       </li>
     </ul>
   </div>

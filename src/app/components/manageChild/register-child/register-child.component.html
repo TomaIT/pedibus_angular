@@ -5,7 +5,7 @@
 
       <div class="form-group">
 
-        <label>Firstname</label>
+        <label>Nome</label>
 
         <input type="text" formControlName="firstname"
                class="form-control"
@@ -19,7 +19,7 @@
       </div>
 
       <div class="form-group">
-        <label >Surname</label>
+        <label >Cognome</label>
 
         <input type="text" formControlName="surname" class="form-control"
                [ngClass]="{ 'is-invalid': submitted && f.surname.errors }" />
@@ -32,7 +32,7 @@
       </div>
 
       <div class="form-group">
-        <label >Birth</label>
+        <label >Data di Nascita</label>
 
         <input type="date" formControlName="birth" class="form-control"
                [ngClass]="{ 'is-invalid': submitted && f.birth.errors }" />
@@ -44,7 +44,7 @@
       </div>
 
       <div class="form-group">
-        <label >Gender</label>
+        <label >Sesso</label>
 
         <select class="form-control" formControlName="gender"
                [ngClass]="{ 'is-invalid': submitted && f.gender.errors }" >
@@ -61,7 +61,7 @@
       </div>
 
       <div class="form-group">
-        <label >Default Outward Stop Bus</label>
+        <label >Fermata di Andata</label>
 
         <select class="form-control" formControlName="outwardStopBus"
                 [ngClass]="{ 'is-invalid': submitted && f.outwardStopBus.errors }" >
@@ -78,7 +78,7 @@
       </div>
 
       <div class="form-group">
-        <label >Default Return Stop Bus</label>
+        <label >Fermata di Ritorno</label>
 
         <select class="form-control" formControlName="returnStopBus"
                 [ngClass]="{ 'is-invalid': submitted && f.returnStopBus.errors }" >
