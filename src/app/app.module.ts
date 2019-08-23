@@ -21,11 +21,12 @@ import {MessageComponent} from './components/manageMessage/message/message.compo
 import {ManageAttendeesComponent} from './components/attendees/manage-attendees/manage-attendees.component';
 import {EscortBusridesComponent} from './components/escort-busrides/escort-busrides.component';
 import {UserProfileComponent} from './components/user-profile/user-profile.component';
-import {ManageUsersComponent} from './components/manage-users/manage-users.component';
+import {ManageUsersComponent} from './components/manageUsers/manage-users/manage-users.component';
 import {CreateAvailabilityComponent} from './components/manageAvailability/create-availability/create-availability.component';
 import {ViewAvailabilityComponent} from './components/manageAvailability/view-availability/view-availability.component';
 import {ShiftManagerComponent} from './components/manageAvailability/shift-manager/shift-manager.component';
 import {MapLinesComponent} from './components/map-lines/map-lines.component';
+import { ManageUserComponent } from './components/manageUsers/manage-user/manage-user.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -43,6 +44,7 @@ const routes: Routes = [
   {path: 'viewAvailabilities', component: ViewAvailabilityComponent},
   {path: 'shiftManage', component: ShiftManagerComponent},
   {path: 'manageUsers', component: ManageUsersComponent},
+  {path: 'manageUsers/:id', component: ManageUserComponent},
   {path: 'mapLines', component: MapLinesComponent},
   {path: 'userProfile', component: UserProfileComponent},
   {path: 'busridesEscort', component: EscortBusridesComponent},
@@ -70,7 +72,8 @@ const routes: Routes = [
     CreateAvailabilityComponent,
     ViewAvailabilityComponent,
     ShiftManagerComponent,
-    MapLinesComponent
+    MapLinesComponent,
+    ManageUserComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col">
+    <label>
+      Seleziona il ruolo da rimuovere
+      <div class="row">
+        <div class="col-8">
+      <select class="form-control" [(ngModel)]="roleToRemove">
+        <option [ngValue]="a" *ngFor="let a of getRolesRemovable();">
+          {{a}}
+        </option>
+      </select>
+        </div>
+        <div class="col-4">
+      <button type="button" class="btn btn-info">Rimuovi</button>
+        </div>
+      </div>
+    </label>
+  </div>
+  <div class="col">
+    <label>
+      Seleziona il ruolo da aggiungere
+      <div class="row">
+        <div class="col-8">
+          <select class="form-control" [(ngModel)]="roleToAdd">
+            <option [ngValue]="a" *ngFor="let a of getRolesAddable();">
+              {{a}}
+            </option>
+          </select>
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-info">Aggiungi</button>
+        </div>
+      </div>
+    </label>
+  </div>
+</div>

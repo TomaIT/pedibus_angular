@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AuthenticationService} from '../../services/authentication.service';
+import {AuthenticationService} from '../../../services/authentication.service';
 import {Router} from '@angular/router';
-import {AlertService} from '../../services/alert.service';
-import {UserService} from '../../services/user.service';
-import {Role, User} from '../../models/user';
+import {AlertService} from '../../../services/alert.service';
+import {UserService} from '../../../services/user.service';
+import {Role, User} from '../../../models/user';
 import {interval} from 'rxjs';
-import {environment} from '../../../environments/environment';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-manage-users',

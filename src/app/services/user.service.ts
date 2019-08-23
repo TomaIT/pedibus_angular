@@ -33,4 +33,8 @@ export class UserService {
   unblockUser(idUser: string): Observable<User> {
     return this.httpClient.put<User>(`${environment.apiUrl}/users/${idUser}/undisable`, {});
   }
+
+  findById(idUser: string): Observable<User> {
+    return this.httpClient.get<User>(`${environment.apiUrl}/users/${idUser}`);
+  }
 }

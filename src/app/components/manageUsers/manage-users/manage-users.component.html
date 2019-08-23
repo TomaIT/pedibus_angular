@@ -19,8 +19,9 @@
       <th scope="col" width="auto">Nome</th>
       <th scope="col" width="auto">Cognome</th>
       <th scope="col" width="auto">Telefono</th>
-      <th scope="col" width="8%">Attivato</th>
       <th *ngIf="authenticationService.isSysAdmin()" scope="col" width="auto">Bloccato</th>
+      <th scope="col" width="8%">Attivato</th>
+      <th scope="col" width="8%">Aggiorna Ruoli</th>
     </tr>
     </thead>
     <tbody>
@@ -29,30 +30,19 @@
       <td>{{a.firstname || '-' }}</td>
       <td>{{a.surname || '-' }}</td>
       <td>{{a.phoneNumber|| '-' }}</td>
-      <td>
-        <img *ngIf="a.enabled" src="../../../assets/images/check-box.png" style="margin-left: 13px;min-width: 25px;" width="50%" height="auto">
-        <img *ngIf="!a.enabled" (click)="refreshUUID(a)" src="../../../assets/images/refresh-button.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-      </td>
       <td *ngIf="authenticationService.isSysAdmin()">
         <button *ngIf="a.accountNonLocked" (click)="blockUser(a)" type="button" class="btn btn-link" style="color: red;">Blocca</button>
         <button *ngIf="!a.accountNonLocked" (click)="unblockUser(a)" type="button" class="btn btn-link">Sblocca</button>
+      </td>
+      <td>
+        <img *ngIf="a.enabled" src="../../../../assets/images/check-box.png" style="margin-left: 13px;min-width: 25px;" width="50%" height="auto">
+        <img *ngIf="!a.enabled" (click)="refreshUUID(a)" src="../../../../assets/images/refresh-button.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+      </td>
+      <td>
+        <img routerLink="/manageUsers/{{a.username}}" src="../../../../assets/images/edit-document.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
       </td>
     </tr>
     </tbody>
   </table>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-<p>
-  <!--TODO-->
-  Qui gestione ruoli admin/linee disabilitazione etc.. degli utenti
-  Qui arrivano solo admin/sysAdmin (nota admin puo operare solo sulle proprie linee)
-</p>
