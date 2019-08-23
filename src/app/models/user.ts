@@ -9,10 +9,10 @@ export class User {
   username: string; // Email
   roles: Array<Role>;
   idLines: Array<string>;
-  isAccountNonExpired: boolean;
-  isAccountNonLocked: boolean;
-  isCredentialsNonExpired: boolean;
-  isEnabled: boolean;
+  enabled: boolean;
+  accountNonLocked: boolean;
+  accountNonExpired: boolean;
+  credentialsNonExpired: boolean;
   firstname: string;
   surname: string;
   birth: Date;

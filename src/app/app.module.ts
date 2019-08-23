@@ -44,7 +44,7 @@ const routes: Routes = [
   {path: 'shiftManage', component: ShiftManagerComponent},
   {path: 'manageUsers', component: ManageUsersComponent},
   {path: 'mapLines', component: MapLinesComponent},
-  {path: 'userProfile/:id', component: UserProfileComponent},
+  {path: 'userProfile', component: UserProfileComponent},
   {path: 'busridesEscort', component: EscortBusridesComponent},
   {path: '**', redirectTo: 'home'}
 ];

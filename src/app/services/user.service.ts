@@ -17,4 +17,20 @@ export class UserService {
   createUser(email: string, roles: Array<Role>): Observable<User> {
     return this.httpClient.post<User>(`${environment.apiUrl}/users`, {email, roles});
   }
+
+  findByRole(role: Role): Observable<Array<User>> {
+    return this.httpClient.get<Array<User>>(`${environment.apiUrl}/roles/${role}/users`);
+  }
+
+  refreshUUID(idUser: string): Observable<User> {
+    return this.httpClient.post<User>(`${environment.apiUrl}/users/${idUser}/uuid`, {});
+  }
+
+  blockUser(idUser: string): Observable<User> {
+    return this.httpClient.put<User>(`${environment.apiUrl}/users/${idUser}/disable`, {});
+  }
+
+  unblockUser(idUser: string): Observable<User> {
+    return this.httpClient.put<User>(`${environment.apiUrl}/users/${idUser}/undisable`, {});
+  }
 }

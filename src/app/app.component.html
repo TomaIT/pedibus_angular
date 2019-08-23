@@ -37,7 +37,7 @@
       </li>
 
       <li *ngIf="authenticationService.isAuthenticated()" [routerLinkActive]="['active']" class="nav-item">
-        <a class="nav-link" routerLink="/userProfile/{{authenticationService.currentUserValue.username}}">Profilo</a>
+        <a class="nav-link" routerLink="/userProfile">Profilo</a>
       </li>
 
       <li *ngIf="authenticationService.isAdmin()||authenticationService.isSysAdmin()"

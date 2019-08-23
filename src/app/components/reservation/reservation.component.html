@@ -31,11 +31,10 @@
     </label>
     <ul class="timeline">
       <li *ngFor="let a of outBusRides">
-        <label style="font-style: italic;color: #22c0e8;">{{a.lineName}}</label>
-        <label style="font-style: italic;" class="float-right">{{a.startTime | date:'fullDate'}}</label>
+        <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
         <p>
-          {{getOutStopBusSelected().name}}
+          {{a.lineName}} - {{getOutStopBusSelected().name}}
         </p>
         <p>
           {{getTimeStopBus(a,getOutStopBusSelected()) | date: 'medium'}}
@@ -66,11 +65,10 @@
     </label>
     <ul class="timeline">
       <li *ngFor="let a of retBusRides">
-        <label style="font-style: italic;color: #22c0e8;">{{a.lineName}}</label>
-        <label style="font-style: italic;" class="float-right">{{a.startTime | date:'fullDate'}}</label>
+        <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
         <p>
-          {{getRetStopBusSelected().name}}
+          {{a.lineName}} - {{getRetStopBusSelected().name}}
         </p>
         <p>
           {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'medium'}}
