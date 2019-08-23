@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {BusRide} from '../models/busride';
+import {BusRide, BusRidePUT} from '../models/busride';
 import {environment} from '../../environments/environment';
 
 @Injectable({
@@ -17,5 +17,9 @@ export class BusRideService {
 
   getBusRideById(idBusRide: string): Observable<BusRide> {
     return this.httpClient.get<BusRide>(`${environment.apiUrl}/busrides/${idBusRide}`);
+  }
+
+  setLastStopBusInBusRide(idBusRide: string, body: BusRidePUT): Observable<BusRide> {
+    return this.httpClient.put<BusRide>(`${environment.apiUrl}/busrides/${idBusRide}`, body);
   }
 }

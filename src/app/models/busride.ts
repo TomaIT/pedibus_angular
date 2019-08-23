@@ -15,3 +15,8 @@ export class BusRide {
   timestampLastStopBus: number; // Epoch time
   idLastStopBus: string;
 }
+
+export class BusRidePUT {
+  idLastStopBus: string;
+  timestampLastStopBus: number;
+}

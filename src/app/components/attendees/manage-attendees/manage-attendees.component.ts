@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {BusRide} from '../../../models/busride';
+import {BusRide, BusRidePUT} from '../../../models/busride';
 import {EnumChildGet, Reservation, ReservationPUT} from '../../../models/reservation';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {ReservationService} from '../../../services/reservation.service';
@@ -192,13 +192,24 @@ export class ManageAttendeesComponent implements OnInit {
     if (!allSetted) {
       this.alertService.error('Aggiornare lo stato di tutti i bambini prenotati!');
     } else {
-      if (!this.isLastStop) {
-        this.router.navigate(
-          [`/attendees/manage/${this.idBusRide}/${this.idNextStopBus}`]);
-      } else {
-        this.router.navigate(
-          [`/busridesEscort`]);
-      }
+      const busRidePUT = new BusRidePUT();
+      busRidePUT.idLastStopBus = this.idCurrentStopBus;
+      busRidePUT.timestampLastStopBus = 0;
+      this.busRideService.setLastStopBusInBusRide(this.idBusRide, busRidePUT)
+        .subscribe(
+          (data) => {
+            if (!this.isLastStop) {
+              this.router.navigate(
+                [`/attendees/manage/${this.idBusRide}/${this.idNextStopBus}`]);
+            } else {
+              this.router.navigate(
+                [`/busridesEscort`]);
+            }
+          },
+          (error) => {
+            this.alertService.error(error);
+          }
+        );
     }
   }
 }
