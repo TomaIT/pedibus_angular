@@ -80,24 +80,48 @@ export class ManageUserComponent implements OnInit {
   }
 
   getRolesRemovable(): Array<Role> {
-    if (this.authenticationService.isSysAdmin()) {
-      return this.user.roles;
+    if (this.user) {
+      if (this.authenticationService.isSysAdmin()) {
+        return this.user.roles;
+      }
+      let temp = this.user.roles.filter(x => x !== Role.sysAdmin);
+      if (this.authenticationService.isAdmin()) {
+        let isPermitted = true;
+        for (const a of this.user.idLines) {
+          if (this.authenticationService.idLines().findIndex(x => x === a) < 0) {
+            isPermitted = false;
+            break;
+          }
+        }
+        if (!isPermitted) {
+          temp = temp.filter(x => x !== Role.admin);
+        }
+      }
+      return temp;
     }
-    return this.user.roles.filter(x => x !== Role.sysAdmin);
+    return null;
   }
 
   getRolesAddable(): Array<Role> {
-    if (this.authenticationService.isSysAdmin()) {
-      return this.allRoles.filter(x => this.user.roles.findIndex(y => y === x) < 0);
+    if (this.user && this.allRoles) {
+      if (this.authenticationService.isSysAdmin()) {
+        return this.allRoles.filter(x => this.user.roles.findIndex(y => y === x) < 0);
+      }
+      return this.allRoles.filter(x => this.user.roles.findIndex(y => y === x) < 0)
+        .filter(x => x !== Role.sysAdmin);
     }
-    return this.allRoles.filter(x => this.user.roles.findIndex(y => y === x) < 0)
-      .filter(x => x !== Role.sysAdmin);
+    return null;
   }
 
   getLinesRemovable(): Array<LineEnum> {
     const temp = new Array<LineEnum>();
     if (this.user && this.linesEnum) {
       for (const a of this.user.idLines) {
+        if (!this.authenticationService.isSysAdmin() && this.authenticationService.isAdmin()) {
+          if (this.authenticationService.idLines().findIndex(x => x === a) < 0) {
+            continue;
+          }
+        }
         const index = this.linesEnum.findIndex(x => x.idLine === a);
         if (index >= 0) {
           temp.push(this.linesEnum[index]);
@@ -109,7 +133,11 @@ export class ManageUserComponent implements OnInit {
 
   getLinesAddable(): Array<LineEnum> {
     if (this.user && this.linesEnum) {
-      return this.linesEnum.filter(x => this.user.idLines.findIndex(y => y === x.idLine) < 0);
+      if (this.authenticationService.isSysAdmin()) {
+        return this.linesEnum.filter(x => this.user.idLines.findIndex(y => y === x.idLine) < 0);
+      }
+      return this.linesEnum.filter(x => this.user.idLines.findIndex(y => y === x.idLine) < 0 &&
+        this.authenticationService.idLines().findIndex(y => y === x.idLine) >= 0);
     }
     return null;
   }

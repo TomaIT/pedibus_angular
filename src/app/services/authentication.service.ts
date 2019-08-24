@@ -81,5 +81,11 @@ export class AuthenticationService {
     return this.isAuthenticated() && this.currentUserValue.user.roles.findIndex(x => x === Role.sysAdmin) >= 0;
   }
 
+  idLines(): Array<string> {
+    if (this.isAdmin()) {
+      return this.currentUserValue.user.idLines;
+    }
+    return null;
+  }
 
 }

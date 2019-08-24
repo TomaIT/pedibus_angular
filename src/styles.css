@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+h1{
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  hyphens: auto;
+}
