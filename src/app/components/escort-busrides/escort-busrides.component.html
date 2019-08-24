@@ -4,3 +4,36 @@
     <li *ngFor="let ca of confirmedAvailabilities">{{ca.idBusRide}} {{ca.idStopBus}} <button (click)="clickOnBusRide(ca)">Effettua corsa</button></li>
   </ul>
 </div>
+Per ora effettuo una richiesta per le availabilies e poi una richiesta <b>per ogni</b> busRide associata.<br>
+Le fermate sono sbagliate: sono la partenza e l'arrivo della linea.
+Mentre dovrebbero essere le fermate di arrivo e di partenza dell'escort.
+<div class="row">
+  <div class="table-responsive">
+    <table class="table table-responsive table-striped" style="font-family: Lato;">
+      <thead>
+      <tr>
+        <th scope="col" width="auto">Data</th>
+        <th scope="col" width="auto">Linea</th>
+        <th scope="col" width="auto">Verso Corsa</th>
+        <th scope="col" width="auto">Fermata partenza</th>
+        <th scope="col" width="auto">Ora partenza</th>
+        <th scope="col" width="auto">Fermata arrivo</th>
+        <th scope="col" width="auto">Ora arrivo</th>
+        <th scope="col" width="auto">Stato corsa</th> <!-- corsa effettuata / effettua corsa / corsa da effettuare -->
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let av of confirmedAvailabilities;" scope="row">
+        <td>{{av.busRide.day}}/{{av.busRide.month}}/{{av.busRide.year}}</td>
+        <td>{{av.busRide.lineName}}</td>
+        <td>{{av.busRide.stopBusType}}</td>
+        <td>{{av.busRide.stopBuses[0].name}}</td>
+        <td>{{convertHoursToTime(av.busRide.stopBuses[0].hours)}}</td>
+        <td>{{av.busRide.stopBuses[av.busRide.stopBuses.length-1].name}}</td>
+        <td>{{convertHoursToTime(av.busRide.stopBuses[av.busRide.stopBuses.length-1].hours)}}</td>
+        <td *ngIf="av.busRide.idLastStopBus === av.busRide.stopBuses[av.busRide.stopBuses.length-1].id">Corsa effettuata</td>
+        <td *ngIf="av.busRide.idLastStopBus !== av.busRide.stopBuses[av.busRide.stopBuses.length-1].id"><button (click)="clickOnBusRide(av)">Effettua corsa</button></td>
+      </tbody>
+    </table>
+  </div>
+</div>

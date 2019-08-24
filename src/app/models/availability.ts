@@ -1,3 +1,5 @@
+import {BusRide} from './busride';
+
 export enum AvailabilityState {
   available = 'Available', // Escort è disponibile a coprire quella corsa
   checked = 'Checked', // Admin ha confermato, e attende che Escort riconfermi la sua disponibilità
@@ -10,4 +12,5 @@ export class Availability {
   idStopBus: string;
   idUser: string; // Escort
   state: AvailabilityState;
+  busRide: BusRide;
 }
