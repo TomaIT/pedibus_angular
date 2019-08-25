@@ -1,4 +1,36 @@
-<p>
-  <!--TODO-->
-  Qui tutti possono vedere la mappa (tipo maps) delle linee.
-</p>
+<div>
+  <label >Line</label>
+
+  <select class="form-control" (change)="getLineCoordinates($event)">
+    <option disabled selected value> -- select an option -- </option>
+    <option [value]="l.idLine" *ngFor="let l of lineEnum" >
+      {{l.lineName}}
+    </option>
+  </select>
+
+<agm-map [latitude]='lat' [longitude]='lng'
+         [mapTypeId]='mapType' [zoom]="14" >
+  <agm-marker
+    [latitude]="lat"
+    [longitude]="lng"
+    [opacity]="1">
+  </agm-marker>
+
+  <agm-marker
+    *ngFor="let marker of markers"
+    [latitude]="marker.lat"
+    [longitude]="marker.lng"
+    [opacity]="marker.alpha"
+    [markerDraggable]="false"
+    [title]="marker.name"
+  >
+  </agm-marker>
+  <agm-rectangle
+    [north]="max('lat')"
+    [east]="max('lng')"
+    [south]="min('lat')"
+    [west]="min('lng')"
+  >
+  </agm-rectangle>
+</agm-map>
+</div>

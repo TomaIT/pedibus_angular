@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AlertService} from './alert.service';
 import {Observable} from 'rxjs';
-import {Role, User} from '../models/user';
+import {Role, User, UserPUT} from '../models/user';
 import {environment} from '../../environments/environment';
 
 @Injectable({
@@ -50,5 +50,9 @@ export class UserService {
   }
   removeLine(idUser: string, idLine: string): Observable<User> {
     return this.httpClient.put<User>(`${environment.apiUrl}/users/${idUser}/removeLine?idLine=${idLine}`, {});
+  }
+
+  updateUser(idUser: string, userPUT: UserPUT): Observable<User> {
+    return this.httpClient.put<User>(`${environment.apiUrl}/users/${idUser}`, userPUT);
   }
 }

@@ -19,3 +19,15 @@ export class User {
   street: string;
   phoneNumber: string;
 }
+
+export class UserPUT {
+  firstname: string;
+  surname: string;
+  // @DateTimeFormat(pattern = "yyyy-MM-dd")
+  birth: Date;
+  phoneNumber: number;
+  street: string; // Photo ??
+  password: string;
+  verifyPassword: string;
+}
+

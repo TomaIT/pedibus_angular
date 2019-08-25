@@ -15,6 +15,6 @@ export class LineService {
   }
 
   getLine(idLine: string): Observable<Line> {
-    return this.httpClient.get<Line>(`${environment.apiUrl}/line/${idLine}`);
+    return this.httpClient.get<Line>(`${environment.apiUrl}/lines/${idLine}`);
   }
 }

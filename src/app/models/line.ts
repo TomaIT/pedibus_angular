@@ -1,4 +1,4 @@
-import {StopBus} from './stopbus';
+import {StopBus, StopBusType} from './stopbus';
 
 export class Line {
   creationTime: number; // Epoch time
@@ -14,4 +14,12 @@ export class Line {
 export class LineEnum {
   idLine: string;
   lineName: string;
+}
+
+export class Markers {
+  lat: number;
+  lng: number;
+  type: StopBusType;
+  alpha: number;
+  name: string;
 }

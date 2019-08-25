@@ -12,6 +12,7 @@ export class ChildService {
   }
 
   createChild(body: ChildPOST, idUser: string): Observable<Child> {
+    console.log(body.birth);
     return this.httpClient.post<Child>(`${environment.apiUrl}/children/${idUser}`, body);
   }
 

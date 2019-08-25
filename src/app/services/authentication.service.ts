@@ -61,6 +61,10 @@ export class AuthenticationService {
       );
   }
 
+  setCurrentUser(newValue: Login) {
+    this.currentUserSubject.next(newValue);
+  }
+
   recovery(email: string): Observable<any> {
     return this.httpClient.post<any>(`${environment.apiUrl}/authentications/recover`, {email});
   }

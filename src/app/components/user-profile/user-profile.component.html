@@ -1,4 +1,104 @@
-<p>
-  <!--TODO-->
-  Qui aggiornamento dati utente...
-</p>
+<div class="row">
+  <div class="col-sm-6 offset-sm-3">
+    <h2>Registra Bambino</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit();">
+
+      <div class="form-group">
+
+        <label>Nome</label>
+
+        <input type="text" formControlName="firstname"
+               class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }" />
+
+        <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
+          <div *ngIf="f.firstname.errors.required">Firstname is required</div>
+          <div *ngIf="f.firstname.errors.maxlength">Firstname too long</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label >Cognome</label>
+
+        <input type="text" formControlName="surname" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.surname.errors }" />
+
+        <div *ngIf="submitted && f.surname.errors" class="invalid-feedback">
+          <div *ngIf="f.surname.errors.required">Surname is required</div>
+          <div *ngIf="f.surname.errors.maxlength">Surname too long</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label >Data di Nascita</label>
+
+        <input type="date" formControlName="birth" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.birth.errors }"
+               [value]="user.birth | date:'yyyy-MM-dd'"/>
+
+        <div *ngIf="submitted && f.birth.errors" class="invalid-feedback">
+          <div *ngIf="f.birth.errors.required">Birth is required</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label >Numero di telefono</label>
+
+        <input type="text" formControlName="phoneNumber" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.phoneNumber.errors }" />
+
+        <div *ngIf="submitted && f.phoneNumber.errors" class="invalid-feedback">
+          <div *ngIf="f.phoneNumber.errors.required">Phone number is required</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label >Indirizzo</label>
+
+        <input type="text" formControlName="street" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.street.errors }" />
+
+        <div *ngIf="submitted && f.street.errors" class="invalid-feedback">
+          <div *ngIf="f.street.errors.required">Street is required</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" formControlName="password" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+
+        <div *ngIf="submitted && f.password.errors && !checkPassword()" class="invalid-feedback">
+          <div *ngIf="!checkPassword()">Password doesn't match</div>
+          <div *ngIf="f.password.errors.pattern">Password pattern is incorrect</div>
+          <div *ngIf="f.password.errors.minlength">Password too short</div>
+          <div *ngIf="f.password.errors.maxlength">Password too long</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Verifica Password</label>
+        <input type="password" formControlName="verifyPassword" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.verifyPassword.errors }" />
+
+        <div *ngIf="submitted && f.verifyPassword.errors && !checkPassword()" class="invalid-feedback">
+          <div *ngIf="!checkPassword()">Password doesn't match</div>
+          <div *ngIf="f.verifyPassword.errors.pattern">Password pattern is incorrect</div>
+          <div *ngIf="f.verifyPassword.errors.minlength">Password too short</div>
+          <div *ngIf="f.verifyPassword.errors.maxlength">Password too long</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button *ngIf="!loading" class="btn btn-primary">Registra</button>
+        <div *ngIf="loading" class="spinner-border text-info" role="status"></div>
+      </div>
+
+    </form>
+  </div>
+</div>
