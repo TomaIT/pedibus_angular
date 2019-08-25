@@ -1,4 +1,4 @@
-<div>
+<div class="row">
   <label >Line</label>
 
   <select class="form-control" (change)="getLineCoordinates($event)">
@@ -8,7 +8,7 @@
     </option>
   </select>
 
-<agm-map [latitude]='lat' [longitude]='lng'
+<!--agm-map [latitude]='lat' [longitude]='lng'
          [mapTypeId]='mapType' [zoom]="14" >
   <agm-marker
     [latitude]="lat"
@@ -32,5 +32,33 @@
     [west]="min('lng')"
   >
   </agm-rectangle>
-</agm-map>
+</agm-map-->
+  <aol-map style="border: none; position: relative; top: 10px; height: 600px; width: 1140px;z-index: 1">
+    <aol-view [zoom]="14">
+      <aol-coordinate [x]="lng" [y]="lat" [srid]="'EPSG:4326'"></aol-coordinate>
+    </aol-view>
+    <aol-interaction-default></aol-interaction-default>
+    <aol-layer-tile [opacity]="1">
+      <aol-source-osm></aol-source-osm>
+    </aol-layer-tile>
+    <aol-layer-vector [opacity]="1">
+      <aol-source-vector>
+        <aol-feature *ngFor="let marker of markers">
+          <aol-geometry-point>
+            <aol-coordinate [x]="marker.lng" [y]="marker.lat" [srid]="'EPSG:4326'" ></aol-coordinate>
+          </aol-geometry-point>
+          <aol-style>
+            <aol-style-icon
+              [src]="'../../../assets/images/marker.png'"
+              [anchor]="[0.5, 1]"
+              [anchorXUnits]="'fraction'" [anchorYUnits]="'fraction'"
+              [scale]="1"
+              [anchorOrigin]="'top-left'">
+            </aol-style-icon>
+          </aol-style>
+        </aol-feature>
+      </aol-source-vector>
+    </aol-layer-vector>
+  </aol-map>
+
 </div>

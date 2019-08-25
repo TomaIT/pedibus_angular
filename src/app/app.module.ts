@@ -28,6 +28,7 @@ import {ShiftManagerComponent} from './components/manageAvailability/shift-manag
 import {MapLinesComponent} from './components/map-lines/map-lines.component';
 import { ManageUserComponent } from './components/manageUsers/manage-user/manage-user.component';
 import {AgmCoreModule} from '@agm/core';
+import {AngularOpenlayersModule} from 'ngx-openlayers';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -83,6 +84,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     AgmCoreModule.forRoot({apiKey: 'AIzaSyCJLZTtvkOWHf2YjAKg0fRZbk9Z-0ksCkM'}),
+    AngularOpenlayersModule,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},

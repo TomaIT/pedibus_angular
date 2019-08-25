@@ -87,4 +87,7 @@ export class MapLinesComponent implements OnInit {
     return Math.min(...this.markers.map(marker => marker[coordType]));
   }
 
+  doSomething() {
+
+  }
 }
