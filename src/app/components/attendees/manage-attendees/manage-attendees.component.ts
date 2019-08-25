@@ -125,7 +125,7 @@ export class ManageAttendeesComponent implements OnInit {
       .subscribe(
         (data) => {
           this.busRide = data;
-          if (this.busRide.stopBusType === StopBusType.ourward) {
+          if (this.busRide.stopBusType === StopBusType.outward) {
             this.isOutwardStop = true;
             this.isReturnStop = false;
           } else {

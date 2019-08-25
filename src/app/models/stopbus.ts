@@ -1,6 +1,6 @@
 export enum StopBusType {
   return = 'Return',
-  ourward = 'Outward'
+  outward = 'Outward'
 }
 
 export class GeoJsonPoint {

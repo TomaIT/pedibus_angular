@@ -20,3 +20,11 @@ export class Availability {
   state: AvailabilityState;
   busRide: BusRide;
 }
+
+export class AvailabilityPOST {
+  id: string;
+  idBusRide: string;
+  idStopBus: string;
+  idUser: string; // Escort
+  state: AvailabilityState;
+}

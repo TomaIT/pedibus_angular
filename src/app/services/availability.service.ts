@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Availability} from '../models/availability';
+import {Availability, AvailabilityPOST} from '../models/availability';
 import {environment} from '../../environments/environment';
 
 @Injectable({
@@ -10,6 +10,11 @@ import {environment} from '../../environments/environment';
 export class AvailabilityService {
 
   constructor(private httpClient: HttpClient) {
+  }
+
+  addAvailability(body: AvailabilityPOST): Observable<any> {
+    const uri = environment.apiUrl + '/availabilities';
+    return this.httpClient.post(uri, body);
   }
 
   getAvailabilitiesByUser(idUser: string): Observable<Array<Availability>> {
