@@ -15,6 +15,7 @@ export class Reservation {
   idUser: string;
   getIn: ReservationState;
   getOut: ReservationState;
+  absent: ReservationState;
   isGetIn = false;
   isGetOut = false;
   isAbsent = false;
