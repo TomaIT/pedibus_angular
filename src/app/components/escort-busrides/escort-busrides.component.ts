@@ -34,6 +34,18 @@ export class EscortBusridesComponent implements OnInit {
       .subscribe(
         (data) => {
           this.confirmedAvailabilities = data.filter(x => x.state.toString() === 'Confirmed');
+          this.confirmedAvailabilities.forEach((av) => {
+            this.busRideService.getBusRideById(av.idBusRide)
+              .subscribe(
+                (data2) => {
+                  av.busRide = data2;
+                },
+                (error2) => {
+                  this.alertService.error(error2);
+                }
+              );
+          });
+          this.confirmedAvailabilities.sort((a, b) => (a.busRide.startTime.getTime() - b.busRide.startTime.getTime()));
         },
         (error) => {
           this.alertService.error(error);
@@ -60,5 +72,11 @@ export class EscortBusridesComponent implements OnInit {
           this.alertService.error(error);
         }
       );
+  }
+
+  convertHoursToTime(hours: number): string {
+    const h = Math.floor(hours / 60);
+    const m = hours - (h * 60);
+    return (('0' + h).slice(-2) + ':' + ('0' + m).slice(-2));
   }
 }

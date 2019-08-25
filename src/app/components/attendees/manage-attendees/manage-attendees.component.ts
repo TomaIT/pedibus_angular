@@ -59,6 +59,20 @@ export class ManageAttendeesComponent implements OnInit {
             } else {
               this.reservations = data.filter(x => x.getIn !== null);
             }
+            this.reservations.forEach((res) => {
+              if (this.isReturnStop) {
+                if (res.getIn !== null) {
+                  res.isGetIn = true;
+                }
+                if (res.absent !== null) {
+                  res.isAbsent = true;
+                }
+              } else {
+                if (res.getOut !== null) {
+                  res.isGetOut = true;
+                }
+              }
+            });
           },
           (error) => {
             this.alertService.error(error);
@@ -73,6 +87,20 @@ export class ManageAttendeesComponent implements OnInit {
             } else {
               this.reservations = data.filter(x => x.getIn !== null);
             }
+            this.reservations.forEach((res) => {
+              if (this.isOutwardStop) {
+                if (res.getIn !== null) {
+                  res.isGetIn = true;
+                }
+                if (res.absent !== null) {
+                  res.isAbsent = true;
+                }
+              } else {
+                if (res.getOut !== null) {
+                  res.isGetOut = true;
+                }
+              }
+            });
           },
           (error) => {
             this.alertService.error(error);
