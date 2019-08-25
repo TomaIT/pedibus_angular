@@ -12,14 +12,12 @@ import {StopBus, StopBusType} from '../../models/stopbus';
   templateUrl: './map-lines.component.html',
   styleUrls: ['./map-lines.component.css']
 })
-export class MapLinesComponent implements OnInit, OnDestroy {
+export class MapLinesComponent implements OnInit {
 
   lat = 45.3216300;
   lng = 8.4198900;
   mapType = 'roadmap';
 
-  sub: Subscription;
-  sub2: Subscription;
   line: Line;
   lineEnum: Array<LineEnum>;
   markers: Array<Markers>;
@@ -36,7 +34,7 @@ export class MapLinesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.markers = new Array<Markers>();
-    this.sub = this.lineService.getLinesEnum()
+    this.lineService.getLinesEnum()
       .subscribe(
         (data) => {
           this.lineEnum = data;
@@ -51,7 +49,7 @@ export class MapLinesComponent implements OnInit, OnDestroy {
   getLineCoordinates(event) {
     console.log(event.target.value);
     this.markers = new Array<Markers>();
-    this.sub2 = this.lineService.getLine(event.target.value)
+    this.lineService.getLine(event.target.value)
       .subscribe(
         (data) => {
           this.line = data;
@@ -87,12 +85,6 @@ export class MapLinesComponent implements OnInit, OnDestroy {
 
   min(coordType: 'lat' | 'lng'): number {
     return Math.min(...this.markers.map(marker => marker[coordType]));
-  }
-
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
-    this.sub2.unsubscribe();
-    this.sub2.unsubscribe();
   }
 
 }
