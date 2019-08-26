@@ -65,7 +65,15 @@ export class MapLinesComponent implements OnInit {
               temp.lat = loc.location.y;
               temp.alpha = 1;
               temp.type = StopBusType.outward;
-              temp.name = loc.name + '\n' + loc.hours;
+              const hours = Math.floor(loc.hours / 60);
+              const minutes = loc.hours % 60;
+              let time: string;
+              if (minutes < 10) {
+                time = hours + ':0' + minutes;
+              } else {
+                time = hours + ':' + minutes;
+              }
+              temp.name = loc.name + ' ' + time;
               temp.show = true;
               this.markers.push(temp);
             }
@@ -86,13 +94,29 @@ export class MapLinesComponent implements OnInit {
     const coordinates = toLonLat(event.coordinate);
     console.log(coordinates);
 
+    let smallestDiff: number[] = [];
+    smallestDiff[0] = Math.abs(coordinates[0] - this.markers[0].lng);
+    smallestDiff[1] = Math.abs(coordinates[1] - this.markers[0].lat);
+
     for (const x of this.markers) {
-      if ( ((x.lng - 0.00001) <= coordinates[0] || (x.lng - 0.00001) >= coordinates[0]) &&
-        ((x.lat - 0.00001) <= coordinates[1] || (x.lat - 0.00001) >= coordinates[1])) {
-        // this.addOverlay = x;
-      } else {
-        // this.addOverlay = undefined;
+      const currentDiff: number[] = [];
+      currentDiff[0] = Math.abs(coordinates[0] - x.lng);
+      currentDiff[1] = Math.abs(coordinates[1] - x.lng);
+      if (currentDiff < smallestDiff) {
+        smallestDiff = currentDiff;
+        this.addOverlay = x;
       }
     }
+
+    smallestDiff[0] = Math.abs(coordinates[0] - this.addOverlay.lng);
+    smallestDiff[1] = Math.abs(coordinates[1] - this.addOverlay.lat);
+    console.log(smallestDiff[0] + ' ' + smallestDiff[1]);
+    if ((smallestDiff[0] > 0.001) || (smallestDiff[1] > 0.001)) {
+      this.addOverlay = undefined;
+    }
+  }
+
+  deleteDiv() {
+    this.addOverlay = undefined;
   }
 }
