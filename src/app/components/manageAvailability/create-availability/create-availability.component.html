@@ -44,7 +44,7 @@
         </p>
         <p *ngIf="!loading">
           <button *ngIf="!isBooked(a)" (click)="giveAvailability(a.id, this.stopBusSelectedId)" class="btn btn-primary" type="button">Invia</button>
-          <button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button">
+          <button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button" disabled>
             Disponibilità inviata </button> <!-- TODO cambiare colore, la cancellazione e la modifica verrà effettuta nell'altra pagina -->
         </p>
 

@@ -25,7 +25,7 @@ export class CreateAvailabilityComponent implements OnInit {
   avbstates: Array<AvailabilityState>;
   dataSelected: any;
   stopBusSelected: StopBus;
-  stopBusSelectedId: string;
+  stopBusSelectedId: string = null;
   loading = false;
   currentUser: string;
 
@@ -43,7 +43,7 @@ export class CreateAvailabilityComponent implements OnInit {
   ngOnInit() {
     const dummy: Login = JSON.parse(localStorage.getItem('currentUser'));
     this.currentUser = dummy.username;
-
+    this.stopBuses = new Array<StopBus>();
     this.directions = new Array<StopBusType>();
     this.availabilities = new Array<Availability>();
     this.avbstates = new Array<AvailabilityState>();
@@ -54,8 +54,9 @@ export class CreateAvailabilityComponent implements OnInit {
     this.directions.push(StopBusType.return);
     this.direction = StopBusType.outward;
     this.dataSelected = this.today();
-    this.getBusRides();
+    this.dataSelectedChange();
     this.refreshStopBuses();
+    this.getBusRides();
     this.availabilityService.getAvailabilitiesByUser(this.currentUser).subscribe(
       (data) => { this.availabilities = data; },
       (error) => { this.alertService.error(error);
@@ -81,7 +82,7 @@ export class CreateAvailabilityComponent implements OnInit {
     this.getBusRides();
   }
 
-  getBusRides() {
+  private getBusRides() {
     if (this.dataSelected && this.stopBusSelected) {
       const temp = new Date(this.dataSelected);
       const nowT = new Date();
@@ -92,26 +93,6 @@ export class CreateAvailabilityComponent implements OnInit {
         temp.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
       }
       this.busRideService.getBusRidesFromStartDate(this.stopBusSelected.id, temp)
-        .subscribe(
-          (data) => {
-            this.busRides = data;
-            // this.stopBusSelected = data[0].id;
-          },
-          (error) => {
-            this.alertService.error(error);
-          }
-        );
-    } else if (this.dataSelected) {
-      this.stopBusSelectedId = '5d613a178ca0d219a011de51';
-      const temp = new Date(this.dataSelected);
-      const nowT = new Date();
-      nowT.setHours(0, 0, 0, 0);
-      temp.setHours(0, 0, 0, 0);
-      if (temp.getTime() === nowT.getTime()) {
-        const now = new Date();
-        temp.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
-      }
-      this.busRideService.getBusRidesFromStartDate(this.stopBusSelectedId, temp)
         .subscribe(
           (data) => {
             this.busRides = data;
