@@ -1,7 +1,7 @@
 <h2 align="center">{{currentStopBus.name}}</h2>
+
 <div class="list">
   <h5 align="left">Bambini prenotati:</h5>
-  <ul>
     <div *ngFor="let res of reservations" class="element" [class.green]="res.isGetIn" [class.orange]="res.isGetOut" [class.red]="res.isAbsent">
       <span style="vertical-align: middle;">{{res.child.firstname}} {{res.child.surname}}</span>
       <div class="container_buttons">
@@ -10,8 +10,20 @@
         <button class="button red" (click)="clickAbsent(res)" *ngIf="(isOutwardStop&&!isLastStop)||(isReturnStop&&isFirstStop)">Assente</button>
       </div>
     </div>
-    <li *ngIf="reservations.length === 0">Nessuna prenotazione!</li>
-  </ul>
-
+    <div *ngIf="reservations.length === 0">Nessuna prenotazione!</div>
 </div>
-<button (click)="clickNextStop()">PROSSIMA FERMATA</button>
+<br><br>
+<div>
+  <button (click)="showBoxSearchChildren = true" *ngIf="!showBoxSearchChildren&&isOutwardStop" class="btn btn-secondary">Aggiunti bambino senza prenotazione</button>
+  <button (click)="showBoxSearchChildren = false" *ngIf="showBoxSearchChildren" class="btn btn-secondary">Nascondi bambini senza prenotazione</button>
+  <div *ngIf="showBoxSearchChildren" style="max-height: 60%;margin: 10px;">
+    <h5>Bambini senza prenotazione</h5>
+    Ricerca per nome e/o cognome: <input type="text" class="form-control" [formControl]="nameChild"><br>
+    <div *ngFor="let child of childrenWithoutReservation | myfilterChildrenByNameAndSurname:nameChild.value; let i = index;" class="element">
+      <span style="vertical-align: middle;">{{child.firstname}} {{child.surname}}</span>
+      <div class="container_buttons"><button class="button green" (click)="clickGetInWithoutReservation(child, i)">Salito</button></div>
+    </div>
+  </div>
+</div>
+<br><br>
+<button (click)="clickNextStop()" class="btn btn-primary" style="float: right;">PROSSIMA FERMATA</button>

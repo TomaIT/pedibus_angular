@@ -40,4 +40,8 @@ export class ChildService {
   findByIdUser(idUser: string): Observable<Array<Child>> {
     return this.httpClient.get<Array<Child>>(`${environment.apiUrl}/users/${idUser}/children`);
   }
+
+  getChildrenWithoutReservationByBusRideAndStopBus(idBusRide: string, idStopBus: string): Observable<Array<Child>> {
+    return this.httpClient.get<Array<Child>>(`${environment.apiUrl}/children/${idBusRide}/${idStopBus}`);
+  }
 }

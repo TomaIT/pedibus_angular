@@ -37,4 +37,7 @@ export class ReservationService {
     return this.httpClient.put<Reservation>(`${environment.apiUrl}/reservations/${idReservation}`, body);
   }
 
+  postReservationChildWithoutReservation(idChild: string, idBusRide: string, idStopBus: string, body: ReservationPUT): Observable<Reservation> {
+    return this.httpClient.post<Reservation>(`${environment.apiUrl}/children/${idChild}/${idBusRide}/${idStopBus}/isTakenWithoutReservation`, body);
+  }
 }

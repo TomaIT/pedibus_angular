@@ -18,7 +18,10 @@ import {UpdateChildComponent} from './components/manageChild/update-child/update
 import {ReservationComponent} from './components/reservation/reservation.component';
 import {ComunicationComponent} from './components/manageMessage/comunication/comunication.component';
 import {MessageComponent} from './components/manageMessage/message/message.component';
-import {ManageAttendeesComponent} from './components/attendees/manage-attendees/manage-attendees.component';
+import {
+  ManageAttendeesComponent,
+  MyFilterChildrenPipe,
+} from './components/attendees/manage-attendees/manage-attendees.component';
 import {EscortBusridesComponent} from './components/escort-busrides/escort-busrides.component';
 import {UserProfileComponent} from './components/user-profile/user-profile.component';
 import {ManageUsersComponent} from './components/manageUsers/manage-users/manage-users.component';
@@ -76,7 +79,8 @@ const routes: Routes = [
     ViewAvailabilityComponent,
     ShiftManagerComponent,
     MapLinesComponent,
-    ManageUserComponent
+    ManageUserComponent,
+    MyFilterChildrenPipe
   ],
   imports: [
     BrowserModule,

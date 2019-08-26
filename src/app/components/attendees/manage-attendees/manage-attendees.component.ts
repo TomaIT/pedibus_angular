@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Pipe, PipeTransform} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {BusRide, BusRidePUT} from '../../../models/busride';
 import {EnumChildGet, Reservation, ReservationPUT} from '../../../models/reservation';
@@ -8,6 +8,10 @@ import {AlertService} from '../../../services/alert.service';
 import {StopBus, StopBusType} from '../../../models/stopbus';
 import {StopBusService} from '../../../services/stop-bus.service';
 import {BusRideService} from '../../../services/bus-ride.service';
+import {FormControl} from '@angular/forms';
+import {ChildService} from '../../../services/child.service';
+import {Child} from '../../../models/child';
+import {AvailabilityService} from '../../../services/availability.service';
 
 @Component({
   selector: 'app-manage-attendees',
@@ -22,6 +26,7 @@ export class ManageAttendeesComponent implements OnInit {
   idNextStopBus: string;
   reservations: Array<Reservation>;
   currentStopBus: StopBus;
+  idLastStopForThisEscort: string;
 
   idReservationsPUT: Array<string>;
   reservationsPUT: Array<ReservationPUT>;
@@ -31,13 +36,21 @@ export class ManageAttendeesComponent implements OnInit {
   isFirstStop: boolean;
   isLastStop: boolean;
 
+  stringSearch: string;
+  showBoxSearchChildren: boolean;
+
+  nameChild = new FormControl('');
+  childrenWithoutReservation: Array<Child>;
+
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
               private router: Router,
               private activatedRoute: ActivatedRoute,
               private reservationService: ReservationService,
               private busRideService: BusRideService,
-              private stopBusService: StopBusService) {
+              private stopBusService: StopBusService,
+              private childService: ChildService,
+              private availabilityService: AvailabilityService) {
     if (!this.authenticationService.isEscort()) {
       this.router.navigate(['/home']);
     }
@@ -121,6 +134,7 @@ export class ManageAttendeesComponent implements OnInit {
   private onChangePath(params: ParamMap) {
     this.idBusRide = params.get('idBusRide');
     this.idCurrentStopBus = params.get('idCurrentStopBus');
+    this.showBoxSearchChildren = false;
     this.busRideService.getBusRideById(this.idBusRide)
       .subscribe(
         (data) => {
@@ -128,9 +142,30 @@ export class ManageAttendeesComponent implements OnInit {
           if (this.busRide.stopBusType === StopBusType.outward) {
             this.isOutwardStop = true;
             this.isReturnStop = false;
+            this.idLastStopForThisEscort = null;
+            this.childService.getChildrenWithoutReservationByBusRideAndStopBus(this.idBusRide, this.idCurrentStopBus)
+              .subscribe(
+                (data2) => {
+                  this.childrenWithoutReservation = data2;
+                },
+                (error2) => {
+                  this.alertService.error(error2);
+                }
+              );
           } else {
             this.isOutwardStop = false;
             this.isReturnStop = true;
+            this.childrenWithoutReservation = null;
+            this.availabilityService.getAvailabilitiesByUser(this.authenticationService.currentUserValue.username)
+              .subscribe(
+                (data3) => {
+                  data3.filter(av => av.idBusRide === this.idBusRide);
+                  this.idLastStopForThisEscort = data3.pop().idStopBus;
+                },
+                (error3) => {
+                  this.alertService.error(error3);
+                }
+              );
           }
           const index = this.busRide.stopBuses.map(x => x.id).indexOf(this.idCurrentStopBus);
           if (index === 0) {
@@ -209,6 +244,26 @@ export class ManageAttendeesComponent implements OnInit {
       );
   }
 
+  clickGetInWithoutReservation(child: Child, index: number) {
+    const resPUT = new ReservationPUT();
+    resPUT.idStopBus = this.idCurrentStopBus;
+    resPUT.epochTime = 0;
+    resPUT.enumChildGet = EnumChildGet.getIn;
+    this.reservationService.postReservationChildWithoutReservation(child.id, this.idBusRide, this.idCurrentStopBus, resPUT)
+      .subscribe(
+        (data) => {
+          delete this.childrenWithoutReservation[index];
+          data.isGetIn = true;
+          data.isGetOut = false;
+          data.isAbsent = false;
+          this.reservations.push(data);
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+  }
+
   clickNextStop() {
     let allSetted: boolean;
     allSetted = true;
@@ -226,12 +281,12 @@ export class ManageAttendeesComponent implements OnInit {
       this.busRideService.setLastStopBusInBusRide(this.idBusRide, busRidePUT)
         .subscribe(
           (data) => {
-            if (!this.isLastStop) {
-              this.router.navigate(
-                [`/attendees/manage/${this.idBusRide}/${this.idNextStopBus}`]);
-            } else {
+            if (this.isLastStop || (this.isOutwardStop && this.idCurrentStopBus === this.idLastStopForThisEscort)) {
               this.router.navigate(
                 [`/busridesEscort`]);
+            } else {
+              this.router.navigate(
+                [`/attendees/manage/${this.idBusRide}/${this.idNextStopBus}`]);
             }
           },
           (error) => {
@@ -241,3 +296,20 @@ export class ManageAttendeesComponent implements OnInit {
     }
   }
 }
+
+
+@Pipe({
+  name: 'myfilterChildrenByNameAndSurname',
+  pure: false
+})
+export class MyFilterChildrenPipe implements PipeTransform {
+  transform(items: Child[], filter: string): Array<Child> {
+    if (!items || !filter || filter === '') {
+      return items;
+    }
+    // filter items array, items which match and return true will be
+    // kept, false will be filtered out
+    return items.filter(x => (x.firstname.indexOf(filter) !== -1) || (x.surname.indexOf(filter) !== -1));
+  }
+}
+

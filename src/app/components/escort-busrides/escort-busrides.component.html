@@ -1,9 +1,4 @@
 <h2 align="center">List of confirmed BusRides</h2>
-<div>
-  <ul>
-    <li *ngFor="let ca of confirmedAvailabilities">{{ca.idBusRide}} {{ca.idStopBus}} <button (click)="clickOnBusRide(ca)">Effettua corsa</button></li>
-  </ul>
-</div>
 Per ora effettuo una richiesta per le availabilies e poi una richiesta <b>per ogni</b> busRide associata.<br>
 Le fermate sono sbagliate: sono la partenza e l'arrivo della linea.
 Mentre dovrebbero essere le fermate di arrivo e di partenza dell'escort.
@@ -20,6 +15,7 @@ Mentre dovrebbero essere le fermate di arrivo e di partenza dell'escort.
         <th scope="col" width="auto">Fermata arrivo</th>
         <th scope="col" width="auto">Ora arrivo</th>
         <th scope="col" width="auto">Stato corsa</th> <!-- corsa effettuata / effettua corsa / corsa da effettuare -->
+        <th scope="col" width="auto">PER DEBUGGING</th>
       </tr>
       </thead>
       <tbody>
@@ -32,7 +28,8 @@ Mentre dovrebbero essere le fermate di arrivo e di partenza dell'escort.
         <td>{{av.busRide.stopBuses[av.busRide.stopBuses.length-1].name}}</td>
         <td>{{convertHoursToTime(av.busRide.stopBuses[av.busRide.stopBuses.length-1].hours)}}</td>
         <td *ngIf="av.busRide.idLastStopBus === av.busRide.stopBuses[av.busRide.stopBuses.length-1].id">Corsa effettuata</td>
-        <td *ngIf="av.busRide.idLastStopBus !== av.busRide.stopBuses[av.busRide.stopBuses.length-1].id"><button (click)="clickOnBusRide(av)">Effettua corsa</button></td>
+        <td *ngIf="av.busRide.idLastStopBus !== av.busRide.stopBuses[av.busRide.stopBuses.length-1].id"><button (click)="clickOnBusRide(av)" class="btn btn-primary">Effettua corsa</button></td>
+        <td><button (click)="clickOnBusRide(av)">Effettua corsa</button></td>
       </tbody>
     </table>
   </div>
