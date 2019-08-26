@@ -5,9 +5,6 @@ import {Availability, AvailabilityPUT, AvailabilityState} from '../../../models/
 import {AvailabilityService} from '../../../services/availability.service';
 import {AlertService} from '../../../services/alert.service';
 import {Login} from '../../../models/login';
-import {BusRideService} from '../../../services/bus-ride.service';
-import {BusRide} from '../../../models/busride';
-import {StopBusService} from '../../../services/stop-bus.service';
 
 @Component({
   selector: 'app-view-availability',
@@ -16,20 +13,18 @@ import {StopBusService} from '../../../services/stop-bus.service';
 })
 export class ViewAvailabilityComponent implements OnInit {
 
-  availabilities: Array<Availability>;
-  currentUser: string;
-  avbstates: Array<AvailabilityState>;
-
   constructor(private authenticationService: AuthenticationService,
               private availabilityService: AvailabilityService,
               private alertService: AlertService,
-              private busRideService: BusRideService,
-              private stopBusService: StopBusService,
               private router: Router) {
     if (!this.authenticationService.isEscort()) {
       this.router.navigate(['/home']);
     }
   }
+
+  availabilities: Array<Availability>;
+  currentUser: string;
+  avbstates: Array<AvailabilityState>;
 
   ngOnInit() {
     const dummy: Login = JSON.parse(localStorage.getItem('currentUser'));
@@ -40,56 +35,21 @@ export class ViewAvailabilityComponent implements OnInit {
     this.avbstates.push(AvailabilityState.checked);
     this.avbstates.push(AvailabilityState.confirmed);
     this.avbstates.push(AvailabilityState.readChecked);
+
     this.availabilityService.getAvailabilitiesByUser(this.currentUser).subscribe(
-      (data) => { this.availabilities = data; },
+      (data) => {
+        this.availabilities = data;
+      },
       (error3) => { this.alertService.error(error3);
       }
     );
   }
 
-  getLineName(brid: string): string {
-    let temp = 'invalid';
-    this.busRideService.getBusRideById(brid).subscribe(
-      (data) => {
-        temp = data.lineName;
-      },
-      (error2) => {
-        this.alertService.error(error2);
-        temp = 'linenameerror';
-      });
+  visualizeData(time: Date): Date {
+    const temp = new Date(time);
+    temp.setFullYear(temp.getFullYear(), temp.getMonth(), temp.getDate());
+    temp.setHours(0, temp.getHours(), 0, 0);
     return temp;
-  }
-
-  getStopName(spid: string): string {
-    let temp = 'invalid';
-    this.stopBusService.getStobBusById(spid).subscribe(
-      (data) => {
-        temp = data.name;
-      },
-      (error1) => { this.alertService.error(error1);
-                    temp = 'stopError';
-      });
-    return temp;
-  }
-
-  getDatePassage(avl: Availability) {
-    this.busRideService.getBusRideById(avl.idBusRide).subscribe(
-      (data) => {
-        const temp: BusRide = data;
-        for ( const sb of temp.stopBuses) {
-          if (sb.id === avl.idStopBus) {
-            return temp.day + '/' + temp.month + '/' + temp.year + ' - ' + 'num ore'; // this.convertHoursToTime(sb.hours);
-          }
-        }
-      },
-      (error4) => { this.alertService.error(error4); }
-    );
-  }
-
-  convertHoursToTime(hours: number): string {
-    const h = Math.floor(hours / 60);
-    const m = hours - (h * 60);
-    return (('0' + h).slice(-2) + ':' + ('0' + m).slice(-2));
   }
 
   confirm(avl: Availability) {
