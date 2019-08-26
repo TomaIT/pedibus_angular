@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AlertService} from '../../services/alert.service';
 import {ChildService} from '../../services/child.service';
 import {AuthenticationService} from '../../services/authentication.service';
@@ -11,12 +11,16 @@ import {ReservationService} from '../../services/reservation.service';
 import {StopBus, StopBusType} from '../../models/stopbus';
 import {StopBusService} from '../../services/stop-bus.service';
 
+// jQuery Sign $
+declare let $: any;
+
 @Component({
   selector: 'app-reservation',
   templateUrl: './reservation.component.html',
   styleUrls: ['./reservation.component.css']
 })
 export class ReservationComponent implements OnInit {
+  @ViewChild('myDate') myDate: ElementRef;
   children: Array<Child>;
   childSelected: Child;
   dataSelected: any;
@@ -43,6 +47,14 @@ export class ReservationComponent implements OnInit {
   }
 
   ngOnInit() {
+    $('#date').datepicker({
+      dateFormat: 'yy-mm-dd',
+      minDate: new Date(),
+      onSelect: (selectedDate, inst) => {
+        this.dataSelected = selectedDate;
+        this.dataSelectedChange();
+      }
+    });
     this.childService.findByIdUser(this.authenticationService.currentUserValue.username)
       .subscribe(
         (data) => {
