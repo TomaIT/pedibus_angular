@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -10,12 +10,16 @@ import {UserService} from '../../services/user.service';
 import {User, UserPUT} from '../../models/user';
 import {Login} from '../../models/login';
 
+// jQuery Sign $
+declare let $: any;
+
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
+  @ViewChild('myDate') myDate: ElementRef;
 
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
@@ -25,11 +29,18 @@ export class UserProfileComponent implements OnInit {
     if (!this.authenticationService.isAuthenticated()) {
       this.router.navigate(['/home']);
     }
+
+    const saved: Login = JSON.parse(localStorage.getItem('currentUser'));
+    this.user = saved.user;
+    this.initForm();
   }
+
+
 
   get f() {
     return this.form.controls;
   }
+
   form: FormGroup;
   loading = false;
   submitted = false;
@@ -39,7 +50,7 @@ export class UserProfileComponent implements OnInit {
     const year = Number(date.split('-')[0]);
     const month = Number(date.split('-')[1]);
     const day = Number(date.split('-')[2].split('T')[0]);
-    return new Date(year, month , day + 1);
+    return new Date(year, month - 1, day + 1);
   }
 
   initForm() {
@@ -54,11 +65,6 @@ export class UserProfileComponent implements OnInit {
         [
           Validators.required,
           Validators.maxLength(64)
-        ]
-      )],
-      birth: [(UserProfileComponent.getDate(this.user.birth)).toISOString().split('T')[0], Validators.compose(
-        [
-          Validators.required
         ]
       )],
       phoneNumber: [this.user.phoneNumber, Validators.compose(
@@ -90,9 +96,9 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    const saved: Login = JSON.parse(localStorage.getItem('currentUser'));
-    this.user = saved.user;
-    this.initForm();
+    $('#date').datepicker({dateFormat: 'yy-mm-dd'});
+    this.myDate.nativeElement.value = UserProfileComponent.getDate(this.user.birth)
+      .toISOString().split('T')[0];
   }
 
   checkPassword() {
@@ -110,7 +116,7 @@ export class UserProfileComponent implements OnInit {
     const temp = new UserPUT();
     temp.firstname = this.f.firstname.value;
     temp.surname = this.f.surname.value;
-    temp.birth = this.f.birth.value;
+    temp.birth = new Date(this.myDate.nativeElement.value);
     if (this.f.password.value === '') {
       temp.password = null;
       temp.verifyPassword = null;
@@ -126,7 +132,10 @@ export class UserProfileComponent implements OnInit {
   changeFormValue(user: User) {
     this.f.firstname.setValue(user.firstname);
     this.f.surname.setValue(user.surname);
-    this.f.birth.setValue(user.birth);
+
+    this.myDate.nativeElement.value = new Date(user.birth)
+      .toISOString().split('T')[0];
+
     this.f.street.setValue(user.street);
     this.f.phoneNumber.setValue(user.phoneNumber);
   }
@@ -167,7 +176,7 @@ export class UserProfileComponent implements OnInit {
       );
   }
 
-  checkInput(event) {
+  /*checkInput(event) {
     const date = event.target.value;
     console.log(date.length);
     if (date.length === 4) {
@@ -176,5 +185,5 @@ export class UserProfileComponent implements OnInit {
     if (date.length === 7) {
       event.target.setValue(date + '-');
     }
-  }
+  }*/
 }

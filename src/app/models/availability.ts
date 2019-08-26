@@ -16,6 +16,9 @@ export class Availability {
   id: string;
   idBusRide: string;
   idStopBus: string;
+  lineNameOfBusRide: string;
+  startDateOfBusRide: Date;
+  stopBusName: string;
   idUser: string; // Escort
   state: AvailabilityState;
   busRide: BusRide;
