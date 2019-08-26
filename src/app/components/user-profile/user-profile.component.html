@@ -1,14 +1,15 @@
 <div class="row">
   <div class="col-sm-6 offset-sm-3">
-    <h2>Registra Bambino</h2>
+    <h2>Aggiorna Informazioni</h2>
     <form [formGroup]="form" (ngSubmit)="onSubmit();">
 
-      <div class="form-group">
+      <div class="form-group" [formGroup]="form">
 
         <label>Nome</label>
 
         <input type="text" formControlName="firstname"
                class="form-control"
+               [value]="user.firstname"
                [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }" />
 
         <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
@@ -18,10 +19,11 @@
 
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [formGroup]="form">
         <label >Cognome</label>
 
         <input type="text" formControlName="surname" class="form-control"
+               [value]="user.surname"
                [ngClass]="{ 'is-invalid': submitted && f.surname.errors }" />
 
         <div *ngIf="submitted && f.surname.errors" class="invalid-feedback">
@@ -31,12 +33,11 @@
 
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [formGroup]="form">
         <label >Data di Nascita</label>
 
         <input type="date" formControlName="birth" class="form-control"
-               [ngClass]="{ 'is-invalid': submitted && f.birth.errors }"
-               [value]="user.birth | date:'yyyy-MM-dd'"/>
+               [ngClass]="{ 'is-invalid': submitted && f.birth.errors }"/>
 
         <div *ngIf="submitted && f.birth.errors" class="invalid-feedback">
           <div *ngIf="f.birth.errors.required">Birth is required</div>
@@ -44,10 +45,11 @@
 
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [formGroup]="form">
         <label >Numero di telefono</label>
 
         <input type="text" formControlName="phoneNumber" class="form-control"
+               [value]="user.phoneNumber"
                [ngClass]="{ 'is-invalid': submitted && f.phoneNumber.errors }" />
 
         <div *ngIf="submitted && f.phoneNumber.errors" class="invalid-feedback">
@@ -56,10 +58,11 @@
 
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [formGroup]="form">
         <label >Indirizzo</label>
 
         <input type="text" formControlName="street" class="form-control"
+               [value]="user.street"
                [ngClass]="{ 'is-invalid': submitted && f.street.errors }" />
 
         <div *ngIf="submitted && f.street.errors" class="invalid-feedback">
@@ -68,7 +71,7 @@
 
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [formGroup]="form">
         <label>Password</label>
         <input type="password" formControlName="password" class="form-control"
                [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
@@ -81,7 +84,7 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [formGroup]="form">
         <label>Verifica Password</label>
         <input type="password" formControlName="verifyPassword" class="form-control"
                [ngClass]="{ 'is-invalid': submitted && f.verifyPassword.errors }" />
@@ -94,11 +97,10 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <button *ngIf="!loading" class="btn btn-primary">Registra</button>
+      <div class="form-group" [formGroup]="form">
+        <button *ngIf="!loading" class="btn btn-primary">Aggiorna</button>
         <div *ngIf="loading" class="spinner-border text-info" role="status"></div>
       </div>
-
     </form>
   </div>
 </div>

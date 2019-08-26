@@ -3,7 +3,7 @@
 
   <select class="form-control" (change)="getLineCoordinates($event)">
     <option disabled selected value> -- select an option -- </option>
-    <option [value]="l.idLine" *ngFor="let l of lineEnum" >
+    <option [value]="l.idLine" *ngFor="let l of lineEnum" [selected]="l.idLine === actualLine">
       {{l.lineName}}
     </option>
   </select>
@@ -33,7 +33,8 @@
   >
   </agm-rectangle>
 </agm-map-->
-  <aol-map style="border: none; position: relative; top: 10px; height: 600px; width: 1140px;z-index: 1">
+
+  <aol-map style="border: none; position: relative; top: 10px; height: 600px; width: 1140px;z-index: 1;" (onClick)="showInfo($event)" >
     <aol-view [zoom]="14">
       <aol-coordinate [x]="lng" [y]="lat" [srid]="'EPSG:4326'"></aol-coordinate>
     </aol-view>
@@ -44,8 +45,8 @@
     <aol-layer-vector [opacity]="1">
       <aol-source-vector>
         <aol-feature *ngFor="let marker of markers">
-          <aol-geometry-point>
-            <aol-coordinate [x]="marker.lng" [y]="marker.lat" [srid]="'EPSG:4326'" ></aol-coordinate>
+          <aol-geometry-point >
+            <aol-coordinate [x]="marker.lng" [y]="marker.lat" [srid]="'EPSG:4326'"></aol-coordinate>
           </aol-geometry-point>
           <aol-style>
             <aol-style-icon
@@ -56,9 +57,23 @@
               [anchorOrigin]="'top-left'">
             </aol-style-icon>
           </aol-style>
+
         </aol-feature>
       </aol-source-vector>
     </aol-layer-vector>
+    <aol-overlay [hidden]="addOverlay.show" *ngIf="addOverlay!==undefined">
+      <aol-coordinate
+        [x]="addOverlay.lng"
+        [y]="addOverlay.lat"
+        [srid]="'EPSG:4326'"
+      >
+      </aol-coordinate>
+      <aol-content>
+        <div class="my-overlay-class" style="background: white">
+          <p>{{addOverlay.name}}</p>
+        </div>
+      </aol-content>
+    </aol-overlay>
   </aol-map>
 
 </div>

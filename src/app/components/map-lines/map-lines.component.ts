@@ -1,11 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {LineService} from '../../services/line.service';
 import {Subscription} from 'rxjs';
 import {Line, LineEnum, Markers} from '../../models/line';
 import {AlertService} from '../../services/alert.service';
 import {StopBus, StopBusType} from '../../models/stopbus';
+import toLonLat = ol.proj.toLonLat;
 
 @Component({
   selector: 'app-map-lines',
@@ -23,10 +24,12 @@ export class MapLinesComponent implements OnInit {
   markers: Array<Markers>;
   actualLine: string;
   actualDirection: string;
+  addOverlay: Markers;
   constructor(private authenticationService: AuthenticationService,
               private router: Router,
               private lineService: LineService,
-              private alertService: AlertService) {
+              private alertService: AlertService,
+              private activatedRoute: ActivatedRoute) {
     if (!this.authenticationService.isAuthenticated()) {
       this.router.navigate(['/home']);
     }
@@ -43,51 +46,53 @@ export class MapLinesComponent implements OnInit {
           this.alertService.error(error);
         }
       );
+    this.activatedRoute.paramMap.subscribe((params: ParamMap) => this.onChangePath(params));
   }
 
 
-  getLineCoordinates(event) {
-    console.log(event.target.value);
+  private onChangePath(params: ParamMap) {
+    const id = params.get('id');
     this.markers = new Array<Markers>();
-    this.lineService.getLine(event.target.value)
-      .subscribe(
-        (data) => {
-          this.line = data;
-          for (const loc of this.line.outStopBuses) {
+    if (id !== null) {
+      this.lineService.getLine(id)
+        .subscribe(
+          (data) => {
+            this.line = data;
+            this.actualLine = this.line.id;
+            for (const loc of this.line.outStopBuses) {
               const temp: Markers = new Markers();
               temp.lng = loc.location.x;
               temp.lat = loc.location.y;
               temp.alpha = 1;
               temp.type = StopBusType.outward;
-              temp.name = loc.name;
+              temp.name = loc.name + '\n' + loc.hours;
+              temp.show = true;
               this.markers.push(temp);
+            }
+            console.log(this.markers);
+          },
+          (error) => {
+            this.alertService.error(error);
           }
-          for (const loc of this.line.retStopBuses) {
-            const temp: Markers = new Markers();
-            temp.lng = loc.location.x;
-            temp.lat = loc.location.y;
-            temp.type = StopBusType.return;
-            temp.alpha = 1;
-            temp.name = loc.name;
-            this.markers.push(temp);
-          }
-          console.log(this.markers);
-        },
-        (error) => {
-          this.alertService.error(error);
-        }
-      );
+        );
+    }
   }
 
-  max(coordType: 'lat' | 'lng'): number {
-    return Math.max(...this.markers.map(marker => marker[coordType]));
+  getLineCoordinates(event) {
+    this.router.navigate(['/mapLines/', event.target.value ]);
   }
 
-  min(coordType: 'lat' | 'lng'): number {
-    return Math.min(...this.markers.map(marker => marker[coordType]));
-  }
+  showInfo(event) {
+    const coordinates = toLonLat(event.coordinate);
+    console.log(coordinates);
 
-  doSomething() {
-
+    for (const x of this.markers) {
+      if ( ((x.lng - 0.00001) <= coordinates[0] || (x.lng - 0.00001) >= coordinates[0]) &&
+        ((x.lat - 0.00001) <= coordinates[1] || (x.lat - 0.00001) >= coordinates[1])) {
+        // this.addOverlay = x;
+      } else {
+        // this.addOverlay = undefined;
+      }
+    }
   }
 }

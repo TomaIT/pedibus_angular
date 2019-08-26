@@ -48,6 +48,7 @@ const routes: Routes = [
   {path: 'manageUsers', component: ManageUsersComponent},
   {path: 'manageUsers/:id', component: ManageUserComponent},
   {path: 'mapLines', component: MapLinesComponent},
+  {path: 'mapLines/:id', component: MapLinesComponent},
   {path: 'userProfile', component: UserProfileComponent},
   {path: 'busridesEscort', component: EscortBusridesComponent},
   {path: '**', redirectTo: 'home'}

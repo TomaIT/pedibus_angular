@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -16,10 +16,6 @@ import {Login} from '../../models/login';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  form: FormGroup;
-  loading = false;
-  submitted = false;
-  user: User;
 
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
@@ -29,6 +25,21 @@ export class UserProfileComponent implements OnInit {
     if (!this.authenticationService.isAuthenticated()) {
       this.router.navigate(['/home']);
     }
+  }
+
+  get f() {
+    return this.form.controls;
+  }
+  form: FormGroup;
+  loading = false;
+  submitted = false;
+  user: User;
+
+  private static getDate(date: any): Date {
+    const year = Number(date.split('-')[0]);
+    const month = Number(date.split('-')[1]);
+    const day = Number(date.split('-')[2].split('T')[0]);
+    return new Date(year, month , day + 1);
   }
 
   initForm() {
@@ -45,7 +56,7 @@ export class UserProfileComponent implements OnInit {
           Validators.maxLength(64)
         ]
       )],
-      birth: [(new Date(this.user.birth)).toISOString().split('T')[0], Validators.compose(
+      birth: [(UserProfileComponent.getDate(this.user.birth)).toISOString().split('T')[0], Validators.compose(
         [
           Validators.required
         ]
@@ -82,10 +93,6 @@ export class UserProfileComponent implements OnInit {
     const saved: Login = JSON.parse(localStorage.getItem('currentUser'));
     this.user = saved.user;
     this.initForm();
-  }
-
-  get f() {
-    return this.form.controls;
   }
 
   checkPassword() {
@@ -158,5 +165,16 @@ export class UserProfileComponent implements OnInit {
           this.alertService.error(error);
         }
       );
+  }
+
+  checkInput(event) {
+    const date = event.target.value;
+    console.log(date.length);
+    if (date.length === 4) {
+      event.target.setValue(date + '-');
+    }
+    if (date.length === 7) {
+      event.target.setValue(date + '-');
+    }
   }
 }

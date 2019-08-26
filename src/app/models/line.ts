@@ -22,4 +22,5 @@ export class Markers {
   type: StopBusType;
   alpha: number;
   name: string;
+  show: boolean;
 }
