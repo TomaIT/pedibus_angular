@@ -162,10 +162,11 @@ export class CreateAvailabilityComponent implements OnInit {
     return null;
   }
 
+  /*
   delete(idAvl: string) {
     this.loading = true;
-    // TODO verificare lo stato prima di richiedere l'effettiva cancellazione
   }
+  */
 
   refreshStopBuses() {
     this.stopBusService.getStopBusByType(this.direction)

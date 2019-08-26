@@ -3,3 +3,36 @@
   Qui ESCORT puo vedere tutte le sue availability e il loro stato, inoltre può confermare la presa visione,
   del fatto che l'availability sia stata accetta dall' admin/sysAdmin
 </p>
+<h2 align="center">Elenco disponibilità</h2>
+<div class="row">
+  <table class="table table-responsive table-striped" style="font-family: Lato;">
+    <thead>
+    <tr>
+      <th scope="col" width="auto">Nome Linea</th>
+      <th scope="col" width="auto">Nome Fermata</th>
+      <th scope="col" width="auto">Data</th>
+      <th scope="col" width="auto">Stato</th>
+      <th scope="col" width="8%">Conferma</th>
+      <th scope="col" width="8%">Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let a of availabilities;">
+      <td>{{getLineName(a.idBusRide) || '-' }}</td>
+      <td>{{getStopName(a.idStopBus) || '-' }}</td>
+      <td>{{getDatePassage(a) || '-' }}</td>
+      <td>{{a.state || '-'}})</td>
+      <td>
+         <img *ngIf="checkConfirm(a.state)" (click)="confirm(a)" src="../../../../assets/images/edit-document.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+        <!-- <img *ngIf="checkConfirm(a.state); else elseBlock" (click)="confirm(a)" src="../../../../assets/images/edit-document.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+         <ng-template #elseBlock>Disponibilità data</ng-template>-->
+      </td>
+      <td>
+        <img *ngIf="checkDel(a.state)" (click)="delete(a)" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+        <!--<img *ngIf="checkDel(a.state); else alertBlock" (click)="delete(a)" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+        <ng-template #alertBlock>Contattare admin per la cancellazione</ng-template>-->
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

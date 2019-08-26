@@ -25,6 +25,10 @@ export class AvailabilityPOST {
   id: string;
   idBusRide: string;
   idStopBus: string;
-  idUser: string; // Escort
+  state: AvailabilityState;
+}
+
+export class AvailabilityPUT {
+  idStopBus: string;
   state: AvailabilityState;
 }

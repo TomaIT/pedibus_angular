@@ -44,7 +44,8 @@
         </p>
         <p *ngIf="!loading">
           <button *ngIf="!isBooked(a)" (click)="giveAvailability(a.id, this.stopBusSelectedId)" class="btn btn-primary" type="button">Invia</button>
-          <button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button" disabled>
+          <!--<button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button" disabled>-->
+          <button *ngIf="isBooked(a)"  class="btn btn-danger" type="button" disabled>
             Disponibilità inviata </button> <!-- TODO cambiare colore, la cancellazione e la modifica verrà effettuta nell'altra pagina -->
         </p>
 
@@ -52,42 +53,4 @@
       </li>
     </ul>
   </div>
-<!--
-<div *ngIf="busrides" class="row ">
-  <div class="col">
-    <table class="table table-responsive table-striped" style="font-family: Lato;">
-      <thead>
-      <tr>
-        <th scope="col" width="auto">Nome Linea</th>
-        <th scope="col" width="auto">Verso</th>
-        <th scope="col" width="auto">Data</th>
-        <th scope="col" width="auto">Partenza</th>
-        <th scope="col" width="auto">Crea</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let a of busrides;">
-
-        <td>{{a.lineName|| '-' }}</td>
-        <td>{{a.stopBusType.toString() || '-' }}</td>
-        <td>{{a.day.toString()+ '/' + (a.month+1).toString() + '/' + a.year.toString() || '-' }}</td>
-        <td>{{getHourAndMinutes(a.startTime) || '-' }}</td>
-        <td>
-          <button (click)="addAvailability(a)" type="button" class="btn btn-link">Aggiungi</button>
-        </td>
-        <td *ngIf="authenticationService.isSysAdmin()">
-          <button *ngIf="a.accountNonLocked" (click)="blockUser(a)" type="button" class="btn btn-link" style="color: red;">Blocca</button>
-          <button *ngIf="!a.accountNonLocked" (click)="unblockUser(a)" type="button" class="btn btn-link">Sblocca</button>
-        </td>
-        <td>
-          <img *ngIf="a.enabled" src="../../../../assets/images/check-box.png" style="margin-left: 13px;min-width: 25px;" width="50%" height="auto">
-          <img *ngIf="!a.enabled" (click)="refreshUUID(a)" src="../../../../assets/images/refresh-button.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-        </td>
-        <td>
-          <img routerLink="/manageUsers/{{a.username}}" src="../../../../assets/images/edit-document.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>-->
 </div>
