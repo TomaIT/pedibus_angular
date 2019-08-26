@@ -34,6 +34,14 @@ export class UpdateChildComponent implements OnInit {
     }
   }
 
+  private getDate(date: any): Date {
+    const year = Number(date.split('-')[0]);
+    const month = Number(date.split('-')[1]);
+    const day = Number(date.split('-')[2].split('T')[0]);
+    const temp = new Date(year, month - 1, day + 1);
+    return temp;
+  }
+
   initForm(child: Child) {
     if (child) {
       this.form = this.formBuilder.group({
@@ -49,7 +57,7 @@ export class UpdateChildComponent implements OnInit {
             Validators.maxLength(64)
           ]
         )],
-        birth: [(new Date(child.birth)).toISOString().split('T')[0], Validators.compose(
+        birth: [(this.getDate(child.birth)).toISOString().split('T')[0], Validators.compose(
           [
             Validators.required
           ]
