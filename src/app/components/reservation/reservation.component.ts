@@ -152,9 +152,9 @@ export class ReservationComponent implements OnInit {
 
   getTimeStopBus(busRide: BusRide, stopBus: StopBus): Date {
     if (busRide && stopBus) {
-      const temp = new Date(busRide.startTime);
-      temp.setHours(0);
-      temp.setMinutes(stopBus.hours);
+      const temp = new Date();
+      temp.setFullYear(busRide.year, busRide.month, busRide.day);
+      temp.setHours(0, stopBus.hours, 0, 0);
       return temp;
     }
     return null;
