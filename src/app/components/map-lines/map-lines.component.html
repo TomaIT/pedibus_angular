@@ -8,6 +8,18 @@
     </option>
   </select>
 
+  <div class="row">
+  <div class="col">
+    <label >Andata
+      <input type="radio" name="direction" value="out" (click)="getDirection($event)"  />
+    </label>
+
+    <label >Ritorno
+      <input type="radio" name="direction" value="ret" (click)="getDirection($event)" />
+    </label>
+  </div>
+  </div>
+
 <!--agm-map [latitude]='lat' [longitude]='lng'
          [mapTypeId]='mapType' [zoom]="14" >
   <agm-marker
@@ -69,9 +81,10 @@
       >
       </aol-coordinate>
       <aol-content>
-        <div class="my-overlay-class" style="background: white;border: black; border-style: groove;">
+        <div class="my-overlay-class" class="popup">
           <input type="image" src="../../../assets/images/delete-cross.png" alt="Submit" width="18" height="18"(click)="deleteDiv()">
-          <p>{{addOverlay.name}}</p>
+          <p>Fermata: {{addOverlay.name}}</p>
+          <p>Orario: {{addOverlay.time}}</p>
         </div>
       </aol-content>
     </aol-overlay>

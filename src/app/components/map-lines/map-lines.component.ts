@@ -17,7 +17,6 @@ export class MapLinesComponent implements OnInit {
 
   lat = 45.3216300;
   lng = 8.4198900;
-  mapType = 'roadmap';
 
   line: Line;
   lineEnum: Array<LineEnum>;
@@ -37,6 +36,7 @@ export class MapLinesComponent implements OnInit {
 
   ngOnInit() {
     this.markers = new Array<Markers>();
+    this.addOverlay = undefined;
     this.lineService.getLinesEnum()
       .subscribe(
         (data) => {
@@ -51,33 +51,55 @@ export class MapLinesComponent implements OnInit {
 
 
   private onChangePath(params: ParamMap) {
+    this.addOverlay = undefined;
+    this.markers = new Array<Markers>();
     const id = params.get('id');
     this.markers = new Array<Markers>();
     if (id !== null) {
-      this.lineService.getLine(id)
+      this.lineService.getLine(id.split('_')[0])
         .subscribe(
           (data) => {
             this.line = data;
             this.actualLine = this.line.id;
-            for (const loc of this.line.outStopBuses) {
-              const temp: Markers = new Markers();
-              temp.lng = loc.location.x;
-              temp.lat = loc.location.y;
-              temp.alpha = 1;
-              temp.type = StopBusType.outward;
-              const hours = Math.floor(loc.hours / 60);
-              const minutes = loc.hours % 60;
-              let time: string;
-              if (minutes < 10) {
-                time = hours + ':0' + minutes;
-              } else {
-                time = hours + ':' + minutes;
+            if (id.split('_')[1] === 'out') {
+              for (const loc of this.line.outStopBuses) {
+                const temp: Markers = new Markers();
+                temp.lng = loc.location.x;
+                temp.lat = loc.location.y;
+                temp.alpha = 1;
+                temp.type = StopBusType.outward;
+                const hours = Math.floor(loc.hours / 60);
+                const minutes = loc.hours % 60;
+                let time: string;
+                if (minutes < 10) {
+                  time = hours + ':0' + minutes;
+                } else {
+                  time = hours + ':' + minutes;
+                }
+                temp.name = loc.name;
+                temp.time = time;
+                this.markers.push(temp);
               }
-              temp.name = loc.name + ' ' + time;
-              temp.show = true;
-              this.markers.push(temp);
+            } else {
+              for (const loc of this.line.retStopBuses) {
+                const temp: Markers = new Markers();
+                temp.lng = loc.location.x;
+                temp.lat = loc.location.y;
+                temp.alpha = 1;
+                temp.type = StopBusType.outward;
+                const hours = Math.floor(loc.hours / 60);
+                const minutes = loc.hours % 60;
+                let time: string;
+                if (minutes < 10) {
+                  time = hours + ':0' + minutes;
+                } else {
+                  time = hours + ':' + minutes;
+                }
+                temp.name = loc.name;
+                temp.time = time;
+                this.markers.push(temp);
+              }
             }
-            console.log(this.markers);
           },
           (error) => {
             this.alertService.error(error);
@@ -87,7 +109,14 @@ export class MapLinesComponent implements OnInit {
   }
 
   getLineCoordinates(event) {
-    this.router.navigate(['/mapLines/', event.target.value ]);
+      this.actualLine = event.target.value;
+      this.prepareNavigation();
+  }
+
+  prepareNavigation() {
+    if (this.actualDirection !== undefined && this.actualLine !== undefined) {
+      this.router.navigate(['/mapLines/', this.actualLine + '_' + this.actualDirection]);
+    }
   }
 
   showInfo(event) {
@@ -101,22 +130,30 @@ export class MapLinesComponent implements OnInit {
     for (const x of this.markers) {
       const currentDiff: number[] = [];
       currentDiff[0] = Math.abs(coordinates[0] - x.lng);
-      currentDiff[1] = Math.abs(coordinates[1] - x.lng);
-      if (currentDiff < smallestDiff) {
+      currentDiff[1] = Math.abs(coordinates[1] - x.lat);
+      if (currentDiff <= smallestDiff) {
         smallestDiff = currentDiff;
+        console.log(x);
         this.addOverlay = x;
       }
     }
 
-    smallestDiff[0] = Math.abs(coordinates[0] - this.addOverlay.lng);
-    smallestDiff[1] = Math.abs(coordinates[1] - this.addOverlay.lat);
-    console.log(smallestDiff[0] + ' ' + smallestDiff[1]);
-    if ((smallestDiff[0] > 0.001) || (smallestDiff[1] > 0.001)) {
-      this.addOverlay = undefined;
+    if (this.addOverlay !== undefined) {
+      smallestDiff[0] = Math.abs(coordinates[0] - this.addOverlay.lng);
+      smallestDiff[1] = Math.abs(coordinates[1] - this.addOverlay.lat);
+      console.log(smallestDiff[0] + ' ' + smallestDiff[1]);
+      if ((smallestDiff[0] > 0.001) || (smallestDiff[1] > 0.001)) {
+        this.addOverlay = undefined;
+      }
     }
   }
 
   deleteDiv() {
     this.addOverlay = undefined;
+  }
+
+  getDirection(event) {
+    this.actualDirection = event.target.value;
+    this.prepareNavigation();
   }
 }
