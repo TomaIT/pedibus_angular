@@ -60,7 +60,7 @@ export class EscortBusridesComponent implements OnInit {
       .subscribe(
         (data) => {
           busRide = data;
-          if (busRide.stopBusType === StopBusType.ourward) {
+          if (busRide.stopBusType === StopBusType.outward) {
             idStartStopBus = ca.idStopBus;
           } else {
             idStartStopBus = busRide.stopBuses[0].id;

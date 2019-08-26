@@ -58,7 +58,7 @@ export class MapLinesComponent implements OnInit {
               temp.lng = loc.location.x;
               temp.lat = loc.location.y;
               temp.alpha = 1;
-              temp.type = StopBusType.ourward;
+              temp.type = StopBusType.outward;
               temp.name = loc.name;
               this.markers.push(temp);
           }

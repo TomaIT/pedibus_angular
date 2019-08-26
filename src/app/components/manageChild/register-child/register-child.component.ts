@@ -79,7 +79,7 @@ export class RegisterChildComponent implements OnInit {
           this.alertService.error(error);
         }
       );
-    this.stopBusService.getStopBusByType(StopBusType.ourward)
+    this.stopBusService.getStopBusByType(StopBusType.outward)
       .subscribe(
         (data) => {
           this.outStopBuses = data.sort((a, b) => {

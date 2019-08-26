@@ -58,7 +58,7 @@ export class ReservationComponent implements OnInit {
       );
     this.dataSelected = this.today();
     this.dataSelectedChange();
-    this.stopBusService.getStopBusByType(StopBusType.ourward)
+    this.stopBusService.getStopBusByType(StopBusType.outward)
       .subscribe(
         (data) => {
           this.outStopBuses = data.sort((a, b) => {
