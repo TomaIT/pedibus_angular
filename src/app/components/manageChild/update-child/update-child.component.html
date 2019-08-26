@@ -34,7 +34,8 @@
       <div class="form-group">
         <label >Data di Nascita</label>
 
-        <input type="date" formControlName="birth" class="form-control"
+        <input type="text" formControlName="birth" class="form-control"
+               [value]="childPath.birth | date: 'yyyy-mm-dd'"
                [ngClass]="{ 'is-invalid': submitted && f.birth.errors }" />
 
         <div *ngIf="submitted && f.birth.errors" class="invalid-feedback">
@@ -48,8 +49,7 @@
 
         <select class="form-control" formControlName="gender"
                 [ngClass]="{ 'is-invalid': submitted && f.gender.errors }" >
-          <option disabled selected value> -- select an option -- </option>
-          <option [value]="gender" *ngFor="let gender of genders">
+          <option [value]="gender" *ngFor="let gender of genders" [selected]="gender==='male'">
             {{gender}}
           </option>
         </select>
