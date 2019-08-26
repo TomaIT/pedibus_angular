@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AlertService} from '../../../services/alert.service';
 import {ChildService} from '../../../services/child.service';
@@ -8,12 +8,16 @@ import {ChildPOST} from '../../../models/child';
 import {StopBus, StopBusType} from '../../../models/stopbus';
 import {StopBusService} from '../../../services/stop-bus.service';
 
+// jQuery Sign $
+declare let $: any;
+
 @Component({
   selector: 'app-register-child',
   templateUrl: './register-child.component.html',
   styleUrls: ['./register-child.component.css']
 })
 export class RegisterChildComponent implements OnInit {
+  @ViewChild('myDate') myDate: ElementRef;
   form: FormGroup;
   loading = false;
   submitted = false;
@@ -46,11 +50,6 @@ export class RegisterChildComponent implements OnInit {
           Validators.maxLength(64)
         ]
       )],
-      birth: ['', Validators.compose(
-        [
-          Validators.required
-        ]
-      )],
       gender: ['', Validators.compose(
         [
           Validators.required
@@ -70,6 +69,7 @@ export class RegisterChildComponent implements OnInit {
   }
 
   ngOnInit() {
+    $('#date').datepicker({dateFormat: 'yy-mm-dd'});
     this.childService.getGenders()
       .subscribe(
         (data) => {
@@ -114,12 +114,11 @@ export class RegisterChildComponent implements OnInit {
     return this.form.controls;
   }
 
-
   childPOSTFromForm(): ChildPOST {
     const temp = new ChildPOST();
     temp.firstname = this.f.firstname.value;
     temp.surname = this.f.surname.value;
-    temp.birth = this.f.birth.value;
+    temp.birth = new Date(this.myDate.nativeElement.value);
     temp.gender = this.f.gender.value;
     temp.idStopBusOutDef = this.f.outwardStopBus.value;
     temp.idStopBusRetDef = this.f.returnStopBus.value;
@@ -130,6 +129,10 @@ export class RegisterChildComponent implements OnInit {
     this.submitted = true;
     // stop here if form is invalid
     if (this.form.invalid) {
+      return;
+    }
+    if (!this.myDate.nativeElement.value) {
+      this.alertService.error('Data di nascita è richiesta.');
       return;
     }
     this.loading = true;

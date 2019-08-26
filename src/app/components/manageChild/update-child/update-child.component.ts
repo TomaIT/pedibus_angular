@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AlertService} from '../../../services/alert.service';
 import {ChildService} from '../../../services/child.service';
 import {AuthenticationService} from '../../../services/authentication.service';
@@ -8,12 +8,16 @@ import {StopBusService} from '../../../services/stop-bus.service';
 import {Child, ChildPOST} from '../../../models/child';
 import {StopBus, StopBusType} from '../../../models/stopbus';
 
+// jQuery Sign $
+declare let $: any;
+
 @Component({
   selector: 'app-update-child',
   templateUrl: './update-child.component.html',
   styleUrls: ['./update-child.component.css']
 })
 export class UpdateChildComponent implements OnInit {
+  @ViewChild('myDate') myDate: ElementRef;
   form: FormGroup;
   childPath: Child;
   submitted = false;
@@ -43,6 +47,8 @@ export class UpdateChildComponent implements OnInit {
 
   initForm(child: Child) {
     if (child) {
+      this.myDate.nativeElement.value = UpdateChildComponent.getDate(child.birth)
+        .toISOString().split('T')[0];
       this.form = this.formBuilder.group({
         firstname: [child.firstname, Validators.compose(
           [
@@ -54,11 +60,6 @@ export class UpdateChildComponent implements OnInit {
           [
             Validators.required,
             Validators.maxLength(64)
-          ]
-        )],
-        birth: [(UpdateChildComponent.getDate(child.birth)).toISOString().split('T')[0], Validators.compose(
-          [
-            Validators.required
           ]
         )],
         gender: [child.gender, Validators.compose(
@@ -116,6 +117,8 @@ export class UpdateChildComponent implements OnInit {
   }
 
   ngOnInit() {
+    $('#date').datepicker({dateFormat: 'yy-mm-dd'});
+
     this.childService.getGenders()
       .subscribe(
         (data) => {
@@ -179,7 +182,7 @@ export class UpdateChildComponent implements OnInit {
     const temp = new ChildPOST();
     temp.firstname = this.f.firstname.value;
     temp.surname = this.f.surname.value;
-    temp.birth = this.f.birth.value;
+    temp.birth = new Date(this.myDate.nativeElement.value);
     temp.gender = this.f.gender.value;
     temp.idStopBusOutDef = this.f.outwardStopBus.value;
     temp.idStopBusRetDef = this.f.returnStopBus.value;
@@ -190,6 +193,10 @@ export class UpdateChildComponent implements OnInit {
     this.submitted = true;
     // stop here if form is invalid
     if (this.form.invalid) {
+      return;
+    }
+    if (!this.myDate.nativeElement.value) {
+      alert('Data di nascita è richiesta.');
       return;
     }
     this.loading = true;

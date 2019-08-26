@@ -34,12 +34,7 @@
       <div class="form-group">
         <label >Data di Nascita</label>
 
-        <input type="date" formControlName="birth" class="form-control"
-               [ngClass]="{ 'is-invalid': submitted && f.birth.errors }" />
-
-        <div *ngIf="submitted && f.birth.errors" class="invalid-feedback">
-          <div *ngIf="f.birth.errors.required">Birth is required</div>
-        </div>
+        <input #myDate type="text" id="date" class="form-control" autocomplete="off"/>
 
       </div>
 
