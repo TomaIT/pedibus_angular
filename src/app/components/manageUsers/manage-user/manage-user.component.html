@@ -1,6 +1,6 @@
 <h1 *ngIf="user" align="center">Utente: {{user.username}}</h1>
 
-<div class="row" style="margin-top: 30px;">
+<div class="row" *ngIf="getLinesAddable().length>0" style="margin-top: 30px;">
   <div class="col">
     <select class="form-control" [(ngModel)]="idLineToAdd">
       <option [ngValue]="a.idLine" *ngFor="let a of getLinesAddable();">
@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<div class="row" style="margin-top: 30px;">
+<div class="row" *ngIf="getRolesAddable().length>0" style="margin-top: 30px;">
   <div class="col">
     <select class="form-control" [(ngModel)]="roleToAdd">
       <option [ngValue]="a" *ngFor="let a of getRolesAddable();">
@@ -26,7 +26,7 @@
   </div>
 </div>
 
-<div class="row" style="margin-top: 30px;">
+<div class="row" *ngIf="getLinesRemovable().length>0" style="margin-top: 30px;">
   <div class="col">
     <select class="form-control" [(ngModel)]="idLineToRemove">
       <option [ngValue]="a.idLine" *ngFor="let a of getLinesRemovable();">
@@ -39,7 +39,7 @@
   </div>
 </div>
 
-<div class="row" style="margin-top: 30px;">
+<div class="row" *ngIf="getRolesRemovable().length>0" style="margin-top: 30px;">
   <div class="col">
     <select class="form-control" [(ngModel)]="roleToRemove">
       <option [ngValue]="a" *ngFor="let a of getRolesRemovable();">

@@ -59,12 +59,14 @@
         <label >Fermata di Andata</label>
 
         <select class="form-control" formControlName="outwardStopBus"
-                [ngClass]="{ 'is-invalid': submitted && f.outwardStopBus.errors }" >
+                [ngClass]="{ 'is-invalid': submitted && f.outwardStopBus.errors }"  (change)="changeOut()">
           <option disabled selected value> -- select an option -- </option>
           <option [value]="a.id" *ngFor="let a of outStopBuses">
             {{a.name}} ({{a.lineName}})
           </option>
         </select>
+
+        <img *ngIf="outIsChange" routerLink="/mapLines/{{getPathLineOut()}}" src="../../../../assets/images/info.png" style="cursor: pointer;object-fit: cover;width: 100%;max-width: 20px;">
 
         <div *ngIf="submitted && f.outwardStopBus.errors" class="invalid-feedback">
           <div *ngIf="f.outwardStopBus.errors.required">Default Outward Stop Bus is required</div>
@@ -76,12 +78,15 @@
         <label >Fermata di Ritorno</label>
 
         <select class="form-control" formControlName="returnStopBus"
-                [ngClass]="{ 'is-invalid': submitted && f.returnStopBus.errors }" >
+                [ngClass]="{ 'is-invalid': submitted && f.returnStopBus.errors }" (change)="changeRet()" >
           <option disabled selected value> -- select an option -- </option>
           <option [value]="a.id" *ngFor="let a of retStopBuses">
             {{a.name}} ({{a.lineName}})
           </option>
         </select>
+
+        <img *ngIf="retIsChange" routerLink="/mapLines/{{getPathLineRet()}}" src="../../../../assets/images/info.png" style="cursor: pointer;object-fit: cover;width: 100%;max-width: 20px;">
+
 
         <div *ngIf="submitted && f.returnStopBus.errors" class="invalid-feedback">
           <div *ngIf="f.returnStopBus.errors.required">Default Return Stop Bus is required</div>
