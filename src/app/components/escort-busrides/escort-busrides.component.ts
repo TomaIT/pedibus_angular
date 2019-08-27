@@ -74,9 +74,24 @@ export class EscortBusridesComponent implements OnInit {
       );
   }
 
-  convertHoursToTime(hours: number): string {
+  convertMinutesToTime(hours: number): string {
     const h = Math.floor(hours / 60);
     const m = hours - (h * 60);
     return (('0' + h).slice(-2) + ':' + ('0' + m).slice(-2));
+  }
+
+  getEscortStartStopBus(availability: Availability) {
+    if (availability.busRide.stopBusType === StopBusType.outward) {
+      return availability.busRide.stopBuses.filter(sb => sb.id === availability.idStopBus).pop();
+    } else {
+      return availability.busRide.stopBuses[0];
+    }
+  }
+  getEscortEndStopBus(availability: Availability) {
+    if (availability.busRide.stopBusType === StopBusType.outward) {
+      return availability.busRide.stopBuses[availability.busRide.stopBuses.length - 1];
+    } else {
+      return availability.busRide.stopBuses.filter(sb => sb.id === availability.idStopBus).pop();
+    }
   }
 }

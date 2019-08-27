@@ -1,22 +1,11 @@
 <div class="row">
   <div class="col">
     <label>
-      Seleziona la fermata di partenza/arrivo
-      <select class="form-control" (change)="chageDirection($event)">
-        <option [value]="a" *ngFor="let a of direction;">
-          {{a}}
-        </option>
-      </select>
-    </label>
-  </div>
-  <div class="col">
-    <label>
       Seleziona la data
       <input #myDate type="text" id="date" class="form-control" [ngModel]="dataSelected" autocomplete="off">
     </label>
   </div>
-</div>
-<div class="row">
+<div class="col">
   <label>
     Seleziona la Linea
     <select class="form-control" (change)="changeLine($event)">
@@ -26,12 +15,55 @@
       </option>
     </select>
   </label>
-  <div class="container" *ngIf="avbList !== undefined">
+</div>
+</div>
+<div class="row">
+  <ng-container *ngIf="lineSelected !== undefined">
+  <div class="col" *ngIf="avbListOut !== undefined">
     <h1>{{lineSelected.lineName}}</h1>
-    <h2>Disponibilità totali: {{avbList.length}}</h2>
+    <h2>Disponibilità totali: {{totalOut}}</h2>
+    <button class="btn btn-primary" type="button" (click)="clearAllAvilabilties('out')">Resetta disponibilità</button>
+    <button class="btn btn-primary" type="button" (click)="deleteBusride('out')">Annulla Corsa</button>
+    <img *ngIf="loadingOut" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
     <ul class="timeline">
+      <li *ngFor="let avb of avbListOut">
+        <p>{{avb.stopName}}</p>
+        <ul>
+          <li *ngFor="let single of avb.availabilities">
+            <p>{{single.idUser}}: {{single.state}}</p>
+            <button class="btn btn-primary" type="button" (click)="updateAvailability(single.idStopBus,single.state,single.id)">Conferma</button>
+          </li>
+        </ul>
+      </li>
     </ul>
   </div>
+    <div class="col" *ngIf="avbListOut === undefined">
+      <h1>{{lineSelected.lineName}} Andata non esiste</h1>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="lineSelected !== undefined">
+  <div class="col" *ngIf="avbListRet !== undefined">
+    <h1>{{lineSelected.lineName}} Ritorno</h1>
+    <h2>Disponibilità totali: {{totalRet}}</h2>
+    <button class="btn btn-primary" type="button" (click)="clearAllAvilabilties('ret')">Resetta disponibilità</button>
+    <button class="btn btn-primary" type="button" (click)="deleteBusride('ret')">Annulla Corsa</button>
+    <img *ngIf="loadingRet" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+    <ul class="timeline">
+      <li *ngFor="let avb of avbListRet">
+        <p>{{avb.stopName}}</p>
+        <ul>
+          <li *ngFor="let single of avb.availabilities">
+            <p>{{single.idUser}}: {{single.state}}</p>
+            <button class="btn btn-primary" type="button" (click)="updateAvailability(single.idStopBus, single.state, single.id)">Conferma</button>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+    <div class="col" *ngIf="avbListRet === undefined">
+      <h1>{{lineSelected.lineName}} Ritorno non esiste</h1>
+    </div>
+  </ng-container>
   <!--mat-card>
     <mat-card-header>
       <mat-card-title>{{lineSelected.lineName}}</mat-card-title>

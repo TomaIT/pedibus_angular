@@ -35,3 +35,10 @@ export class AvailabilityPUT {
   idStopBus: string;
   state: AvailabilityState;
 }
+
+
+export class GroupedAvailabilities {
+  stopName: string;
+  availabilities: Array<Availability>;
+  startTime: number;
+}

@@ -212,4 +212,20 @@ export class UpdateChildComponent implements OnInit {
         }
       );
   }
+
+  getPathLineRet() {
+    const index = this.retStopBuses.findIndex(x => x.id === this.f.returnStopBus.value);
+    if (index >= 0) {
+      return this.retStopBuses[index].idLine + '_ret';
+    }
+    return null;
+  }
+
+  getPathLineOut(): string {
+    const index = this.outStopBuses.findIndex(x => x.id === this.f.outwardStopBus.value);
+    if (index >= 0) {
+      return this.outStopBuses[index].idLine + '_out';
+    }
+    return null;
+  }
 }

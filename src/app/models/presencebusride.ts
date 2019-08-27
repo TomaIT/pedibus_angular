@@ -7,6 +7,7 @@ export class PresenceChild {
   idReservation: string;
   isGetIn: boolean;
   isGetOut: boolean;
+  isAbsent: boolean;
 }
 
 export class PresenceStopBus {
