@@ -32,6 +32,7 @@ import {MapLinesComponent} from './components/map-lines/map-lines.component';
 import { ManageUserComponent } from './components/manageUsers/manage-user/manage-user.component';
 import {AgmCoreModule} from '@agm/core';
 import {AngularOpenlayersModule} from 'ngx-openlayers';
+import { StateBusrideComponent } from './components/state-busride/state-busride.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -54,6 +55,8 @@ const routes: Routes = [
   {path: 'mapLines/:id', component: MapLinesComponent},
   {path: 'userProfile', component: UserProfileComponent},
   {path: 'busridesEscort', component: EscortBusridesComponent},
+  {path: 'stateBusRide', component: StateBusrideComponent},
+  {path: 'stateBusRide/:idLine/:stopBusType/:data', component: StateBusrideComponent},
   {path: '**', redirectTo: 'home'}
 ];
 
@@ -80,7 +83,8 @@ const routes: Routes = [
     ShiftManagerComponent,
     MapLinesComponent,
     ManageUserComponent,
-    MyFilterChildrenPipe
+    MyFilterChildrenPipe,
+    StateBusrideComponent
   ],
   imports: [
     BrowserModule,
