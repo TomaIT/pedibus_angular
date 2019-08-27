@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   apiUrl: 'http://127.0.0.1:8080/rest',
-  intervalTimePolling: 1000 // milliseconds
+  intervalTimePolling: 1000, // milliseconds
+  intervalAvailCheck: 5000
 };
 
 /*
