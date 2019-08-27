@@ -164,7 +164,7 @@ export class CreateAvailabilityComponent implements OnInit {
 
   getRetStopBusSelected(): StopBus {
     if (this.retStopBusSelectedId) {
-      const index = this.outStopBuses.findIndex(x => x.id === this.retStopBusSelectedId);
+      const index = this.retStopBuses.findIndex(x => x.id === this.retStopBusSelectedId);
       if (index >= 0) {
         return this.outStopBuses[index];
       }
