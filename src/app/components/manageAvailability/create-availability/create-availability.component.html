@@ -2,51 +2,69 @@
   <!--TODO-->
   Qui ESCORT puo dare la sua disponibilità nelle varie corse (elenco delle busrides)
 </p>
-<div class="row">
-  <div class="col">
-    <label>
-      Seleziona la fermata di partenza/arrivo
-      <select class="form-control" [(ngModel)]="direction" (ngModelChange)="changeDirection()">
-        <option [ngValue]="a" *ngFor="let a of directions;">
-          {{a}}
-        </option>
-      </select>
-    </label>
-  </div>
-  <div class="col">
+<div class="col">
     <label>
       Seleziona la data
       <input #myDate type="text" id="date" class="form-control" [(ngModel)]="dataSelected" autocomplete="off">
     </label>
-  </div>
 </div>
-
 <div class="row" style="margin-top: 30px;">
   <div class="col">
-    <h4>{{direction}}</h4>
+    <h4>Andata</h4>
     <label>
       Seleziona la fermata
-      <select class="form-control" [(ngModel)]="stopBusSelected" (ngModelChange)="stopBusSelectedChange()">
-        <option [ngValue]="a" [selected]="a" *ngFor="let a of stopBuses;">
+      <select class="form-control" [(ngModel)]="outStopBusSelectedId" (ngModelChange)="outStopBusSelectedChange()">
+        <option [ngValue]="a.id" [selected]="a.id" *ngFor="let a of outStopBuses;">
           {{a.name}} ({{a.lineName}})
         </option>
       </select>
     </label>
     <ul class="timeline">
-      <li *ngFor="let a of busRides">
+      <li *ngFor="let a of outBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
         <p>
           {{a.lineName}}
         </p>
         <p>
-          {{getTimeStopBus(a,getStopBusSelected()) | date: 'medium'}}
+          {{getTimeStopBus(a,getOutStopBusSelected()) | date: 'medium'}}
         </p>
         <p *ngIf="!loading">
-          <button *ngIf="!isBooked(a)" (click)="giveAvailability(a.id, this.stopBusSelectedId)" class="btn btn-primary" type="button">Invia</button>
+          <button *ngIf="!isBooked(a)" (click)="giveAvailability(a.id, this.outStopBusSelectedId)" class="btn btn-primary" type="button">Invia</button>
           <!--<button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button" disabled>-->
           <button *ngIf="isBooked(a)"  class="btn btn-danger" type="button" disabled>
             Disponibilità inviata </button> <!-- TODO cambiare colore, la cancellazione e la modifica verrà effettuta nell'altra pagina -->
+        </p>
+
+        <div *ngIf="loading" class="spinner-border text-info" role="status"></div>
+      </li>
+    </ul>
+  </div>
+  <div class="col">
+    <h4>Ritorno</h4>
+    <label>
+      Seleziona la fermata
+      <select class="form-control" [(ngModel)]="retStopBusSelectedId" (ngModelChange)="retStopBusSelectedChange()">
+        <option [ngValue]="a.id" [selected]="a.id" *ngFor="let a of retStopBuses;">
+          {{a.name}} ({{a.lineName}})
+        </option>
+      </select>
+    </label>
+    <ul class="timeline">
+      <li *ngFor="let a of retBusRides">
+        <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
+        <p></p>
+        <p>
+          {{a.lineName}}
+        </p>
+        <p>
+          {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'medium'}}
+        </p>
+        <p *ngIf="!loading">
+          <button *ngIf="!isBooked(a)" (click)="giveAvailability(a.id, this.retStopBusSelectedId)" class="btn btn-primary" type="button">Invia</button>
+          <!--<button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button" disabled>-->
+          <button *ngIf="isBooked(a)"  class="btn btn-danger" type="button" disabled>
+            Disponibilità inviata </button>
         </p>
 
         <div *ngIf="loading" class="spinner-border text-info" role="status"></div>

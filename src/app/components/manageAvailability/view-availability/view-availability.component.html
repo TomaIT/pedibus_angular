@@ -21,7 +21,7 @@
       <td>{{a.lineNameOfBusRide || '-' }}</td>
       <td>{{a.stopBusName || '-' }}</td>
       <!--<td>{{visualizeData(a.startDateOfBusRide) | date: 'medium'}}</td>-->
-      <td>{{visualizeData(a.startDateOfBusRide) | date:'hh:mm - dd/MM/yy'}}</td>
+      <td>{{visualizeData(a.startDateOfBusRide) | date:'HH:mm - dd/MM/yy'}}</td>
       <td>{{a.state || '-'}}</td>
       <td>
         <button *ngIf="checkConfirm(a.state)" (click)="confirm(a)">Conferma</button>

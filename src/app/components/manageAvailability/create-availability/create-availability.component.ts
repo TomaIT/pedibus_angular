@@ -20,15 +20,15 @@ declare let $: any;
 })
 export class CreateAvailabilityComponent implements OnInit {
   @ViewChild('myDate') myDate: ElementRef;
-  busRides: Array<BusRide>;
-  direction: StopBusType;
-  directions: Array<StopBusType>;
-  stopBuses: Array<StopBus>;
+  retBusRides: Array<BusRide>;
+  outBusRides: Array<BusRide>;
+  retStopBuses: Array<StopBus>;
+  outStopBuses: Array<StopBus>;
   availabilities: Array<Availability>;
   avbstates: Array<AvailabilityState>;
   dataSelected: any;
-  stopBusSelected: StopBus;
-  stopBusSelectedId: string = null;
+  outStopBusSelectedId: string;
+  retStopBusSelectedId: string;
   loading = false;
   currentUser: string;
 
@@ -54,16 +54,13 @@ export class CreateAvailabilityComponent implements OnInit {
     });
     const dummy: Login = JSON.parse(localStorage.getItem('currentUser'));
     this.currentUser = dummy.username;
-    this.stopBuses = new Array<StopBus>();
-    this.directions = new Array<StopBusType>();
+    this.retStopBuses = new Array<StopBus>();
+    this.outStopBuses = new Array<StopBus>();
     this.availabilities = new Array<Availability>();
     this.avbstates = new Array<AvailabilityState>();
     this.avbstates.push(AvailabilityState.available);
     this.avbstates.push(AvailabilityState.checked);
     this.avbstates.push(AvailabilityState.confirmed);
-    this.directions.push(StopBusType.outward);
-    this.directions.push(StopBusType.return);
-    this.direction = StopBusType.outward;
     this.dataSelected = this.today();
     this.dataSelectedChange();
     this.refreshStopBuses();
@@ -73,6 +70,7 @@ export class CreateAvailabilityComponent implements OnInit {
       (error) => { this.alertService.error(error);
       }
     );
+
   }
 
   today() {
@@ -88,13 +86,16 @@ export class CreateAvailabilityComponent implements OnInit {
     }
   }
 
-  stopBusSelectedChange() {
-    this.stopBusSelectedId = this.stopBusSelected.id;
+  retStopBusSelectedChange() {
+    this.getBusRides();
+  }
+
+  outStopBusSelectedChange() {
     this.getBusRides();
   }
 
   private getBusRides() {
-    if (this.dataSelected && this.stopBusSelected) {
+    if (this.dataSelected && this.outStopBusSelectedId && this.retStopBusSelectedId) {
       const temp = new Date(this.dataSelected);
       const nowT = new Date();
       nowT.setHours(0, 0, 0, 0);
@@ -103,17 +104,26 @@ export class CreateAvailabilityComponent implements OnInit {
         const now = new Date();
         temp.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
       }
-      this.busRideService.getBusRidesFromStartDate(this.stopBusSelected.id, temp)
+      this.busRideService.getBusRidesFromStartDate(this.retStopBusSelectedId.toString(), temp)
         .subscribe(
           (data) => {
-            this.busRides = data;
-            // this.stopBusSelected = data[0].id;
+            this.retBusRides = data;
+          },
+          (error) => {
+            this.alertService.error(error);
+          }
+        );
+      this.busRideService.getBusRidesFromStartDate(this.outStopBusSelectedId.toString(), temp)
+        .subscribe(
+          (data) => {
+            this.outBusRides = data;
           },
           (error) => {
             this.alertService.error(error);
           }
         );
     }
+    // alert(this.dataSelected + this.outStopBusSelectedId + this.retStopBusSelectedId);
   }
 
   giveAvailability(idbr: string, idsb: string) {
@@ -144,21 +154,24 @@ export class CreateAvailabilityComponent implements OnInit {
     return null;
   }
 
-  getStopBusSelected(): StopBus {
-    if (this.stopBusSelected) {
-      const index = this.stopBuses.findIndex(x => x.id === this.stopBusSelected.id);
+  getOutStopBusSelected(): StopBus {
+    if (this.outStopBusSelectedId) {
+      const index = this.outStopBuses.findIndex(x => x.id === this.outStopBusSelectedId);
       if (index >= 0) {
-        return this.stopBuses[index];
+        return this.outStopBuses[index];
       }
+      return null;
     }
-    return null;
   }
 
-  changeDirection() {
-    this.busRides = [];
-    this.refreshStopBuses();
-    this.getBusRides();
-
+  getRetStopBusSelected(): StopBus {
+    if (this.retStopBusSelectedId) {
+      const index = this.outStopBuses.findIndex(x => x.id === this.retStopBusSelectedId);
+      if (index >= 0) {
+        return this.outStopBuses[index];
+      }
+      return null;
+    }
   }
 
   isBooked(bus: BusRide): Availability {
@@ -173,47 +186,45 @@ export class CreateAvailabilityComponent implements OnInit {
     return null;
   }
 
-  /*
-  delete(idAvl: string) {
-    this.loading = true;
-  }
-  */
-
   refreshStopBuses() {
-    this.stopBusService.getStopBusByType(this.direction)
-      .subscribe(
-        (data) => {
-          this.stopBuses = data.sort((a, b) => {
-            if (a.idLine === b.idLine) {
-              return a.hours - b.hours;
+    if (this.retStopBuses.length === 0) {
+      this.stopBusService.getStopBusByType(StopBusType.return)
+        .subscribe(
+          (data) => {
+            this.retStopBuses = data.sort((a, b) => {
+              if (a.idLine === b.idLine) {
+                return a.hours - b.hours;
+              }
+              return a.idLine.localeCompare(b.idLine);
+            });
+            if (this.retStopBusSelectedId === undefined) {
+              this.retStopBusSelectedId = this.retStopBuses[0].id;
             }
-            return a.idLine.localeCompare(b.idLine);
-          });
-        },
-        (error) => {
-          this.alertService.error(error);
-        }
-      );
-  }
-  /*
-    transformData(date: Date): string {
-      const temp  = new Date(date);
-      const day = date.getDay() + 1;
-      const mm = date.getMonth() + 1;
-      const yy = date.getFullYear().toString().substr(-2);
-      return this.checkZero(day) + '.' + this.checkZero(mm) + '.' + yy;
+          },
+          (error) => {
+            this.alertService.error(error);
+          }
+        );
     }
-    getHourAndMinutes(trasforma: Date) {
-    const temp: Date = new Date(trasforma);
-    return this.checkZero(temp.getHours()) + ':' + this.checkZero(temp.getMinutes());
-  }
-  checkZero(temp: number): string {
-    if (temp < 10) {
-      return '0' + temp;
-    } else {
-      return temp.toString();
+    if (this.outStopBuses.length === 0) {
+      this.stopBusService.getStopBusByType(StopBusType.outward)
+        .subscribe(
+          (data) => {
+            this.outStopBuses = data.sort((a, b) => {
+              if (a.idLine === b.idLine) {
+                return a.hours - b.hours;
+              }
+              return a.idLine.localeCompare(b.idLine);
+            });
+            if (this.outStopBusSelectedId === undefined) {
+              this.outStopBusSelectedId = this.outStopBuses[0].id;
+            }
+          },
+          (error) => {
+            this.alertService.error(error);
+          }
+        );
     }
-  }
-    */
 
+  }
 }
