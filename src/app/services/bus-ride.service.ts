@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {BusRide, BusRidePUT} from '../models/busride';
 import {environment} from '../../environments/environment';
+import {StopBusType} from '../models/stopbus';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,10 @@ export class BusRideService {
 
   getBusRideById(idBusRide: string): Observable<BusRide> {
     return this.httpClient.get<BusRide>(`${environment.apiUrl}/busrides/${idBusRide}`);
+  }
+
+  getBusRideByLineAndDirectionAndDate(idLine: string, direction: StopBusType, year: number, month: number, day: number): Observable<BusRide> {
+    return this.httpClient.get<BusRide>(`${environment.apiUrl}/busrides/${idLine}/${direction}/${year}/${month}/${day}`);
   }
 
   setLastStopBusInBusRide(idBusRide: string, body: BusRidePUT): Observable<BusRide> {

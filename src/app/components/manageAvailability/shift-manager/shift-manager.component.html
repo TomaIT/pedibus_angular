@@ -1,5 +1,51 @@
-<p>
-  <!--TODO-->
-  Qui ADMIN/SYSADMIN puo vedere le diponibilità e confermarle,
-  nel caso non ci fossero per le corse, ci deve essere la possibilità di cancellare tali corse.
-</p>
+<div class="row">
+  <div class="col">
+    <label>
+      Seleziona la fermata di partenza/arrivo
+      <select class="form-control" (change)="chageDirection($event)">
+        <option [value]="a" *ngFor="let a of direction;">
+          {{a}}
+        </option>
+      </select>
+    </label>
+  </div>
+  <div class="col">
+    <label>
+      Seleziona la data
+      <input #myDate type="text" id="date" class="form-control" [ngModel]="dataSelected" autocomplete="off">
+    </label>
+  </div>
+</div>
+<div class="row">
+  <label>
+    Seleziona la Linea
+    <select class="form-control" (change)="changeLine($event)">
+      <option disabled selected value>--select an option--</option>
+      <option [value]="line.idLine" *ngFor="let line of lines;">
+        {{line.lineName}}
+      </option>
+    </select>
+  </label>
+  <div class="container" *ngIf="avbList !== undefined">
+    <h1>{{lineSelected.lineName}}</h1>
+    <h2>Disponibilità totali: {{avbList.length}}</h2>
+    <ul class="timeline">
+    </ul>
+  </div>
+  <!--mat-card>
+    <mat-card-header>
+      <mat-card-title>{{lineSelected.lineName}}</mat-card-title>
+      <mat-card-subtitle>Disponibilità totali: {{avbList.length}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <ul class="numbered">
+        <li *ngFor="let a of avbList">
+        </li>
+      </ul>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="modifyReservation($event, child.Id)">MODIFY</button>
+      <button mat-button (click)="deleteReservation($event, child.Id)">DELETE</button>
+    </mat-card-actions>
+  </mat-card-->
+</div>

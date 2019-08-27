@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {LineService} from '../../services/line.service';
-import {Subscription} from 'rxjs';
 import {Line, LineEnum, Markers} from '../../models/line';
 import {AlertService} from '../../services/alert.service';
 import {StopBus, StopBusType} from '../../models/stopbus';

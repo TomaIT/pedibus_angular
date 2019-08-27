@@ -139,10 +139,6 @@ export class UserProfileComponent implements OnInit {
   changeFormValue(user: User) {
     this.f.firstname.setValue(user.firstname);
     this.f.surname.setValue(user.surname);
-
-    this.myDate.nativeElement.value = new Date(user.birth)
-      .toISOString().split('T')[0];
-
     this.f.street.setValue(user.street);
     this.f.phoneNumber.setValue(user.phoneNumber);
   }
