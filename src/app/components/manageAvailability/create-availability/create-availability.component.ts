@@ -122,7 +122,6 @@ export class CreateAvailabilityComponent implements OnInit {
           }
         );
     }
-    // alert(this.dataSelected + this.outStopBusSelectedId + this.retStopBusSelectedId);
   }
 
   giveAvailability(idbr: string, idsb: string) {
