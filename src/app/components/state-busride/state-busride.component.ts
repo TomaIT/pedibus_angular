@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AlertService} from '../../services/alert.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {AuthenticationService} from '../../services/authentication.service';
@@ -7,7 +7,10 @@ import {BusRideService} from '../../services/bus-ride.service';
 import {StopBusType} from '../../models/stopbus';
 import {LineEnum} from '../../models/line';
 import {LineService} from '../../services/line.service';
-import {PresenceBusRide} from '../../models/presencebusride';
+import {PresenceBusRide, PresenceChild, PresenceStopBus} from '../../models/presencebusride';
+
+// jQuery Sign $
+declare let $: any;
 
 @Component({
   selector: 'app-state-busride',
@@ -15,9 +18,8 @@ import {PresenceBusRide} from '../../models/presencebusride';
   styleUrls: ['./state-busride.component.css']
 })
 export class StateBusrideComponent implements OnInit {
-
+  @ViewChild('myDate') myDate: ElementRef;
   selectedLine: LineEnum;
-  stopBusType: StopBusType;
   selectedData: any;
   selectedDay: number;    // (1-31)
   selectedMonth: number;  // (0-11)
@@ -42,6 +44,17 @@ export class StateBusrideComponent implements OnInit {
   }
 
   ngOnInit() {
+    $('#date').datepicker({
+      dateFormat: 'yy-mm-dd',
+      onSelect: (selDate, inst) => {
+        this.selectedData = selDate;
+        this.selectedDataChange();
+      }
+    });
+    this.busRide = new BusRide();
+    this.presenceBusRide = new PresenceBusRide();
+    this.presenceBusRide.presenceStopBusGETTreeSet = new Array<PresenceStopBus>();
+    this.presenceBusRide.presenceStopBusGETTreeSet.forEach(p => p.presenceChildGETSet = new Array<PresenceChild>());
     this.lines = new Array<LineEnum>();
     this.directions = new Array<StopBusType>();
     this.directions.push(StopBusType.outward);
@@ -50,29 +63,41 @@ export class StateBusrideComponent implements OnInit {
   }
 
   onChangePath(params: ParamMap) {
-    if (params.get('stopBusType') !== null && params.get('stopBusType') === 'Return') {
-      this.stopBusType = StopBusType.return;
+    let reload = false;
+    if (params.get('stopBusType') === 'Return') {
+      this.selectedDirection = StopBusType.return;
     } else {
-      this.stopBusType = StopBusType.outward;
+      if (params.get('stopBusType') === 'Outward') {
+        this.selectedDirection = StopBusType.outward;
+      } else {
+        this.selectedDirection = StopBusType.outward;
+        reload = true;
+      }
     }
     if (params.get('data') !== null && params.get('data').length === 8) {
-      this.selectedDay = Number.parseInt(params.get('data').substr(0, 2), 10);
-      this.selectedMonth = Number.parseInt(params.get('data').substr(2, 2), 10);
-      this.selectedYear = Number.parseInt(params.get('data').substr(4, 4), 10);
+      this.selectedYear = Number.parseInt(params.get('data').substr(0, 4), 10);
+      this.selectedMonth = Number.parseInt(params.get('data').substr(4, 2), 10);
+      this.selectedDay = Number.parseInt(params.get('data').substr(6, 2), 10);
+      this.selectedData = new Date(this.selectedYear, this.selectedMonth, this.selectedDay + 1).toISOString().split('T')[0];
     } else {  // forse servono altri controlli per la data
       this.selectedDay = (new Date()).getDate();
       this.selectedMonth = (new Date()).getMonth();
       this.selectedYear = (new Date()).getFullYear();
+      this.selectedData = new Date().toISOString().split('T')[0];
+      reload = true;
     }
-    this.selectedData = new Date(this.selectedYear, this.selectedMonth, this.selectedDay).toISOString().split('T')[0];
     this.lineService.getLinesEnum()
       .subscribe(
         (data) => {
           this.lines = data;
           if (params.get('idLine') === null || !this.lines.map(l => l.idLine).includes(params.get('idLine'))) {
             this.selectedLine = this.lines[0];
+            reload = true;
           } else {
             this.selectedLine = this.lines.filter(l => l.idLine === params.get('idLine')).pop();
+          }
+          if (reload) {
+            this.reloadWithNewPath();
           }
           this.onChangeValues();
         },
@@ -85,13 +110,13 @@ export class StateBusrideComponent implements OnInit {
 
   onChangeValues() {
     this.busRideService.getBusRidesFromLineAndStopBusTypeAndData(this.selectedLine.idLine,
-      this.stopBusType, this.selectedYear, this.selectedMonth, this.selectedDay)
+      this.selectedDirection, this.selectedYear, this.selectedMonth, this.selectedDay)
       .subscribe(
         (data) => { this.busRide = data; },
         (error) => { this.alertService.error(error); }
       );
     this.busRideService.getPresenceAggregateFromLineAndStopBusTypeAndData(this.selectedLine.idLine,
-      this.stopBusType, this.selectedYear, this.selectedMonth, this.selectedDay)
+      this.selectedDirection, this.selectedYear, this.selectedMonth, this.selectedDay)
       .subscribe(
         (data) => { this.presenceBusRide = data; },
         (error) => { this.alertService.error(error); }
@@ -105,8 +130,23 @@ export class StateBusrideComponent implements OnInit {
   }
 
   selectedLineChange() {
-    alert(this.selectedLine.idLine + ' ' + this.selectedLine.lineName);
+    this.reloadWithNewPath();
   }
   selectedDirectionChange() {
+    this.reloadWithNewPath();
+  }
+
+  selectedDataChange() {
+    const temp = new Date(this.selectedData);
+    this.selectedDay = temp.getDate();
+    this.selectedMonth = temp.getMonth();
+    this.selectedYear = temp.getFullYear();
+    this.reloadWithNewPath();
+  }
+
+  reloadWithNewPath() {
+    const strData = ('0' + this.selectedYear).slice(-4) + ('0' + this.selectedMonth).slice(-2) + ('0' + this.selectedDay).slice(-2);
+    this.router.navigate(
+      [`/stateBusRide/${this.selectedLine.idLine}/${this.selectedDirection}/${strData}`]);
   }
 }

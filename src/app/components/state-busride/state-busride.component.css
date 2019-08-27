@@ -30,11 +30,14 @@ ul.timeline > li:before {
 }
 
 .green {
-  background-color: #4CAF50;
+  color: #4CAF50;
+  font-weight: bold;
 }
 .red {
-  background-color: #f44336;
+  color: #f44336;
+  font-weight: bold;
 }
 .orange {
-  background-color: orange;
+  color: orange;
+  font-weight: bold;
 }

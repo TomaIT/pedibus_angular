@@ -3,11 +3,11 @@ import {StopBusType} from './stopbus';
 export class PresenceChild {
   idChild: string;
   nameChild: string;
-  isBooked: boolean;
+  booked: boolean;
   idReservation: string;
-  isGetIn: boolean;
-  isGetOut: boolean;
-  isAbsent: boolean;
+  getIn: boolean;
+  getOut: boolean;
+  absent: boolean;
 }
 
 export class PresenceStopBus {
