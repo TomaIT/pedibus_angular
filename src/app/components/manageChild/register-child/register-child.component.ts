@@ -24,6 +24,8 @@ export class RegisterChildComponent implements OnInit {
   genders: Array<string>;
   outStopBuses: Array<StopBus>;
   retStopBuses: Array<StopBus>;
+  outIsChange = false;
+  retIsChange = false;
 
   constructor(private alertService: AlertService,
               private childService: ChildService,
@@ -149,5 +151,29 @@ export class RegisterChildComponent implements OnInit {
           this.alertService.error(error);
         }
       );
+  }
+
+  changeOut() {
+    this.outIsChange = true;
+  }
+
+  getPathLineOut(): string {
+    const index = this.outStopBuses.findIndex(x => x.id === this.f.outwardStopBus.value);
+    if (index >= 0) {
+      return this.outStopBuses[index].idLine + '_out';
+    }
+    return null;
+  }
+
+  changeRet() {
+    this.retIsChange = true;
+  }
+
+  getPathLineRet() {
+    const index = this.retStopBuses.findIndex(x => x.id === this.f.returnStopBus.value);
+    if (index >= 0) {
+      return this.retStopBuses[index].idLine + '_ret';
+    }
+    return null;
   }
 }
