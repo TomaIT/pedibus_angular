@@ -64,7 +64,6 @@ export class CreateAvailabilityComponent implements OnInit {
     this.dataSelected = this.today();
     this.dataSelectedChange();
     this.refreshStopBuses();
-    this.getBusRides();
     this.availabilityService.getAvailabilitiesByUser(this.currentUser).subscribe(
       (data) => { this.availabilities = data; },
       (error) => { this.alertService.error(error);
@@ -123,7 +122,6 @@ export class CreateAvailabilityComponent implements OnInit {
           }
         );
     }
-    // alert(this.dataSelected + this.outStopBusSelectedId + this.retStopBusSelectedId);
   }
 
   giveAvailability(idbr: string, idsb: string) {
@@ -219,6 +217,7 @@ export class CreateAvailabilityComponent implements OnInit {
             if (this.outStopBusSelectedId === undefined) {
               this.outStopBusSelectedId = this.outStopBuses[0].id;
             }
+            this.getBusRides();
           },
           (error) => {
             this.alertService.error(error);
