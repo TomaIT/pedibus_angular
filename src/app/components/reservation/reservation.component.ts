@@ -126,7 +126,7 @@ export class ReservationComponent implements OnInit {
         .subscribe(
           (data) => {
             this.retBusRides = data;
-            alert(this.retBusRides[0].startTime);
+            // alert(this.retBusRides[0].startTime);
           },
           (error) => {
             this.alertService.error(error);
