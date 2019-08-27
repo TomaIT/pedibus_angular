@@ -48,7 +48,7 @@ export class ViewAvailabilityComponent implements OnInit {
   visualizeData(time: Date): Date {
     const temp = new Date(time);
     temp.setFullYear(temp.getFullYear(), temp.getMonth(), temp.getDate());
-    temp.setHours(0, temp.getHours(), 0, 0);
+    temp.setHours(temp.getHours(), temp.getMinutes(), 0, 0);
     return temp;
   }
 
@@ -58,17 +58,23 @@ export class ViewAvailabilityComponent implements OnInit {
     temp.idStopBus = avl.idStopBus;
     this.availabilityService.updateAvailability(temp, avl.id).subscribe((data) => {
       this.alertService.success('Disponibilità aggiornata con successo.');
+      const index = this.availabilities.findIndex(x => x.id === avl.id);
+      this.availabilities[index].state = AvailabilityState.readChecked;
     }, (error) => {
       this.alertService.error(error);
     });
   }
 
   checkConfirm(state: AvailabilityState): boolean {
-    return state === AvailabilityState.available;
+    return state === AvailabilityState.checked;
   }
 
   checkDel(state: AvailabilityState): boolean {
-    return state !== AvailabilityState.confirmed;
+    return state === AvailabilityState.confirmed;
+  }
+
+  checkAvail(state: AvailabilityState): boolean {
+    return state === AvailabilityState.available;
   }
 
 
@@ -83,5 +89,9 @@ export class ViewAvailabilityComponent implements OnInit {
       (error) => {
         this.alertService.error(error);
       });
+  }
+
+  checkrc(state: AvailabilityState): boolean {
+    return state === AvailabilityState.readChecked;
   }
 }
