@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../services/authentication.service';
 import {AlertService} from '../../services/alert.service';
+import {RouterExtService} from '../../services/router-ext.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,8 @@ export class LoginComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               private authenticationService: AuthenticationService,
-              private alertService: AlertService) {
+              private alertService: AlertService,
+              private routerExtService: RouterExtService) {
     // redirect to home if already logged in
     if (this.authenticationService.isAuthenticated()) {
       this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
@@ -62,7 +64,12 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.f.username.value, this.f.password.value)
       .subscribe(
         (data) => {
-          this.router.navigate(['/home']);
+          const a = this.routerExtService.getPreviousUrl();
+          if (a && a !== '/login') {
+            this.router.navigate([a]).catch((reason) => this.alertService.error(reason));
+          } else {
+            this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
+          }
         },
         (error) => {
           this.alertService.error(error);
