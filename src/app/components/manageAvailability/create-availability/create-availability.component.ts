@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {Router} from '@angular/router';
 import {BusRide} from '../../../models/busride';
@@ -10,13 +10,16 @@ import {Availability, AvailabilityPOST, AvailabilityState} from '../../../models
 import {AvailabilityService} from '../../../services/availability.service';
 import {Login} from '../../../models/login';
 
+// jQuery Sign $
+declare let $: any;
+
 @Component({
   selector: 'app-create-availability',
   templateUrl: './create-availability.component.html',
   styleUrls: ['./create-availability.component.css']
 })
 export class CreateAvailabilityComponent implements OnInit {
-
+  @ViewChild('myDate') myDate: ElementRef;
   busRides: Array<BusRide>;
   direction: StopBusType;
   directions: Array<StopBusType>;
@@ -41,6 +44,14 @@ export class CreateAvailabilityComponent implements OnInit {
   }
 
   ngOnInit() {
+    $('#date').datepicker({
+      dateFormat: 'yy-mm-dd',
+      minDate: new Date(),
+      onSelect: (selectedDate, inst) => {
+        this.dataSelected = selectedDate;
+        this.dataSelectedChange();
+      }
+    });
     const dummy: Login = JSON.parse(localStorage.getItem('currentUser'));
     this.currentUser = dummy.username;
     this.stopBuses = new Array<StopBus>();
