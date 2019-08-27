@@ -27,7 +27,7 @@
           {{a.lineName}}
         </p>
         <p>
-          {{getTimeStopBus(a,getOutStopBusSelected()) | date: 'medium'}}
+          {{getTimeStopBus(a,getOutStopBusSelected()) | date:'dd MMM yy - HH:mm'}}
         </p>
         <p *ngIf="!loading">
           <button *ngIf="!isBooked(a)" (click)="giveAvailability(a.id, this.outStopBusSelectedId)" class="btn btn-primary" type="button">Invia</button>
@@ -58,7 +58,7 @@
           {{a.lineName}}
         </p>
         <p>
-          {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'medium'}}
+          {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'dd MMM yy - HH:mm'}}
         </p>
         <p *ngIf="!loading">
           <button *ngIf="!isBooked(a)" (click)="giveAvailability(a.id, this.retStopBusSelectedId)" class="btn btn-primary" type="button">Invia</button>

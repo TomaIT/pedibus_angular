@@ -144,7 +144,10 @@ export class CreateAvailabilityComponent implements OnInit {
     if (busRide && stopBus) {
       const temp = new Date();
       temp.setFullYear(busRide.year, busRide.month, busRide.day);
-      temp.setHours(0, stopBus.hours, 0, 0);
+      const temp2 = new Date();
+      const h = Math.floor(stopBus.hours / 60);
+      const m = stopBus.hours - (h * 60);
+      temp.setHours(h, m, 0, 0);
       return temp;
     }
     return null;
@@ -164,7 +167,7 @@ export class CreateAvailabilityComponent implements OnInit {
     if (this.retStopBusSelectedId) {
       const index = this.retStopBuses.findIndex(x => x.id === this.retStopBusSelectedId);
       if (index >= 0) {
-        return this.outStopBuses[index];
+        return this.retStopBuses[index];
       }
       return null;
     }
