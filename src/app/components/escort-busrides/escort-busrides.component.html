@@ -1,7 +1,5 @@
 <h2 align="center">List of confirmed BusRides</h2>
 Per ora effettuo una richiesta per le availabilies e poi una richiesta <b>per ogni</b> busRide associata.<br>
-Le fermate sono sbagliate: sono la partenza e l'arrivo della linea.
-Mentre dovrebbero essere le fermate di arrivo e di partenza dell'escort.
 <div class="row">
   <div class="table-responsive">
     <table class="table table-responsive table-striped" style="font-family: Lato;">
@@ -23,10 +21,10 @@ Mentre dovrebbero essere le fermate di arrivo e di partenza dell'escort.
         <td>{{av.busRide.day}}/{{av.busRide.month}}/{{av.busRide.year}}</td>
         <td>{{av.busRide.lineName}}</td>
         <td>{{av.busRide.stopBusType}}</td>
-        <td>{{av.busRide.stopBuses[0].name}}</td>
-        <td>{{convertHoursToTime(av.busRide.stopBuses[0].hours)}}</td>
-        <td>{{av.busRide.stopBuses[av.busRide.stopBuses.length-1].name}}</td>
-        <td>{{convertHoursToTime(av.busRide.stopBuses[av.busRide.stopBuses.length-1].hours)}}</td>
+        <td>{{getEscortStartStopBus(av).name}}</td>
+        <td>{{convertMinutesToTime(getEscortStartStopBus(av).hours)}}</td>
+        <td>{{getEscortEndStopBus(av).name}}</td>
+        <td>{{convertMinutesToTime(getEscortEndStopBus(av).hours)}}</td>
         <td *ngIf="av.busRide.idLastStopBus === av.busRide.stopBuses[av.busRide.stopBuses.length-1].id">Corsa effettuata</td>
         <td *ngIf="av.busRide.idLastStopBus !== av.busRide.stopBuses[av.busRide.stopBuses.length-1].id"><button (click)="clickOnBusRide(av)" class="btn btn-primary">Effettua corsa</button></td>
         <td><button (click)="clickOnBusRide(av)">Effettua corsa</button></td>

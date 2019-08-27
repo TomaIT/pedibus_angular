@@ -64,6 +64,8 @@
             {{a.name}} ({{a.lineName}})
           </option>
         </select>
+        <img routerLink="/mapLines/{{getPathLineOut()}}" src="../../../../assets/images/info.png" style="cursor: pointer;object-fit: cover;width: 100%;max-width: 20px;">
+
 
         <div *ngIf="submitted && f.outwardStopBus.errors" class="invalid-feedback">
           <div *ngIf="f.outwardStopBus.errors.required">Default Outward Stop Bus is required</div>
@@ -81,6 +83,8 @@
             {{a.name}} ({{a.lineName}})
           </option>
         </select>
+        <img routerLink="/mapLines/{{getPathLineRet()}}" src="../../../../assets/images/info.png" style="cursor: pointer;object-fit: cover;width: 100%;max-width: 20px;">
+
 
         <div *ngIf="submitted && f.returnStopBus.errors" class="invalid-feedback">
           <div *ngIf="f.returnStopBus.errors.required">Default Return Stop Bus is required</div>

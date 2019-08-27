@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col">
+    <label>
+      Seleziona la linea
+      <select class="form-control" [(ngModel)]="selectedLine" (ngModelChange)="selectedLineChange()">
+        <option [ngValue]="l" *ngFor="let l of lines;">
+          {{l.lineName}}
+        </option>
+      </select>
+    </label>
+  </div>
+  <div class="col">
+    <label>
+      Seleziona direzione
+      <select class="form-control" [(ngModel)]="selectedDirection" (ngModelChange)="selectedDirectionChange()">
+        <option [ngValue]="a" *ngFor="let a of directions;">
+          {{a}}
+        </option>
+      </select>
+    </label>
+  </div>
+  <div class="col">
+    <label>
+      Seleziona la data
+      <input type="data" id="date" class="form-control" [(ngModel)]="selectedData">
+    </label>
+  </div>
+</div>
+<div class="row" style="margin-top: 30px;">
+  <ul class="timeline">
+    <li *ngFor="let stopBus of busRide.stopBuses; let i = index;">
+      <div>
+        <h5 style="font-style: italic;color: #22c0e8;" class="left">{{convertMinutesToTime(stopBus.hours)}} - {{stopBus.name}}</h5>
+        <span *ngFor="let child of presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet;last as isLast;">
+              <!--(click)="isSelected($event, it.stopBusType, child)"-->
+          <span [class.green]="child.isGetIn" [class.red]="child.isAbsent" [class.orange]="child.isGetOut">{{child.nameChild}}</span>
+          <span *ngIf="!isLast">, </span>
+          <span *ngIf="isLast">.</span>
+        </span>
+      </div>
+    </li>
+  </ul>
+</div>

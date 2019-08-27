@@ -33,7 +33,7 @@
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
         <p>
-          {{a.lineName}} - {{getOutStopBusSelected().name}}
+          <a routerLink="/mapLines/{{a.idLine+'_out'}}">{{a.lineName}}</a> - {{getOutStopBusSelected().name}}
         </p>
         <p>
           {{getTimeStopBus(a,getOutStopBusSelected()) | date: 'medium'}}
@@ -67,7 +67,7 @@
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
         <p>
-          {{a.lineName}} - {{getRetStopBusSelected().name}}
+          <a routerLink="/mapLines/{{a.idLine+'_ret'}}">{{a.lineName}}</a> - {{getRetStopBusSelected().name}}
         </p>
         <p>
           {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'medium'}}

@@ -309,7 +309,8 @@ export class MyFilterChildrenPipe implements PipeTransform {
     }
     // filter items array, items which match and return true will be
     // kept, false will be filtered out
-    return items.filter(x => (x.firstname.indexOf(filter) !== -1) || (x.surname.indexOf(filter) !== -1));
+    return items.filter(x => (
+      x.firstname.toLowerCase().indexOf(filter.toLowerCase()) !== -1) || (x.surname.toLowerCase().indexOf(filter.toLowerCase()) !== -1));
   }
 }
 
