@@ -40,7 +40,7 @@ export class AuthenticationService {
     if (login && login.jwtToken) {
       if (login.expiredEpochTime <= (new Date()).getTime()) {// Is Expired
         this.logout();
-        this.alertService.error('Token Expired. Please Login',true);
+        this.alertService.error('Token Expired. Please Login');
         return false;
       }
       return true;
