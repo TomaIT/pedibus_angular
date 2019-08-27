@@ -70,8 +70,7 @@ export class ReservationComponent implements OnInit {
       );
     this.dataSelected = this.today();
     this.dataSelectedChange();
-    this.stopBusService.getStopBusByType(StopBusType.outward)
-      .subscribe(
+    this.stopBusService.getStopBusByType(StopBusType.outward).subscribe(
         (data) => {
           this.outStopBuses = data.sort((a, b) => {
             if (a.idLine === b.idLine) {
@@ -84,8 +83,7 @@ export class ReservationComponent implements OnInit {
           this.alertService.error(error);
         }
       );
-    this.stopBusService.getStopBusByType(StopBusType.return)
-      .subscribe(
+    this.stopBusService.getStopBusByType(StopBusType.return).subscribe(
         (data) => {
           this.retStopBuses = data.sort((a, b) => {
             if (a.idLine === b.idLine) {
@@ -128,6 +126,7 @@ export class ReservationComponent implements OnInit {
         .subscribe(
           (data) => {
             this.retBusRides = data;
+            alert(this.retBusRides[0].startTime);
           },
           (error) => {
             this.alertService.error(error);
