@@ -29,10 +29,6 @@ export class UserProfileComponent implements OnInit {
     if (!this.authenticationService.isAuthenticated()) {
       this.router.navigate(['/home']);
     }
-
-    const saved: Login = JSON.parse(localStorage.getItem('currentUser'));
-    this.user = saved.user;
-    this.initForm();
   }
 
 
@@ -54,52 +50,63 @@ export class UserProfileComponent implements OnInit {
   }
 
   initForm() {
-    this.form = this.formBuilder.group({
-      firstname: [this.user.firstname, Validators.compose(
-        [
-          Validators.required,
-          Validators.maxLength(64)
-        ]
-      )],
-      surname: [this.user.surname, Validators.compose(
-        [
-          Validators.required,
-          Validators.maxLength(64)
-        ]
-      )],
-      phoneNumber: [this.user.phoneNumber, Validators.compose(
-        [
-          Validators.required,
-          Validators.pattern('^[0-9]*$')
-        ]
-      )],
-      street: [this.user.street, Validators.compose(
-        [
-          Validators.required
-        ]
-      )],
-      password: ['', Validators.compose(
-        [
-          Validators.minLength(8),
-          Validators.maxLength(32),
-          Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')
-        ]
-      )],
-      verifyPassword: ['', Validators.compose(
-        [
-          Validators.minLength(8),
-          Validators.maxLength(32),
-          Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')
-        ]
-      )]
-    });
+      this.form = this.formBuilder.group({
+        firstname: ['', Validators.compose(
+          [
+            Validators.required,
+            Validators.maxLength(64)
+          ]
+        )],
+        surname: ['', Validators.compose(
+          [
+            Validators.required,
+            Validators.maxLength(64)
+          ]
+        )],
+        phoneNumber: ['', Validators.compose(
+          [
+            Validators.required,
+            Validators.pattern('^[0-9]*$')
+          ]
+        )],
+        street: ['', Validators.compose(
+          [
+            Validators.required
+          ]
+        )],
+        password: ['', Validators.compose(
+          [
+            Validators.minLength(8),
+            Validators.maxLength(32),
+            Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')
+          ]
+        )],
+        verifyPassword: ['', Validators.compose(
+          [
+            Validators.minLength(8),
+            Validators.maxLength(32),
+            Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')
+          ]
+        )]
+      });
   }
 
   ngOnInit() {
-    $('#date').datepicker({dateFormat: 'yy-mm-dd'});
-    this.myDate.nativeElement.value = UserProfileComponent.getDate(this.user.birth)
-      .toISOString().split('T')[0];
-  }
+    this.initForm();
+    this.userService.findById(this.authenticationService.currentUserValue.username)
+      .subscribe(
+        (user) => {
+          this.user = user;
+          this.changeFormValue(this.user);
+          $('#date').datepicker({dateFormat: 'yy-mm-dd'});
+          this.myDate.nativeElement.value = UserProfileComponent.getDate(this.user.birth)
+            .toISOString().split('T')[0];
+        },
+        (errorUser) => {
+          this.alertService.error(errorUser);
+        }
+      );
+}
 
   checkPassword() {
     const pass = this.f.password.value;
