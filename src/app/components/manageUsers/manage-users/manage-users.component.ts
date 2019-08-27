@@ -6,6 +6,7 @@ import {UserService} from '../../../services/user.service';
 import {Role, User} from '../../../models/user';
 import {interval} from 'rxjs';
 import {environment} from '../../../../environments/environment';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'app-manage-users',
@@ -13,11 +14,9 @@ import {environment} from '../../../../environments/environment';
   styleUrls: ['./manage-users.component.css']
 })
 export class ManageUsersComponent implements OnInit, OnDestroy {
-
-  roleSelected: Role;
-  roles: Array<Role>;
   users: Array<User>;
   pollingData: any;
+  usernameStartWith: string;
 
 
   constructor(private authenticationService: AuthenticationService,
@@ -25,58 +24,34 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
               private alertService: AlertService,
               private userService: UserService) {
     if (!(this.authenticationService.isSysAdmin() || this.authenticationService.isAdmin())) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => alertService.error(reason));
     }
-    this.roles = new Array<Role>();
-    this.roles.push(Role.admin);
-    this.roles.push(Role.escort);
-    this.roles.push(Role.parent);
-    this.roles.push(Role.sysAdmin);
   }
 
   ngOnInit() {
-    this.roleSelected = Role.parent;
-    this.roleSelectedChange();
+    this.usernameStartWith = '';
+    this.usernameStartWithChange();
     this.pollingData = interval(environment.intervalTimePolling + 5000)
-      .subscribe((data) => this.roleSelectedChange());
+      .subscribe((data) => this.usernameStartWithChange());
   }
 
   ngOnDestroy(): void {
-    this.pollingData.unsubscribe();
-  }
-
-  isParent(user: User): boolean {
-    return user.roles.findIndex(x => x === Role.parent) >= 0;
-  }
-
-  isEscort(user: User): boolean {
-    return user.roles.findIndex(x => x === Role.escort) >= 0;
-  }
-
-  isAdmin(user: User): boolean {
-    return user.roles.findIndex(x => x === Role.admin) >= 0;
-  }
-
-  isSysAdmin(user: User): boolean {
-    return user.roles.findIndex(x => x === Role.sysAdmin) >= 0;
-  }
-
-  roleSelectedChange() {
-    if (this.roleSelected) {
-      this.userService.findByRole(this.roleSelected)
-        .subscribe(
-          (data) => {
-            this.users = data;
-          },
-          (error) => {
-            this.alertService.error(error);
-          }
-        );
+    if (!isNullOrUndefined(this.pollingData)) {
+      this.pollingData.unsubscribe();
     }
   }
 
-  disableUser(a: User) {
-
+  usernameStartWithChange() {
+    this.userService.findByUsernameStartWith(this.usernameStartWith)
+      .subscribe(
+        (data) => {
+          this.users = data.sort((a, b) => a.username.localeCompare(b.username));
+          this.users.forEach(x => x.roles = x.roles.sort((a, b) => a.localeCompare(b)));
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
   }
 
   refreshUUID(a: User) {
@@ -122,4 +97,5 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
         }
       );
   }
+
 }

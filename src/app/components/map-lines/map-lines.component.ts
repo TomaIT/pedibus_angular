@@ -29,7 +29,7 @@ export class MapLinesComponent implements OnInit {
               private alertService: AlertService,
               private activatedRoute: ActivatedRoute) {
     if (!this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
   }
 

@@ -9,7 +9,8 @@
     <thead>
     <tr>
       <th scope="col" width="auto">Nome Linea</th>
-      <th scope="col" width="auto">Nome Fermata</th>
+      <th scope="col" width="auto">Fermata Partenza</th>
+      <th scope="col" width="auto">Fermata Arrivo</th>
       <th scope="col" width="auto">Data</th>
       <th scope="col" width="auto">Stato</th>
       <th scope="col" width="8%">Conferma</th>
@@ -19,8 +20,8 @@
     <tbody>
     <tr *ngFor="let a of availabilities;">
       <td>{{a.lineNameOfBusRide || '-' }}</td>
-      <td>{{a.stopBusName || '-' }}</td>
-      <!--<td>{{visualizeData(a.startDateOfBusRide) | date: 'medium'}}</td>-->
+      <td>{{showDep(a.idBusRide, a.stopBusName) || '-' }}</td>
+      <td>{{showArr(a.idBusRide, a.stopBusName) || '-' }}</td>
       <td>{{visualizeData(a.startDateOfBusRide) | date:'HH:mm - dd/MM/yy'}}</td>
       <td>{{a.state || '-'}}</td>
       <td>

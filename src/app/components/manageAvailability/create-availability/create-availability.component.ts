@@ -8,7 +8,6 @@ import {StopBus, StopBusType} from '../../../models/stopbus';
 import {StopBusService} from '../../../services/stop-bus.service';
 import {Availability, AvailabilityPOST, AvailabilityState} from '../../../models/availability';
 import {AvailabilityService} from '../../../services/availability.service';
-import {Login} from '../../../models/login';
 
 // jQuery Sign $
 declare let $: any;
@@ -39,7 +38,7 @@ export class CreateAvailabilityComponent implements OnInit {
               private availabilityService: AvailabilityService,
               private router: Router) {
     if (!this.authenticationService.isEscort()) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
   }
 
@@ -52,13 +51,12 @@ export class CreateAvailabilityComponent implements OnInit {
         this.dataSelectedChange();
       }
     });
-    const dummy: Login = JSON.parse(localStorage.getItem('currentUser'));
-    this.currentUser = dummy.username;
     this.retStopBuses = new Array<StopBus>();
     this.outStopBuses = new Array<StopBus>();
     this.availabilities = new Array<Availability>();
     this.avbstates = new Array<AvailabilityState>();
     this.avbstates.push(AvailabilityState.available);
+    this.currentUser = this.authenticationService.currentUserValue.username;
     this.avbstates.push(AvailabilityState.checked);
     this.avbstates.push(AvailabilityState.confirmed);
     this.dataSelected = this.today();
@@ -146,7 +144,10 @@ export class CreateAvailabilityComponent implements OnInit {
     if (busRide && stopBus) {
       const temp = new Date();
       temp.setFullYear(busRide.year, busRide.month, busRide.day);
-      temp.setHours(0, stopBus.hours, 0, 0);
+      const temp2 = new Date();
+      const h = Math.floor(stopBus.hours / 60);
+      const m = stopBus.hours - (h * 60);
+      temp.setHours(h, m, 0, 0);
       return temp;
     }
     return null;
@@ -166,14 +167,14 @@ export class CreateAvailabilityComponent implements OnInit {
     if (this.retStopBusSelectedId) {
       const index = this.retStopBuses.findIndex(x => x.id === this.retStopBusSelectedId);
       if (index >= 0) {
-        return this.outStopBuses[index];
+        return this.retStopBuses[index];
       }
       return null;
     }
   }
 
   isBooked(bus: BusRide): Availability {
-    if (this.availabilities) {
+    if (this.availabilities.length) {
       for (const x of this.availabilities) {
         if (x.idUser === this.currentUser && bus.id === x.idBusRide) {
           return x;
@@ -196,7 +197,7 @@ export class CreateAvailabilityComponent implements OnInit {
               return a.idLine.localeCompare(b.idLine);
             });
             if (this.retStopBusSelectedId === undefined) {
-              this.retStopBusSelectedId = this.retStopBuses[0].id;
+              this.retStopBusSelectedId = this.retStopBuses[this.retStopBuses.length - 1].id; // però non è della stessa linea
             }
             if (this.outStopBuses.length === 0) {
               this.stopBusService.getStopBusByType(StopBusType.outward)

@@ -1,44 +1,90 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {Router} from '@angular/router';
 import {Availability, AvailabilityPUT, AvailabilityState} from '../../../models/availability';
 import {AvailabilityService} from '../../../services/availability.service';
 import {AlertService} from '../../../services/alert.service';
-import {Login} from '../../../models/login';
+import {interval} from 'rxjs';
+import {environment} from '../../../../environments/environment';
+import {BusRideService} from '../../../services/bus-ride.service';
+import {StopBus, StopBusType} from '../../../models/stopbus';
+import {BusRide} from '../../../models/busride';
 
 @Component({
   selector: 'app-view-availability',
   templateUrl: './view-availability.component.html',
   styleUrls: ['./view-availability.component.css']
 })
-export class ViewAvailabilityComponent implements OnInit {
+export class ViewAvailabilityComponent implements OnInit, OnDestroy {
 
   constructor(private authenticationService: AuthenticationService,
               private availabilityService: AvailabilityService,
               private alertService: AlertService,
+              private busRidesService: BusRideService,
               private router: Router) {
     if (!this.authenticationService.isEscort()) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
+    this.pollCounter();
+    this.pollingData = interval(environment.intervalAvailCheck)
+      .subscribe((data) => this.pollCounter());
   }
 
   availabilities: Array<Availability>;
-  currentUser: string;
   avbstates: Array<AvailabilityState>;
+  pollingData: any;
+  busRides: Array<BusRide>;
+
+  ngOnDestroy(): void {
+      this.pollingData.unsubscribe();
+  }
+
+  private pollCounter() {
+    if (this.authenticationService.isAuthenticated()) {
+      this.availabilityService.getAvailabilitiesByUser(this.authenticationService.currentUserValue.username).subscribe(
+        (data) => {
+          this.availabilities = data;
+          const tempbuscoll: Array<BusRide> = new Array<BusRide>();
+          for (const temp of this.availabilities) {
+            this.busRidesService.getBusRideById(temp.idBusRide).subscribe(
+              (data1) => { tempbuscoll.push(data1); },
+              (error2) => {this.alertService.error(error2); }
+            );
+          }
+          if (tempbuscoll.length === this.busRides.length) {
+            if (this.busRides.every(element => tempbuscoll.includes(element))) { // controlla che gli array siano uguali
+              // do nothing
+            } else {
+              this.busRides = tempbuscoll;
+            }
+          } else {
+            this.busRides = tempbuscoll;
+          }
+        },
+        (error3) => { this.alertService.error(error3);
+        }
+      );
+    }
+  }
 
   ngOnInit() {
-    const dummy: Login = JSON.parse(localStorage.getItem('currentUser'));
-    this.currentUser = dummy.username;
     this.availabilities = new Array<Availability>();
     this.avbstates = new Array<AvailabilityState>();
+    this.busRides = new Array<BusRide>();
     this.avbstates.push(AvailabilityState.available);
     this.avbstates.push(AvailabilityState.checked);
     this.avbstates.push(AvailabilityState.confirmed);
     this.avbstates.push(AvailabilityState.readChecked);
 
-    this.availabilityService.getAvailabilitiesByUser(this.currentUser).subscribe(
+    this.availabilityService.getAvailabilitiesByUser(this.authenticationService.currentUserValue.username).subscribe(
       (data) => {
         this.availabilities = data;
+        for (const temp of this.availabilities) {
+          this.busRidesService.getBusRideById(temp.idBusRide).subscribe(
+            (data1) => { this.busRides.push(data1); },
+            (error2) => {this.alertService.error(error2); }
+          );
+        }
       },
       (error3) => { this.alertService.error(error3);
       }
@@ -93,5 +139,29 @@ export class ViewAvailabilityComponent implements OnInit {
 
   checkrc(state: AvailabilityState): boolean {
     return state === AvailabilityState.readChecked;
+  }
+
+  showDep(idbr: string, busname: string) {
+    for (const temp of this.busRides) {
+      if (temp.id === idbr) {
+        if (temp.stopBusType === StopBusType.return) {
+          return temp.stopBuses[0].name;
+        } else {
+          return busname;
+        }
+      }
+    }
+  }
+
+  showArr(idbr: string, busname: string) {
+    for (const temp of this.busRides) {
+      if (temp.id === idbr) {
+      if (temp.stopBusType === StopBusType.outward) {
+        return temp.stopBuses[temp.stopBuses.length - 1].name;
+      } else {
+        return busname;
+      }
+    }
+  }
   }
 }

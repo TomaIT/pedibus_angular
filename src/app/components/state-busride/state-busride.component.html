@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col">
+  <div class="col-sm-4">
     <label>
       Seleziona la linea
       <select class="form-control" [(ngModel)]="selectedLine" (ngModelChange)="selectedLineChange()">
@@ -9,7 +9,7 @@
       </select>
     </label>
   </div>
-  <div class="col">
+  <div class="col-sm-4">
     <label>
       Seleziona direzione
       <select class="form-control" [(ngModel)]="selectedDirection" (ngModelChange)="selectedDirectionChange()">
@@ -19,25 +19,70 @@
       </select>
     </label>
   </div>
-  <div class="col">
+  <div class="col-sm-4">
     <label>
       Seleziona la data
-      <input type="data" id="date" class="form-control" [(ngModel)]="selectedData">
+      <input #myDate type="text" id="date" class="form-control" [(ngModel)]="selectedData" autocomplete="off">
     </label>
   </div>
 </div>
 <div class="row" style="margin-top: 30px;">
-  <ul class="timeline">
-    <li *ngFor="let stopBus of busRide.stopBuses; let i = index;">
-      <div>
-        <h5 style="font-style: italic;color: #22c0e8;" class="left">{{convertMinutesToTime(stopBus.hours)}} - {{stopBus.name}}</h5>
-        <span *ngFor="let child of presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet;last as isLast;">
-              <!--(click)="isSelected($event, it.stopBusType, child)"-->
-          <span [class.green]="child.isGetIn" [class.red]="child.isAbsent" [class.orange]="child.isGetOut">{{child.nameChild}}</span>
-          <span *ngIf="!isLast">, </span>
-          <span *ngIf="isLast">.</span>
-        </span>
-      </div>
-    </li>
-  </ul>
+  <div class="col">
+    <ul class="timeline">
+      <li *ngFor="let stopBus of busRide.stopBuses; let i = index;last as isLastStop;first as isFirstStop;">
+        <div>
+          <h5 style="font-style: italic;color: #22c0e8;" class="left">{{convertMinutesToTime(stopBus.hours)}} - {{stopBus.name}}</h5>
+          <span *ngFor="let child of presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet;last as isLast;">
+                <!--(click)="isSelected($event, it.stopBusType, child)"-->
+            <ng-container *ngIf="stopBus.stopBusType === 'Outward'">
+              <span [class.green]="child.getIn" [class.red]="child.absent">{{child.nameChild}}</span>
+              <span *ngIf="!child.booked">[NON PRENOTATO]</span>
+              <span *ngIf="!isLast">, </span>
+              <span *ngIf="isLast">.</span>
+            </ng-container>
+
+            <ng-container *ngIf="stopBus.stopBusType === 'Return'">
+              <span [class.orange]="child.getOut">{{child.nameChild}}</span>
+              <span *ngIf="!child.booked">[NON PRENOTATO]</span>
+              <span *ngIf="!isLast">, </span>
+              <span *ngIf="isLast">.</span>
+            </ng-container>
+          </span>
+          <ng-container *ngIf="!(stopBus.stopBusType === 'Outward' && isLastStop)&&!(stopBus.stopBusType === 'Return' && isFirstStop)">
+            <span *ngIf="presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet.length === 0"><i>Non ci sono bambini prenotati.</i></span>
+          </ng-container>
+          <ng-container *ngIf="stopBus.stopBusType === 'Outward' && isLastStop">
+            <ng-container *ngFor="let presSB of presenceBusRide.presenceStopBusGETTreeSet">
+              <span *ngFor="let p of presSB.presenceChildGETSet;last as isLast;">
+                <span [class.orange]="p.getOut">{{p.nameChild}}</span>
+                <span *ngIf="!p.booked">[NON PRENOTATO]</span>
+                <span *ngIf="!isLast">, </span>
+                <span *ngIf="isLast">.</span>
+              </span>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="stopBus.stopBusType === 'Return' && isFirstStop">
+            <ng-container *ngFor="let presSB of presenceBusRide.presenceStopBusGETTreeSet">
+              <span *ngFor="let p of presSB.presenceChildGETSet;last as isLast;">
+                <span [class.green]="p.getIn" [class.red]="p.absent">{{p.nameChild}}</span>
+                <span *ngIf="!p.booked">[NON PRENOTATO]</span>
+                <span *ngIf="!isLast">, </span>
+                <span *ngIf="isLast">.</span>
+              </span>
+            </ng-container>
+          </ng-container>
+        </div>
+      </li>
+    </ul>
+    <br>
+    <div>
+      <span><i>Legenda:</i></span>
+      <ul>
+        <li>[nero] Prenotato ma stato non aggiornato</li>
+        <li class="green">[verde] Salito</li>
+        <li class="orange">[arancio] Sceso</li>
+        <li class="red">[rosso] Assente</li>
+      </ul>
+    </div>
+  </div>
 </div>

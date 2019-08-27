@@ -4,9 +4,9 @@ import {AlertService} from '../../services/alert.service';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AvailabilityService} from '../../services/availability.service';
-import {Availability} from '../../models/availability';
+import {Availability, AvailabilityState} from '../../models/availability';
 import {BusRideService} from '../../services/bus-ride.service';
-import {StopBusType} from '../../models/stopbus';
+import {StopBus, StopBusType} from '../../models/stopbus';
 
 @Component({
   selector: 'app-escort-busrides',
@@ -15,7 +15,6 @@ import {StopBusType} from '../../models/stopbus';
 })
 export class EscortBusridesComponent implements OnInit {
 
-  confirmedBusRides: Array<BusRide>;
   confirmedAvailabilities: Array<Availability>;
 
   constructor(private alertService: AlertService,
@@ -25,15 +24,22 @@ export class EscortBusridesComponent implements OnInit {
               private availabilityService: AvailabilityService,
               private busRideService: BusRideService) {
     if (!this.authenticationService.isEscort()) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
   }
 
   ngOnInit() {
+    this.confirmedAvailabilities = new Array<Availability>();
     this.availabilityService.getAvailabilitiesByUser(this.authenticationService.currentUserValue.username)
       .subscribe(
         (data) => {
           this.confirmedAvailabilities = data.filter(x => x.state.toString() === 'Confirmed');
+          this.confirmedAvailabilities.forEach(av => {
+            av.busRide = new BusRide();
+            av.busRide.stopBuses = new Array<StopBus>();
+            av.busRide.startTime = new Date();
+            av.busRide.stopBuses = new Array<StopBus>();
+          });
           this.confirmedAvailabilities.forEach((av) => {
             this.busRideService.getBusRideById(av.idBusRide)
               .subscribe(
@@ -54,7 +60,7 @@ export class EscortBusridesComponent implements OnInit {
   }
 
   clickOnBusRide(ca: Availability) {
-    let busRide: BusRide;
+    let busRide = new BusRide();
     let idStartStopBus: string;
     this.busRideService.getBusRideById(ca.idBusRide)
       .subscribe(
