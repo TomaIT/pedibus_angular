@@ -164,7 +164,7 @@ export class CreateAvailabilityComponent implements OnInit {
 
   getRetStopBusSelected(): StopBus {
     if (this.retStopBusSelectedId) {
-      const index = this.outStopBuses.findIndex(x => x.id === this.retStopBusSelectedId);
+      const index = this.retStopBuses.findIndex(x => x.id === this.retStopBusSelectedId);
       if (index >= 0) {
         return this.outStopBuses[index];
       }
@@ -198,32 +198,31 @@ export class CreateAvailabilityComponent implements OnInit {
             if (this.retStopBusSelectedId === undefined) {
               this.retStopBusSelectedId = this.retStopBuses[0].id;
             }
-          },
-          (error) => {
-            this.alertService.error(error);
-          }
-        );
-    }
-    if (this.outStopBuses.length === 0) {
-      this.stopBusService.getStopBusByType(StopBusType.outward)
-        .subscribe(
-          (data) => {
-            this.outStopBuses = data.sort((a, b) => {
-              if (a.idLine === b.idLine) {
-                return a.hours - b.hours;
-              }
-              return a.idLine.localeCompare(b.idLine);
-            });
-            if (this.outStopBusSelectedId === undefined) {
-              this.outStopBusSelectedId = this.outStopBuses[0].id;
+            if (this.outStopBuses.length === 0) {
+              this.stopBusService.getStopBusByType(StopBusType.outward)
+                .subscribe(
+                  (data1) => {
+                    this.outStopBuses = data1.sort((a, b) => {
+                      if (a.idLine === b.idLine) {
+                        return a.hours - b.hours;
+                      }
+                      return a.idLine.localeCompare(b.idLine);
+                    });
+                    if (this.outStopBusSelectedId === undefined) {
+                      this.outStopBusSelectedId = this.outStopBuses[0].id;
+                    }
+                    this.getBusRides();
+                  },
+                  (error) => {
+                    this.alertService.error(error);
+                  }
+                );
             }
-            this.getBusRides();
           },
           (error) => {
             this.alertService.error(error);
           }
         );
     }
-
   }
 }
