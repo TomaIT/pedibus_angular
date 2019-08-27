@@ -13,11 +13,9 @@ import {environment} from '../../../../environments/environment';
   styleUrls: ['./manage-users.component.css']
 })
 export class ManageUsersComponent implements OnInit, OnDestroy {
-
-  roleSelected: Role;
-  roles: Array<Role>;
   users: Array<User>;
   pollingData: any;
+  usernameStartWith: string;
 
 
   constructor(private authenticationService: AuthenticationService,
@@ -27,56 +25,29 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
     if (!(this.authenticationService.isSysAdmin() || this.authenticationService.isAdmin())) {
       this.router.navigate(['/home']);
     }
-    this.roles = new Array<Role>();
-    this.roles.push(Role.admin);
-    this.roles.push(Role.escort);
-    this.roles.push(Role.parent);
-    this.roles.push(Role.sysAdmin);
   }
 
   ngOnInit() {
-    this.roleSelected = Role.parent;
-    this.roleSelectedChange();
+    this.usernameStartWith = '';
+    this.usernameStartWithChange();
     this.pollingData = interval(environment.intervalTimePolling + 5000)
-      .subscribe((data) => this.roleSelectedChange());
+      .subscribe((data) => this.usernameStartWithChange());
   }
 
   ngOnDestroy(): void {
     this.pollingData.unsubscribe();
   }
 
-  isParent(user: User): boolean {
-    return user.roles.findIndex(x => x === Role.parent) >= 0;
-  }
-
-  isEscort(user: User): boolean {
-    return user.roles.findIndex(x => x === Role.escort) >= 0;
-  }
-
-  isAdmin(user: User): boolean {
-    return user.roles.findIndex(x => x === Role.admin) >= 0;
-  }
-
-  isSysAdmin(user: User): boolean {
-    return user.roles.findIndex(x => x === Role.sysAdmin) >= 0;
-  }
-
-  roleSelectedChange() {
-    if (this.roleSelected) {
-      this.userService.findByRole(this.roleSelected)
-        .subscribe(
-          (data) => {
-            this.users = data;
-          },
-          (error) => {
-            this.alertService.error(error);
-          }
-        );
-    }
-  }
-
-  disableUser(a: User) {
-
+  usernameStartWithChange() {
+    this.userService.findByUsernameStartWith(this.usernameStartWith)
+      .subscribe(
+        (data) => {
+          this.users = data.sort((a, b) => a.username.localeCompare(b.username));
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
   }
 
   refreshUUID(a: User) {
@@ -122,4 +93,5 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
         }
       );
   }
+
 }

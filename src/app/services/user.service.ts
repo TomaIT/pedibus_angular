@@ -55,4 +55,8 @@ export class UserService {
   updateUser(idUser: string, userPUT: UserPUT): Observable<User> {
     return this.httpClient.put<User>(`${environment.apiUrl}/users/${idUser}`, userPUT);
   }
+
+  findByUsernameStartWith(idUserStarting: string): Observable<Array<User>> {
+    return this.httpClient.get<Array<User>>(`${environment.apiUrl}/users?idUserStarting=${idUserStarting}`);
+  }
 }
