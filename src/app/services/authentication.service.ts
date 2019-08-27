@@ -6,6 +6,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 import {Login} from '../models/login';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class AuthenticationService {
   public currentUser: Observable<Login>;
 
   constructor(private httpClient: HttpClient,
+              private router: Router,
               private alertService: AlertService) {
     this.currentUserSubject = new BehaviorSubject<Login>(
       JSON.parse(localStorage.getItem('currentUser')));
@@ -30,6 +32,7 @@ export class AuthenticationService {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this.router.navigate(['/login']).catch((reason) => this.alertService.error(reason));
   }
 
   isAuthenticated(): boolean {
@@ -37,7 +40,7 @@ export class AuthenticationService {
     if (login && login.jwtToken) {
       if (login.expiredEpochTime <= (new Date()).getTime()) {// Is Expired
         this.logout();
-        this.alertService.error('Token Expired. Please Login');
+        this.alertService.error('Token Expired. Please Login',true);
         return false;
       }
       return true;

@@ -6,6 +6,7 @@ import {UserService} from '../../../services/user.service';
 import {Role, User} from '../../../models/user';
 import {interval} from 'rxjs';
 import {environment} from '../../../../environments/environment';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'app-manage-users',
@@ -23,7 +24,7 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
               private alertService: AlertService,
               private userService: UserService) {
     if (!(this.authenticationService.isSysAdmin() || this.authenticationService.isAdmin())) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => alertService.error(reason));
     }
   }
 
@@ -35,7 +36,9 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.pollingData.unsubscribe();
+    if (!isNullOrUndefined(this.pollingData)) {
+      this.pollingData.unsubscribe();
+    }
   }
 
   usernameStartWithChange() {
@@ -43,6 +46,7 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           this.users = data.sort((a, b) => a.username.localeCompare(b.username));
+          this.users.forEach(x => x.roles = x.roles.sort((a, b) => a.localeCompare(b)));
         },
         (error) => {
           this.alertService.error(error);

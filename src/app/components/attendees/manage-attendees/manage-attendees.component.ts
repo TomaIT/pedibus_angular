@@ -52,7 +52,7 @@ export class ManageAttendeesComponent implements OnInit {
               private childService: ChildService,
               private availabilityService: AvailabilityService) {
     if (!this.authenticationService.isEscort()) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
     this.reservationsPUT = new Array<ReservationPUT>();
     this.idReservationsPUT = new Array<string>();

@@ -37,7 +37,7 @@ export class StateBusrideComponent implements OnInit {
               private busRideService: BusRideService,
               private lineService: LineService) {
     if (!this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
   }
 

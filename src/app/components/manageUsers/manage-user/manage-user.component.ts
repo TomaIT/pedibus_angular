@@ -28,7 +28,7 @@ export class ManageUserComponent implements OnInit {
               private userService: UserService,
               private lineService: LineService) {
     if (!(this.authenticationService.isSysAdmin() || this.authenticationService.isAdmin())) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
     this.allRoles = new Array<Role>();
     this.allRoles.push(Role.sysAdmin);

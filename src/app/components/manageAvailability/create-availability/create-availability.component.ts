@@ -39,7 +39,7 @@ export class CreateAvailabilityComponent implements OnInit {
               private availabilityService: AvailabilityService,
               private router: Router) {
     if (!this.authenticationService.isEscort()) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
   }
 

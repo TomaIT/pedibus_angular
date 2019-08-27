@@ -21,7 +21,7 @@ export class MessageComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private messageService: MessageService) {
     if (!this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
   }
 

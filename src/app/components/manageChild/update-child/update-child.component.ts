@@ -34,7 +34,7 @@ export class UpdateChildComponent implements OnInit {
               private formBuilder: FormBuilder,
               private stopBusService: StopBusService) {
     if (!this.authenticationService.isParent()) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
   }
 

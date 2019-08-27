@@ -33,7 +33,7 @@ export class ComunicationComponent implements OnInit, OnDestroy {
               private router: Router,
               private messageService: MessageService) {
     if (!this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
   }
 
