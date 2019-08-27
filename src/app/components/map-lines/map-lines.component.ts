@@ -17,7 +17,7 @@ export class MapLinesComponent implements OnInit {
 
   lat = 45.3216300;
   lng = 8.4198900;
-
+  loading: boolean;
   line: Line;
   lineEnum: Array<LineEnum>;
   markers: Array<Markers>;
@@ -56,12 +56,14 @@ export class MapLinesComponent implements OnInit {
     const id = params.get('id');
     this.markers = new Array<Markers>();
     if (id !== null) {
+      this.loading = true;
       this.lineService.getLine(id.split('_')[0])
         .subscribe(
           (data) => {
             this.line = data;
             this.actualLine = this.line.id;
-            if (id.split('_')[1] === 'out') {
+            this.actualDirection = id.split('_')[1];
+            if (this.actualDirection === 'out') {
               for (const loc of this.line.outStopBuses) {
                 const temp: Markers = new Markers();
                 temp.lng = loc.location.x;
@@ -100,6 +102,7 @@ export class MapLinesComponent implements OnInit {
                 this.markers.push(temp);
               }
             }
+            this.loading = false;
           },
           (error) => {
             this.alertService.error(error);

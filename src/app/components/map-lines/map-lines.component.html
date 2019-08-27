@@ -1,4 +1,5 @@
 <div class="row">
+
   <label >Line</label>
 
   <select class="form-control" (change)="getLineCoordinates($event)">
@@ -11,11 +12,11 @@
   <div class="row">
   <div class="col">
     <label >Andata
-      <input type="radio" name="direction" value="out" (click)="getDirection($event)"  />
+      <input type="radio" name="direction" style="position: absolute" value="out" [checked]="actualDirection === 'out' ? true : false" (click)="getDirection($event)"  />
     </label>
 
     <label >Ritorno
-      <input type="radio" name="direction" value="ret" (click)="getDirection($event)" />
+      <input type="radio" name="direction" style="position: absolute" value="ret" [checked]="actualDirection === 'ret' ? true : false" (click)="getDirection($event)" />
     </label>
   </div>
   </div>
@@ -56,6 +57,20 @@
     </aol-layer-tile>
     <aol-layer-vector [opacity]="1">
       <aol-source-vector>
+        <aol-feature *ngIf="loading">
+          <aol-geometry-point >
+            <aol-coordinate [x]="lng" [y]="lat" [srid]="'EPSG:4326'"></aol-coordinate>
+          </aol-geometry-point>
+          <aol-style>
+            <aol-style-icon
+              [src]="'data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=='"
+              [anchor]="[0.5, 1]"
+              [anchorXUnits]="'fraction'" [anchorYUnits]="'fraction'"
+              [scale]="1"
+              [anchorOrigin]="'top-left'">
+            </aol-style-icon>
+          </aol-style>
+        </aol-feature>
         <aol-feature *ngFor="let marker of markers">
           <aol-geometry-point >
             <aol-coordinate [x]="marker.lng" [y]="marker.lat" [srid]="'EPSG:4326'"></aol-coordinate>

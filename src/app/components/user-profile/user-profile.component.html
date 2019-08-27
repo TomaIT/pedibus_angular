@@ -9,7 +9,6 @@
 
         <input type="text" formControlName="firstname"
                class="form-control"
-               [value]="user.firstname"
                [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }" />
 
         <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
@@ -23,7 +22,6 @@
         <label >Cognome</label>
 
         <input type="text" formControlName="surname" class="form-control"
-               [value]="user.surname"
                [ngClass]="{ 'is-invalid': submitted && f.surname.errors }" />
 
         <div *ngIf="submitted && f.surname.errors" class="invalid-feedback">
@@ -44,7 +42,6 @@
         <label >Numero di telefono</label>
 
         <input type="text" formControlName="phoneNumber" class="form-control"
-               [value]="user.phoneNumber"
                [ngClass]="{ 'is-invalid': submitted && f.phoneNumber.errors }" />
 
         <div *ngIf="submitted && f.phoneNumber.errors" class="invalid-feedback">
@@ -57,7 +54,6 @@
         <label >Indirizzo</label>
 
         <input type="text" formControlName="street" class="form-control"
-               [value]="user.street"
                [ngClass]="{ 'is-invalid': submitted && f.street.errors }" />
 
         <div *ngIf="submitted && f.street.errors" class="invalid-feedback">
