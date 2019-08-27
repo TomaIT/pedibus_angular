@@ -71,7 +71,11 @@ export class RegisterChildComponent implements OnInit {
   }
 
   ngOnInit() {
-    $('#date').datepicker({dateFormat: 'yy-mm-dd'});
+    $('#date').datepicker({
+      dateFormat: 'yy-mm-dd',
+      changeYear: true,
+      yearRange: '1980:c',
+    });
     this.childService.getGenders()
       .subscribe(
         (data) => {
