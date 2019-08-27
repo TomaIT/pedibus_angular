@@ -20,20 +20,19 @@
     <tr *ngFor="let a of availabilities;">
       <td>{{a.lineNameOfBusRide || '-' }}</td>
       <td>{{a.stopBusName || '-' }}</td>
-      <td>{{visualizeData(a.startDateOfBusRide) | date: 'medium'}}</td>
+      <!--<td>{{visualizeData(a.startDateOfBusRide) | date: 'medium'}}</td>-->
+      <td>{{visualizeData(a.startDateOfBusRide) | date:'hh:mm - dd/MM/yy'}}</td>
       <td>{{a.state || '-'}}</td>
       <td>
         <button *ngIf="checkConfirm(a.state)" (click)="confirm(a)">Conferma</button>
-        <button *ngIf="!checkConfirm(a.state)" (click)="confirm(a)" disabled>Disponibilità già data</button>
-
-        <!-- <img *ngIf="checkConfirm(a.state)" (click)="confirm(a)" src="../../../../assets/images/edit-document.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-     <img *ngIf="checkConfirm(a.state); else elseBlock" (click)="confirm(a)" src="../../../../assets/images/edit-document.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-       <ng-template #elseBlock>Disponibilità data</ng-template>-->
+        <button *ngIf="checkAvail(a.state)" disabled>Attesa conferma Admin</button>
+        <button *ngIf="checkDel(a.state)" disabled>Disponibilità già data</button>
+        <button *ngIf="checkrc(a.state)" disabled>Attesa completamento Admin</button>
       </td>
       <td>
-        <img *ngIf="checkDel(a.state)" (click)="delete(a)" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-        <!--<img *ngIf="checkDel(a.state); else alertBlock" (click)="delete(a)" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-        <ng-template #alertBlock>Contattare admin per la cancellazione</ng-template>-->
+        <img *ngIf="!checkDel(a.state)" (click)="delete(a)" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+        <button *ngIf="checkDel(a.state)" (click)="confirm(a)" disabled>info mouse over</button>
+        <!--TODO l'ideale sarebbe un'iconcina con il ? (ma anche icone per il resto) dove se ci si passa sopra il mouse o ci si clicca dice che bisogna contattare l'admin per la cancellazione-->
       </td>
     </tr>
     </tbody>
