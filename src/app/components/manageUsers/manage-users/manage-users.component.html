@@ -54,6 +54,7 @@
     <!--<div *ngFor="let item of pageOfItems">{{item.username}}</div>-->
   </div>
   <div class="card-footer pb-0 pt-3">
-    <jw-pagination [items]="users" [pageSize]="5" (changePage)="onChangePage($event)"></jw-pagination>
+    <jw-pagination [items]="users" [initialPage]="numberPageOfView" [pageSize]="pageSize"
+                   (changePage)="onChangePage($event)"></jw-pagination>
   </div>
 </div>

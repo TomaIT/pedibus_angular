@@ -14,10 +14,13 @@ import {isNullOrUndefined} from 'util';
   styleUrls: ['./manage-users.component.css']
 })
 export class ManageUsersComponent implements OnInit, OnDestroy {
+  pageSize = 5;
   users: Array<User>;
   pollingData: any;
   usernameStartWith: string;
   pageOfItems: Array<any>;
+  numberPageOfView = 1;
+  historyPage = 1;
 
 
   constructor(private authenticationService: AuthenticationService,
@@ -37,6 +40,10 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
   }
 
   onChangePage(pageOfItems: Array<any>) {
+    const index = this.users.findIndex(x => x.username === pageOfItems[0].username);
+    if (index >= 0) {
+      this.historyPage = (index / this.pageSize) + 1;
+    }
     this.pageOfItems = pageOfItems;
   }
 
@@ -65,10 +72,12 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
         (data) => {
           const temp = data.content.sort((a, b) => a.username.localeCompare(b.username));
           temp.forEach(x => x.roles = x.roles.sort((a, b) => a.localeCompare(b)));
-          if (!this.users || this.users.length !== temp.length ||
+          this.users = temp;
+          this.numberPageOfView = this.historyPage;
+         /* if (!this.users || this.users.length !== temp.length ||
             temp.filter(y => this.users.findIndex(x => this.equals(x, y)) < 0).length > 0) {
             this.users = temp;
-          }
+          }*/
         },
         (error) => {
           this.alertService.error(error);
