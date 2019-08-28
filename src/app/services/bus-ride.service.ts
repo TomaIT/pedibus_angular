@@ -34,7 +34,8 @@ export class BusRideService {
   getPresenceAggregateFromLineAndStopBusTypeAndData(idLine: string, stopBusType: StopBusType,
                                                     year: number, month: number, day: number): Observable<PresenceBusRide> {
     return this.httpClient.get<PresenceBusRide>(
-      `${environment.apiUrl}/aggregates/presence/${idLine}/${stopBusType.toString()}/${year.toString()}/${month.toString()}/${day.toString()}`);
+      `${environment.apiUrl}/aggregates/presence/${idLine}/${stopBusType.toString()}/
+            ${year.toString()}/${month.toString()}/${day.toString()}`);
   }
   // TODO: stringa sopra troppo lunga
 }

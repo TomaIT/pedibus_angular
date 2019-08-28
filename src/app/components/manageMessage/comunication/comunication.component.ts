@@ -45,7 +45,7 @@ export class ComunicationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.refreshMessages();
-    this.pollingData = interval(environment.intervalTimePolling + 5000)
+    this.pollingData = interval(environment.intervalTimePolling)
       .subscribe((data) => this.refreshMessages());
   }
 

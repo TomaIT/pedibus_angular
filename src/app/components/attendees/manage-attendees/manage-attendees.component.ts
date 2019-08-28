@@ -1,4 +1,4 @@
-import {Component, OnInit, Pipe, PipeTransform} from '@angular/core';
+import {Component, OnDestroy, OnInit, Pipe, PipeTransform} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {BusRide, BusRidePUT} from '../../../models/busride';
 import {EnumChildGet, Reservation, ReservationPUT} from '../../../models/reservation';
@@ -12,13 +12,15 @@ import {FormControl} from '@angular/forms';
 import {ChildService} from '../../../services/child.service';
 import {Child} from '../../../models/child';
 import {AvailabilityService} from '../../../services/availability.service';
+import {interval} from 'rxjs';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-manage-attendees',
   templateUrl: './manage-attendees.component.html',
   styleUrls: ['./manage-attendees.component.css']
 })
-export class ManageAttendeesComponent implements OnInit {
+export class ManageAttendeesComponent implements OnInit, OnDestroy {
 
   busRide: BusRide;
   idBusRide: string;
@@ -42,6 +44,9 @@ export class ManageAttendeesComponent implements OnInit {
   nameChild = new FormControl('');
   childrenWithoutReservation: Array<Child>;
 
+  isAllLoaded = false;  // evita di fare il polling se non ho ancora le info necessarie
+  pollingData: any;
+
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
               private router: Router,
@@ -60,6 +65,20 @@ export class ManageAttendeesComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe((params: ParamMap) => this.onChangePath(params));
+    this.pollingData = interval(environment.intervalTimePolling)
+      .subscribe((data) => this.refreshReservationAndChildren());
+  }
+  ngOnDestroy(): void {
+    this.pollingData.unsubscribe();
+  }
+
+  private refreshReservationAndChildren() {
+    if (this.isAllLoaded) {
+      this.loadReservations();
+      if (this.isOutwardStop) {
+        this.loadChildrenWithoutReservation();
+      }
+    }
   }
 
   private loadReservations() {
@@ -131,6 +150,18 @@ export class ManageAttendeesComponent implements OnInit {
       );
   }
 
+  private loadChildrenWithoutReservation() {
+    this.childService.getChildrenWithoutReservationByBusRideAndStopBus(this.idBusRide, this.idCurrentStopBus)
+      .subscribe(
+        (data2) => {
+          this.childrenWithoutReservation = data2;
+        },
+        (error2) => {
+          this.alertService.error(error2);
+        }
+      );
+  }
+
   private onChangePath(params: ParamMap) {
     this.idBusRide = params.get('idBusRide');
     this.idCurrentStopBus = params.get('idCurrentStopBus');
@@ -143,15 +174,7 @@ export class ManageAttendeesComponent implements OnInit {
             this.isOutwardStop = true;
             this.isReturnStop = false;
             this.idLastStopForThisEscort = null;
-            this.childService.getChildrenWithoutReservationByBusRideAndStopBus(this.idBusRide, this.idCurrentStopBus)
-              .subscribe(
-                (data2) => {
-                  this.childrenWithoutReservation = data2;
-                },
-                (error2) => {
-                  this.alertService.error(error2);
-                }
-              );
+            this.loadChildrenWithoutReservation();
           } else {
             this.isOutwardStop = false;
             this.isReturnStop = true;
@@ -182,6 +205,7 @@ export class ManageAttendeesComponent implements OnInit {
           if (!this.isLastStop) {
             this.idNextStopBus = this.busRide.stopBuses[index + 1].id;
           }
+          this.isAllLoaded = true;
           this.loadReservations();
         },
         (error) => {

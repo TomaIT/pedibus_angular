@@ -16,13 +16,38 @@ ul.timeline > li {
   margin: 20px 0;
   padding-left: 20px;
 }
-ul.timeline > li:before {
+/*ul.timeline > li:before {
   content: ' ';
   background: white;
   display: inline-block;
   position: absolute;
   border-radius: 50%;
   border: 3px solid #22c0e8;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+  z-index: 400;
+}*/
+
+ul.timeline > .nopassed:before {
+  content: ' ';
+  background: white;
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid #22c0e8;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+  z-index: 400;
+}
+ul.timeline > .passed:before {
+  content: ' ';
+  background: white;
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  border: 4px solid darkblue;
   left: 20px;
   width: 20px;
   height: 20px;
