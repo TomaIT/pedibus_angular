@@ -200,16 +200,51 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
     }
   }
 
-  isBooked(bus: BusRide): Availability {
-    if (this.availabilities.length) {
+  isBooked(bus: string): boolean {
+    if (this.availabilities.length > 0) {
       for (const x of this.availabilities) {
-        if (x.idUser === this.currentUser && bus.id === x.idBusRide) {
-          return x;
+        if (bus === x.idBusRide) {
+          return true;
         }
       }
-      return null;
+      return false;
     }
-    return null;
+    return false;
+  }
+
+  checkBookedDate(busid: string, lineName: string, date: Date): boolean {
+    if (this.availabilities.length > 0) {
+      for (const x of this.availabilities) {
+        if ((busid !== x.idBusRide) && (lineName !== x.lineNameOfBusRide)) {
+          // per escludere la prenotazione selezionata e le fermate della stessa linea
+          if (x.startDateOfBusRide === date) {
+            return true; // inizio esattamente alla stessa ora
+          } else {
+            const busDate = new Date(date);
+            const avDate = new Date(x.startDateOfBusRide);
+            if (busDate.getMonth() === avDate.getMonth()) {
+              if (busDate.getDate() === avDate.getDate()) {
+                const temphAv = avDate.getHours();
+                const tempB = busDate.getHours();
+                // tslint:disable-next-line:max-line-length
+                if (tempB === temphAv) {
+                  return true;
+                } else {
+                    if ( temphAv - tempB > 2) {
+                      // do nothing
+                    } else {
+                      if (temphAv - tempB > -1) {
+                        return true; // perchè la differenza è troppo bassa
+                      }
+                    }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
   }
 
   refreshStopBuses() {
