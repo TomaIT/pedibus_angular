@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AlertService} from '../../services/alert.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {AuthenticationService} from '../../services/authentication.service';
@@ -8,6 +8,8 @@ import {StopBusType} from '../../models/stopbus';
 import {LineEnum} from '../../models/line';
 import {LineService} from '../../services/line.service';
 import {PresenceBusRide, PresenceChild, PresenceStopBus} from '../../models/presencebusride';
+import {interval} from 'rxjs';
+import {environment} from '../../../environments/environment';
 
 // jQuery Sign $
 declare let $: any;
@@ -17,7 +19,7 @@ declare let $: any;
   templateUrl: './state-busride.component.html',
   styleUrls: ['./state-busride.component.css']
 })
-export class StateBusrideComponent implements OnInit {
+export class StateBusrideComponent implements OnInit, OnDestroy {
   @ViewChild('myDate') myDate: ElementRef;
   selectedLine: LineEnum;
   selectedData: any;
@@ -31,6 +33,8 @@ export class StateBusrideComponent implements OnInit {
   idBusRide: string;
   busRide: BusRide;
   presenceBusRide: PresenceBusRide;
+
+  pollingData: any;
 
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
@@ -60,6 +64,11 @@ export class StateBusrideComponent implements OnInit {
     this.directions.push(StopBusType.outward);
     this.directions.push(StopBusType.return);
     this.activatedRoute.paramMap.subscribe((params: ParamMap) => this.onChangePath(params));
+    this.pollingData = interval(environment.intervalTimePolling + 5000)
+      .subscribe((data) => this.refreshBusRideAndPresences());
+  }
+  ngOnDestroy(): void {
+    this.pollingData.unsubscribe();
   }
 
   onChangePath(params: ParamMap) {
@@ -99,7 +108,7 @@ export class StateBusrideComponent implements OnInit {
           if (reload) {
             this.reloadWithNewPath();
           }
-          this.onChangeValues();
+          this.refreshBusRideAndPresences();
         },
         (error) => {
           this.alertService.error(error);
@@ -108,7 +117,7 @@ export class StateBusrideComponent implements OnInit {
     // alert(this.selectedDay + '/' + this.selectedMonth + '/' + this.selectedYear);
   }
 
-  onChangeValues() {
+  private refreshBusRideAndPresences() {
     this.busRideService.getBusRidesFromLineAndStopBusTypeAndData(this.selectedLine.idLine,
       this.selectedDirection, this.selectedYear, this.selectedMonth, this.selectedDay)
       .subscribe(
@@ -148,5 +157,20 @@ export class StateBusrideComponent implements OnInit {
     const strData = ('0' + this.selectedYear).slice(-4) + ('0' + this.selectedMonth).slice(-2) + ('0' + this.selectedDay).slice(-2);
     this.router.navigate(
       [`/stateBusRide/${this.selectedLine.idLine}/${this.selectedDirection}/${strData}`]);
+  }
+
+  isBusAlreadyPassed(idStopBus: string): boolean {
+    const idStopBuses = this.busRide.stopBuses.map(x => x.id);
+    if (idStopBuses.indexOf(idStopBus) <= idStopBuses.indexOf(this.busRide.idLastStopBus)) {
+      return true;
+    }
+    return false;
+  }
+
+  convertTimestampToTime(timestamp: number): string {
+    const date = new Date(timestamp);
+    const h = date.getHours();
+    const m = date.getMinutes();
+    return (('0' + h).slice(-2) + ':' + ('0' + m).slice(-2));
   }
 }

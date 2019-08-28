@@ -29,8 +29,8 @@
 <div class="row" style="margin-top: 30px;">
   <div class="col">
     <ul class="timeline">
-      <li *ngFor="let stopBus of busRide.stopBuses; let i = index;last as isLastStop;first as isFirstStop;">
-        <div>
+      <li *ngFor="let stopBus of busRide.stopBuses; let i = index;last as isLastStop;first as isFirstStop;" [class.nopassed]="!isBusAlreadyPassed(stopBus.id)" [class.passed]="isBusAlreadyPassed(stopBus.id)">
+        <div style="padding:0px 0px 15px 10px;">
           <h5 style="font-style: italic;color: #22c0e8;" class="left">{{convertMinutesToTime(stopBus.hours)}} - {{stopBus.name}}</h5>
           <span *ngFor="let child of presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet;last as isLast;">
                 <!--(click)="isSelected($event, it.stopBusType, child)"-->
@@ -54,10 +54,12 @@
           <ng-container *ngIf="stopBus.stopBusType === 'Outward' && isLastStop">
             <ng-container *ngFor="let presSB of presenceBusRide.presenceStopBusGETTreeSet">
               <span *ngFor="let p of presSB.presenceChildGETSet;last as isLast;">
-                <span [class.orange]="p.getOut">{{p.nameChild}}</span>
-                <span *ngIf="!p.booked">[NON PRENOTATO]</span>
-                <span *ngIf="!isLast">, </span>
-                <span *ngIf="isLast">.</span>
+                <ng-container *ngIf="!p.absent">
+                  <span [class.orange]="p.getOut">{{p.nameChild}}</span>
+                  <span *ngIf="!p.booked">[NON PRENOTATO]</span>
+                  <span *ngIf="!isLast">, </span>
+                  <span *ngIf="isLast">. </span>
+                </ng-container>
               </span>
             </ng-container>
           </ng-container>
@@ -71,6 +73,11 @@
               </span>
             </ng-container>
           </ng-container>
+          <div *ngIf="stopBus.id === busRide.idLastStopBus" style="margin: 15px 5px 0px 0px;">
+            <img src="../../../../assets/images/bus-logo.png" style="margin-right: 10px;min-width: 25px;" width="30px" height="auto">
+            <span *ngIf="!isLastStop">Il Pedibus ha lascito questa fermata alle ore: {{convertTimestampToTime(busRide.timestampLastStopBus)}}</span>
+            <span *ngIf="isLastStop">Il Pedibus ha concluso la sua corsa alle ore: {{convertTimestampToTime(busRide.timestampLastStopBus)}}</span>
+          </div>
         </div>
       </li>
     </ul>

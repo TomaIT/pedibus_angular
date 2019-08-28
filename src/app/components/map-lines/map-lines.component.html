@@ -47,7 +47,7 @@
   </agm-rectangle>
 </agm-map-->
 
-  <aol-map style="border: none; position: relative; top: 10px; height: 600px; width: 1140px;z-index: 1;" (onClick)="showInfo($event)" >
+  <aol-map style="border: none; position: relative; top: 10px; height: 600px; width: 1140px;z-index: 1;" (onClick)="showInfo($event)" *ngIf="showMap">
     <aol-view [zoom]="14">
       <aol-coordinate [x]="lng" [y]="lat" [srid]="'EPSG:4326'"></aol-coordinate>
     </aol-view>

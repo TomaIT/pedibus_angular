@@ -74,8 +74,11 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           for (const x of data) {
-            user.user.idLines.includes(x.idLine);
-            this.lines.push(x);
+            for (const uLine of user.user.idLines) {
+              if (uLine.localeCompare(x.idLine) === 0) {
+                this.lines.push(x);
+              }
+            }
           }
         },
         (error) => {
@@ -145,7 +148,6 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
           (error) => {
             this.loadingOut = false;
             this.avbListOut = undefined;
-            this.alertService.error(error);
           }
         );
       this.loadingRet = true;
@@ -180,9 +182,8 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
               );
           },
           (error) => {
-            this.loadingOut = false;
+            this.loadingRet = false;
             this.avbListRet = undefined;
-            this.alertService.error(error);
           }
         );
     }
@@ -301,4 +302,5 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
         }
       );
   }
+
 }
