@@ -44,21 +44,9 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
       this.availabilityService.getAvailabilitiesByUser(this.authenticationService.currentUserValue.username).subscribe(
         (data) => {
           this.availabilities = data;
-          const tempbuscoll: Array<BusRide> = new Array<BusRide>();
-          for (const temp of this.availabilities) {
-            this.busRidesService.getBusRideById(temp.idBusRide).subscribe(
-              (data1) => { tempbuscoll.push(data1); },
-              (error2) => {this.alertService.error(error2); }
-            );
-          }
-          if (tempbuscoll.length === this.busRides.length) {
-            if (this.busRides.every(element => tempbuscoll.includes(element))) { // controlla che gli array siano uguali
-              // do nothing
-            } else {
-              this.busRides = tempbuscoll;
-            }
-          } else {
-            this.busRides = tempbuscoll;
+          this.busRides.length = 0;
+          for (const avl of this.availabilities) {
+            this.busRides.push(avl.busRide);
           }
         },
         (error3) => { this.alertService.error(error3);
@@ -80,10 +68,7 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
       (data) => {
         this.availabilities = data;
         for (const temp of this.availabilities) {
-          this.busRidesService.getBusRideById(temp.idBusRide).subscribe(
-            (data1) => { this.busRides.push(data1); },
-            (error2) => {this.alertService.error(error2); }
-          );
+          this.busRides.push(temp.busRide);
         }
       },
       (error3) => { this.alertService.error(error3);
