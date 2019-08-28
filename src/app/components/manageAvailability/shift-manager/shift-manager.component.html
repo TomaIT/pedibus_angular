@@ -2,7 +2,7 @@
   <div class="col">
     <label>
       Seleziona la data
-      <input #myDate type="text" id="date" class="form-control" [ngModel]="dataSelected" autocomplete="off">
+      <input #myDate type="text" id="date" style="position: relative; z-index: 100000;" class="form-control" [ngModel]="dataSelected" autocomplete="off">
     </label>
   </div>
 <div class="col">
@@ -24,22 +24,22 @@
     <h2>Disponibilità totali: {{totalOut}}</h2>
     <button class="btn btn-primary" type="button" (click)="clearAllAvilabilties('out')">Resetta disponibilità</button>
     &nbsp;
-    <button class="btn btn-primary" type="button" (click)="deleteBusride('out')">Annulla Corsa</button>
+    <button class="btn btn-danger" type="button" (click)="deleteBusride('out')">Annulla Corsa</button>
     <img *ngIf="loadingOut" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-    &nbsp;
+    &nbsp;&nbsp;
     <ul class="timeline">
       <li *ngFor="let avb of avbListOut">
         <label style="font-style: italic;color: #22c0e8;font-size: 20px">{{avb.stopName}}</label>
         <ul>
           <li *ngFor="let single of avb.availabilities">
-            <p>{{single.idUser}}: {{single.state}} <button class="btn" style="border-radius: 50%; font-size: 15px; background: greenyellow" *ngIf="single.state.toString() !== 'Confirmed'" type="button" (click)="updateAvailability(single.idStopBus,single.state,single.id)">Conferma</button></p>
+            <p>{{single.idUser}}: {{single.state}} <button class="btn" style="border-radius: 50%; font-size: 15px; background: greenyellow" *ngIf="changeState(single.state)" type="button" (click)="updateAvailability(single.idStopBus,single.state,single.id)">Conferma</button><button class="btn btn-danger" style="border-radius: 50%; font-size: 15px;" *ngIf="!changeState(single.state)" type="button" (click)="deleteAvailability(single.id)">Cancella</button></p>
           </li>
         </ul>
       </li>
     </ul>
   </div>
     <div class="col" *ngIf="avbListOut === undefined">
-      <h1>La corsa {{lineSelected.lineName}}(A) non esiste</h1>
+      <h1>La corsa {{lineSelected.lineName}}(A) non è modificabile</h1>
     </div>
   </ng-container>
   <ng-container *ngIf="lineSelected !== undefined">
@@ -47,10 +47,10 @@
     <h1>{{lineSelected.lineName}} Ritorno</h1>
     <h2>Disponibilità totali: {{totalRet}}</h2>
     <button class="btn btn-primary" type="button" (click)="clearAllAvilabilties('ret')">Resetta disponibilità</button>
-    &nbsp;
-    <button class="btn btn-primary" type="button" (click)="deleteBusride('ret')">Annulla Corsa</button>
+    &nbsp;&nbsp;
+    <button class="btn btn-danger" type="button" (click)="deleteBusride('ret')">Annulla Corsa</button>
     <img *ngIf="loadingRet" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-    &nbsp;
+    &nbsp;&nbsp;
     <ul class="timeline">
       <li *ngFor="let avb of avbListRet">
         <label style="font-style: italic;color: #22c0e8;font-size: 20px">{{avb.stopName}}</label>
@@ -63,7 +63,7 @@
     </ul>
   </div>
     <div class="col" *ngIf="avbListRet === undefined">
-      <h1>La corsa {{lineSelected.lineName}}(R)  non esiste</h1>
+      <h1>La corsa {{lineSelected.lineName}}(R)  non è modificabile</h1>
     </div>
   </ng-container>
   <!--mat-card>
