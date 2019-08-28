@@ -14,9 +14,13 @@ import {isNullOrUndefined} from 'util';
   styleUrls: ['./manage-users.component.css']
 })
 export class ManageUsersComponent implements OnInit, OnDestroy {
+  pageSize = 5;
   users: Array<User>;
   pollingData: any;
   usernameStartWith: string;
+  pageOfItems: Array<any>;
+  numberPageOfView = 1;
+  historyPage = 1;
 
 
   constructor(private authenticationService: AuthenticationService,
@@ -35,18 +39,45 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
       .subscribe((data) => this.usernameStartWithChange());
   }
 
+  onChangePage(pageOfItems: Array<any>) {
+    const index = this.users.findIndex(x => x.username === pageOfItems[0].username);
+    if (index >= 0) {
+      this.historyPage = (index / this.pageSize) + 1;
+    }
+    this.pageOfItems = pageOfItems;
+  }
+
   ngOnDestroy(): void {
     if (!isNullOrUndefined(this.pollingData)) {
       this.pollingData.unsubscribe();
     }
   }
 
+  equals(a: User, obj: User): boolean {
+    return a.username === obj.username &&
+      a.enabled === obj.enabled &&
+      a.accountNonLocked === obj.accountNonLocked &&
+      a.accountNonExpired === obj.accountNonExpired &&
+      a.credentialsNonExpired === obj.credentialsNonExpired &&
+      a.firstname === obj.firstname &&
+      a.surname === obj.surname &&
+      a.roles.length === obj.roles.length &&
+      a.roles.filter(x => obj.roles.findIndex(y => x === y) < 0).length <= 0 &&
+      a.phoneNumber === obj.phoneNumber;
+  }
+
   usernameStartWithChange() {
-    this.userService.findByUsernameStartWith(this.usernameStartWith)
+    this.userService.findByUsernameStartWith(this.usernameStartWith, 0, 200)
       .subscribe(
         (data) => {
-          this.users = data.sort((a, b) => a.username.localeCompare(b.username));
-          this.users.forEach(x => x.roles = x.roles.sort((a, b) => a.localeCompare(b)));
+          const temp = data.content.sort((a, b) => a.username.localeCompare(b.username));
+          temp.forEach(x => x.roles = x.roles.sort((a, b) => a.localeCompare(b)));
+          this.users = temp;
+          this.numberPageOfView = this.historyPage;
+         /* if (!this.users || this.users.length !== temp.length ||
+            temp.filter(y => this.users.findIndex(x => this.equals(x, y)) < 0).length > 0) {
+            this.users = temp;
+          }*/
         },
         (error) => {
           this.alertService.error(error);

@@ -1,55 +1,65 @@
-<div class="row">
+<!--<div class="row">
   <div class="col">
   <label>
     Ricerca Per Email
   <input [(ngModel)]="usernameStartWith" (ngModelChange)="usernameStartWithChange()" class="form-control"
-         type="text" placeholder="--Search--" aria-label="Search">
+         type="text" placeholder="&#45;&#45;Search&#45;&#45;" aria-label="Search">
   </label>
   </div>
 </div>
-<hr style="width: 100%; color: black; height: 1px; background-color:lightgrey;">
-<label *ngIf="users"  style="float: right;font-size: smaller;">Risultati: {{users.length}}</label>
-<h1 *ngIf="users" align="center">Risultati</h1>
-<div *ngIf="users" class="row ">
-  <div class="col">
-  <table class="table table-responsive table-striped" style="font-family: Lato;">
-    <thead>
-    <tr>
-      <th scope="col" width="auto">Email</th>
-      <th scope="col" width="auto">Nome</th>
-      <th scope="col" width="auto">Cognome</th>
-      <th scope="col" width="auto">Telefono</th>
-      <th scope="col" width="auto">Ruoli</th>
-      <th *ngIf="authenticationService.isSysAdmin()" scope="col" width="auto">Bloccato</th>
-      <th scope="col" width="8%">Attivato</th>
-      <th scope="col" width="8%">Aggiorna</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let a of users;">
-      <td>{{a.username|| '-' }}</td>
-      <td>{{a.firstname || '-' }}</td>
-      <td>{{a.surname || '-' }}</td>
-      <td>{{a.phoneNumber|| '-' }}</td>
-      <td>
-        <select class="form-control">
-          <option *ngFor="let b of a.roles;">{{b}}</option>
-        </select>
+<hr style="width: 100%; color: black; height: 1px; background-color:lightgrey;">-->
+<!-- main app container -->
+<div class="card text-center m-3">
+  <h3 class="card-header">Ricerca per Email
+  <input [(ngModel)]="usernameStartWith" (ngModelChange)="usernameStartWithChange()" class="form-control"
+         type="text" placeholder="--Search--" aria-label="Search">
+  </h3>
 
-      </td>
-      <td *ngIf="authenticationService.isSysAdmin()">
-        <button *ngIf="a.accountNonLocked" (click)="blockUser(a)" type="button" class="btn btn-link" style="color: red;">Blocca</button>
-        <button *ngIf="!a.accountNonLocked" (click)="unblockUser(a)" type="button" class="btn btn-link">Sblocca</button>
-      </td>
-      <td>
-        <img *ngIf="a.enabled" src="../../../../assets/images/check-box.png" style="margin-left: 13px;min-width: 25px;" width="50%" height="auto">
-        <img *ngIf="!a.enabled" (click)="refreshUUID(a)" src="../../../../assets/images/refresh-button.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-      </td>
-      <td>
-        <img routerLink="/manageUsers/{{a.username}}" src="../../../../assets/images/edit-document.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="card-body">
+    <table class="table table-responsive table-striped" style="font-family: Lato;">
+      <thead>
+      <tr>
+        <th scope="col" width="auto">Email</th>
+        <th scope="col" width="auto">Nome</th>
+        <th scope="col" width="auto">Cognome</th>
+        <th scope="col" width="auto">Telefono</th>
+        <th scope="col" width="auto">Ruoli</th>
+        <th *ngIf="authenticationService.isSysAdmin()" scope="col" width="auto">Bloccato</th>
+        <th scope="col" width="8%">Attivato</th>
+        <th scope="col" width="8%">Aggiorna</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let a of pageOfItems;">
+        <td>{{a.username|| '-' }}</td>
+        <td>{{a.firstname || '-' }}</td>
+        <td>{{a.surname || '-' }}</td>
+        <td>{{a.phoneNumber|| '-' }}</td>
+        <td>
+          <select class="form-control">
+            <option *ngFor="let b of a.roles;">{{b}}</option>
+          </select>
+
+        </td>
+        <td *ngIf="authenticationService.isSysAdmin()">
+          <button *ngIf="a.accountNonLocked" (click)="blockUser(a)" type="button" class="btn btn-link" style="color: red;">Blocca</button>
+          <button *ngIf="!a.accountNonLocked" (click)="unblockUser(a)" type="button" class="btn btn-link">Sblocca</button>
+        </td>
+        <td>
+          <img *ngIf="a.enabled" src="../../../../assets/images/check-box.png" style="margin-left: 13px;min-width: 25px;" width="50%" height="auto">
+          <img *ngIf="!a.enabled" (click)="refreshUUID(a)" src="../../../../assets/images/refresh-button.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+        </td>
+        <td>
+          <img routerLink="/manageUsers/{{a.username}}" src="../../../../assets/images/edit-document.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <!--<div *ngFor="let item of pageOfItems">{{item.username}}</div>-->
+  </div>
+  <div class="card-footer pb-0 pt-3">
+
+    <jw-pagination class="my" [maxPages]="3" [items]="users" [initialPage]="numberPageOfView" [pageSize]="pageSize"
+                   (changePage)="onChangePage($event)"></jw-pagination>
   </div>
 </div>

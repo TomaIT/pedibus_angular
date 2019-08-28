@@ -34,24 +34,6 @@ export class EscortBusridesComponent implements OnInit {
       .subscribe(
         (data) => {
           this.confirmedAvailabilities = data.filter(x => x.state.toString() === 'Confirmed');
-          this.confirmedAvailabilities.forEach(av => {
-            av.busRide = new BusRide();
-            av.busRide.stopBuses = new Array<StopBus>();
-            av.busRide.startTime = new Date();
-            av.busRide.stopBuses = new Array<StopBus>();
-          });
-          this.confirmedAvailabilities.forEach((av) => {
-            this.busRideService.getBusRideById(av.idBusRide)
-              .subscribe(
-                (data2) => {
-                  av.busRide = data2;
-                },
-                (error2) => {
-                  this.alertService.error(error2);
-                }
-              );
-          });
-          this.confirmedAvailabilities.sort((a, b) => (a.busRide.startTime.getTime() - b.busRide.startTime.getTime()));
         },
         (error) => {
           this.alertService.error(error);

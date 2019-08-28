@@ -64,6 +64,8 @@ export class ManageAttendeesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.reservations = new Array<Reservation>();
+    this.currentStopBus = new StopBus();
     this.activatedRoute.paramMap.subscribe((params: ParamMap) => this.onChangePath(params));
     this.pollingData = interval(environment.intervalTimePolling)
       .subscribe((data) => this.refreshReservationAndChildren());

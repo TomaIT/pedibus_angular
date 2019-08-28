@@ -33,6 +33,7 @@ import { ManageUserComponent } from './components/manageUsers/manage-user/manage
 import {AgmCoreModule} from '@agm/core';
 import {AngularOpenlayersModule} from 'ngx-openlayers';
 import { StateBusrideComponent } from './components/state-busride/state-busride.component';
+import { JwPaginationComponent } from 'jw-angular-pagination';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -85,7 +86,8 @@ const routes: Routes = [
     MapLinesComponent,
     ManageUserComponent,
     MyFilterChildrenPipe,
-    StateBusrideComponent
+    StateBusrideComponent,
+    JwPaginationComponent
   ],
   imports: [
     BrowserModule,
