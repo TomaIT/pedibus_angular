@@ -47,7 +47,7 @@
   </agm-rectangle>
 </agm-map-->
 
-  <aol-map style="border: none; position: relative; top: 10px; height: 600px; width: 1140px;z-index: 1;" (onClick)="showInfo($event)" >
+  <aol-map style="border: none; position: relative; top: 10px; height: 600px; width: 1140px;z-index: 1;" (onClick)="showInfo($event)" *ngIf="showMap">
     <aol-view [zoom]="14">
       <aol-coordinate [x]="lng" [y]="lat" [srid]="'EPSG:4326'"></aol-coordinate>
     </aol-view>
@@ -71,6 +71,7 @@
             </aol-style-icon>
           </aol-style>
         </aol-feature>
+        <ng-container *ngIf="markers !== null">
         <aol-feature *ngFor="let marker of markers">
           <aol-geometry-point >
             <aol-coordinate [x]="marker.lng" [y]="marker.lat" [srid]="'EPSG:4326'"></aol-coordinate>
@@ -86,6 +87,7 @@
           </aol-style>
 
         </aol-feature>
+        </ng-container>
       </aol-source-vector>
     </aol-layer-vector>
     <aol-overlay *ngIf="addOverlay!==undefined">

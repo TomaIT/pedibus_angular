@@ -28,4 +28,8 @@ export class AvailabilityService {
   deleteAvailability(idAvailability: string): Observable<any> {
     return this.httpClient.delete<any>(`${environment.apiUrl}/availabilities/${idAvailability}`);
   }
+
+  getBusRideAvailabilities(idBusRide: string): Observable<Array<Availability>> {
+    return this.httpClient.get<Array<Availability>>(`${environment.apiUrl}/busrides/${idBusRide}/availabilities`);
+  }
 }

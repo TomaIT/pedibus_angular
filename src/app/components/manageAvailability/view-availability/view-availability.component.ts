@@ -140,43 +140,7 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
   checkrc(state: AvailabilityState): boolean {
     return state === AvailabilityState.readChecked;
   }
-/*
-  showDep(idbr: string, busname: string) {
-    if (!idbr.includes('Return')) {
-      return busname;
-    } else {
-      let tempColl: Array<StopBus> = new Array<StopBus>();
-      this.busRidesService.getBusRideById(idbr).subscribe(
-        (data) => {
-          tempColl = data.stopBuses;
-          return tempColl[0].name;
-        },
-        (error) => {
-          this.alertService.error(error);
-          return 'errorDep';
-        }
-      );
-    }
-  }
 
-  showArr(idbr: string, busname: string) {
-    if (idbr.includes('Return')) {
-      return busname;
-    } else {
-      let tempColl: Array<StopBus> = new Array<StopBus>();
-      this.busRidesService.getBusRideById(idbr).subscribe(
-        (data) => {
-          tempColl = data.stopBuses;
-          return tempColl[tempColl.length - 1].name;
-        },
-        (error) => {
-          this.alertService.error(error);
-          return 'errorArr';
-        }
-      );
-    }
-  }
-  */
   showDep(idbr: string, busname: string) {
     for (const temp of this.busRides) {
       if (temp.id === idbr) {

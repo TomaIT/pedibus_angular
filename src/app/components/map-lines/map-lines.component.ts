@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {LineService} from '../../services/line.service';
-import {Subscription} from 'rxjs';
 import {Line, LineEnum, Markers} from '../../models/line';
 import {AlertService} from '../../services/alert.service';
 import {StopBus, StopBusType} from '../../models/stopbus';
@@ -24,6 +23,7 @@ export class MapLinesComponent implements OnInit {
   actualLine: string;
   actualDirection: string;
   addOverlay: Markers;
+  showMap = true;
   constructor(private authenticationService: AuthenticationService,
               private router: Router,
               private lineService: LineService,
@@ -31,6 +31,7 @@ export class MapLinesComponent implements OnInit {
               private activatedRoute: ActivatedRoute) {
     if (!this.authenticationService.isAuthenticated()) {
       this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
+      this.showMap = false;
     }
   }
 
@@ -52,10 +53,10 @@ export class MapLinesComponent implements OnInit {
 
   private onChangePath(params: ParamMap) {
     this.addOverlay = undefined;
-    this.markers = new Array<Markers>();
     const id = params.get('id');
-    this.markers = new Array<Markers>();
+    console.log(id);
     if (id !== null) {
+      this.markers = new Array<Markers>();
       this.loading = true;
       this.lineService.getLine(id.split('_')[0])
         .subscribe(

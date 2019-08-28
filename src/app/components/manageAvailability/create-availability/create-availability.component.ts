@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {Router} from '@angular/router';
 import {BusRide} from '../../../models/busride';
@@ -8,6 +8,8 @@ import {StopBus, StopBusType} from '../../../models/stopbus';
 import {StopBusService} from '../../../services/stop-bus.service';
 import {Availability, AvailabilityPOST, AvailabilityState} from '../../../models/availability';
 import {AvailabilityService} from '../../../services/availability.service';
+import {interval} from 'rxjs';
+import {environment} from '../../../../environments/environment';
 
 // jQuery Sign $
 declare let $: any;
@@ -17,7 +19,8 @@ declare let $: any;
   templateUrl: './create-availability.component.html',
   styleUrls: ['./create-availability.component.css']
 })
-export class CreateAvailabilityComponent implements OnInit {
+export class CreateAvailabilityComponent implements OnInit, OnDestroy {
+
   @ViewChild('myDate') myDate: ElementRef;
   retBusRides: Array<BusRide>;
   outBusRides: Array<BusRide>;
@@ -30,6 +33,7 @@ export class CreateAvailabilityComponent implements OnInit {
   retStopBusSelectedId: string;
   loading = false;
   currentUser: string;
+  pollingData: any;
 
   constructor(private authenticationService: AuthenticationService,
               private busRideService: BusRideService,
@@ -40,6 +44,19 @@ export class CreateAvailabilityComponent implements OnInit {
     if (!this.authenticationService.isEscort()) {
       this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
+    this.pollCounter();
+    this.pollingData = interval(environment.intervalAvailCheck)
+      .subscribe((data) => this.pollCounter());
+  }
+
+  private pollCounter() {
+    if (this.authenticationService.isAuthenticated()) {
+      this.getBusRides();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.pollingData.unsubscribe();
   }
 
   ngOnInit() {
@@ -128,23 +145,36 @@ export class CreateAvailabilityComponent implements OnInit {
     temp.idStopBus = idsb;
     temp.state = AvailabilityState.available;
     this.loading = true;
-    this.availabilityService.addAvailability(temp).subscribe((data) => {
-      this.loading = false;
-      this.alertService.success('Disponibilità inviata con successo.');
-      this.availabilities.push(data);
-      this.getBusRides();
-    },
-      (error) => {
-        this.alertService.error(error);
-        this.loading = false;
-      });
+    this.busRideService.getBusRideById(idbr).subscribe(
+      (data1) => {
+        if (data1) {
+        this.availabilityService.addAvailability(temp).subscribe((data) => {
+            this.loading = false;
+            this.alertService.success('Disponibilità inviata con successo.');
+            this.availabilities.push(data);
+            this.getBusRides();
+          },
+          (error) => {
+            this.alertService.error(error);
+            this.loading = false;
+          });
+      } else {
+          this.alertService.error('BusRide not found');
+        }
+        }, (error2) => {
+        this.alertService.error('BusRide not found');
+      }
+    );
   }
 
   getTimeStopBus(busRide: BusRide, stopBus: StopBus): Date {
     if (busRide && stopBus) {
       const temp = new Date();
       temp.setFullYear(busRide.year, busRide.month, busRide.day);
-      temp.setHours(0, stopBus.hours, 0, 0);
+      const temp2 = new Date();
+      const h = Math.floor(stopBus.hours / 60);
+      const m = stopBus.hours - (h * 60);
+      temp.setHours(h, m, 0, 0);
       return temp;
     }
     return null;
@@ -164,7 +194,7 @@ export class CreateAvailabilityComponent implements OnInit {
     if (this.retStopBusSelectedId) {
       const index = this.retStopBuses.findIndex(x => x.id === this.retStopBusSelectedId);
       if (index >= 0) {
-        return this.outStopBuses[index];
+        return this.retStopBuses[index];
       }
       return null;
     }

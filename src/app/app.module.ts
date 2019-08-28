@@ -49,6 +49,7 @@ const routes: Routes = [
   {path: 'createAvailabilities', component: CreateAvailabilityComponent},
   {path: 'viewAvailabilities', component: ViewAvailabilityComponent},
   {path: 'shiftManage', component: ShiftManagerComponent},
+  {path: 'shiftManage/:id', component: ShiftManagerComponent},
   {path: 'manageUsers', component: ManageUsersComponent},
   {path: 'manageUsers/:id', component: ManageUserComponent},
   {path: 'mapLines', component: MapLinesComponent},
