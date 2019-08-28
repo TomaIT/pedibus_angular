@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../../services/authentication.service';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {StopBusType} from '../../../models/stopbus';
 import {Availability, AvailabilityPUT, AvailabilityState, GroupedAvailabilities} from '../../../models/availability';
 import {LineEnum} from '../../../models/line';
@@ -118,13 +118,13 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
       getBusRidesFromLineAndStopBusTypeAndData(this.lineSelected.idLine, StopBusType.outward, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
         .subscribe(
           (busride) => {
-            console.log(busride);
             this.busRideOut = busride.id;
             this.availabilityService.getBusRideAvailabilities(busride.id)
               .subscribe(
                 (availabilities) => {
 
                   this.totalOut = availabilities.length;
+                  const arr: Array<string> = new Array<string>();
                   const grouped = availabilities.reduce((objectsByKeyValue: Array<Availability>, obj) => {
                       const value = obj.stopBusName;
                       objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
@@ -135,9 +135,36 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                   Object.keys(grouped).forEach((key) => {
                     const parsed: GroupedAvailabilities = new GroupedAvailabilities();
                     parsed.stopName = key;
+                    arr.push(key);
                     parsed.availabilities = grouped[key];
+                    parsed.startTime = parsed.availabilities[0].busRide.stopBuses[0].hours;
                     this.avbListOut.push(parsed);
                   });
+                  for (const stop of busride.stopBuses) {
+                    for (const avb of this.avbListOut) {
+                      if (stop.name === avb.stopName) {
+                        avb.startTime = stop.hours;
+                      }
+                    }
+                    if (arr.includes(stop.name) === false) {
+                      const parsed: GroupedAvailabilities = new GroupedAvailabilities();
+                      parsed.stopName = stop.name;
+                      parsed.startTime = stop.hours;
+                      parsed.availabilities = null;
+                      this.avbListOut.push(parsed);
+                    }
+                  }
+                  this.avbListOut.sort((a, b) => {
+                    return a.startTime - b.startTime;
+                  });
+                  if (this.dataSelected === this.today()) {
+                    const now = new Date();
+                    const seconds = (now.getHours() * 60) + now.getMinutes();
+                    console.log(seconds);
+                    if (this.avbListOut[0].startTime <= seconds) {
+                      this.avbListOut = undefined;
+                    }
+                  }
                 },
                 (error) => {
                   this.alertService.error(error);
@@ -161,6 +188,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
 
                   this.totalRet = availabilities.length;
                   this.busRideRet = busride.id;
+                  const arr: Array<string> = new Array<string>();
                   const grouped = availabilities.reduce((objectsByKeyValue: Array<Availability>, obj) => {
                       const value = obj.stopBusName;
                       objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
@@ -171,9 +199,34 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                   Object.keys(grouped).forEach((key) => {
                     const parsed: GroupedAvailabilities = new GroupedAvailabilities();
                     parsed.stopName = key;
+                    arr.push(key);
                     parsed.availabilities = grouped[key];
                     this.avbListRet.push(parsed);
                   });
+                  for (const stop of busride.stopBuses) {
+                    for (const avb of this.avbListRet) {
+                      if (stop.name === avb.stopName) {
+                        avb.startTime = stop.hours;
+                      }
+                    }
+                    if (arr.includes(stop.name) === false) {
+                      const parsed: GroupedAvailabilities = new GroupedAvailabilities();
+                      parsed.stopName = stop.name;
+                      parsed.startTime = stop.hours;
+                      parsed.availabilities = null;
+                      this.avbListRet.push(parsed);
+                    }
+                  }
+                  this.avbListRet.sort((a, b) => {
+                    return a.startTime - b.startTime;
+                  });
+                  if (this.dataSelected === this.today()) {
+                    const now = new Date();
+                    const seconds = (now.getHours() * 60) + now.getMinutes() ;
+                    if (this.avbListRet[0].startTime <= seconds) {
+                      this.avbListRet = undefined;
+                    }
+                  }
                   this.loadingRet = false;
                 },
                 (error) => {
@@ -303,4 +356,24 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
       );
   }
 
+  changeState(state: AvailabilityState): boolean {
+    if (state === AvailabilityState.available || state === AvailabilityState.readChecked) {
+      return true;
+    } else if (state === AvailabilityState.checked || state === AvailabilityState.confirmed) {
+      return false;
+    }
+  }
+
+  deleteAvailability(id: string) {
+    this.availabilityService.deleteAvailability(id)
+      .subscribe(
+        (data) => {
+          this.alertService.success('Availability deleted');
+          this.getAvailabilities();
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+  }
 }
