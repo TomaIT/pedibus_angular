@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AlertService} from './alert.service';
 import {Observable} from 'rxjs';
-import {Role, User, UserPUT} from '../models/user';
+import {Page, Role, User, UserPUT} from '../models/user';
 import {environment} from '../../environments/environment';
 
 @Injectable({
@@ -10,9 +10,7 @@ import {environment} from '../../environments/environment';
 })
 export class UserService {
 
-  constructor(private httpClient: HttpClient,
-              private alertService: AlertService) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   createUser(email: string, roles: Array<Role>): Observable<User> {
     return this.httpClient.post<User>(`${environment.apiUrl}/users`, {email, roles});
@@ -56,7 +54,8 @@ export class UserService {
     return this.httpClient.put<User>(`${environment.apiUrl}/users/${idUser}`, userPUT);
   }
 
-  findByUsernameStartWith(idUserStarting: string): Observable<Array<User>> {
-    return this.httpClient.get<Array<User>>(`${environment.apiUrl}/users?idUserStarting=${idUserStarting}`);
+  findByUsernameStartWith(idUserStarting: string, page: number, size: number): Observable<Page<User>> {
+    /* &page=${page}&size=${size}*/
+    return this.httpClient.get<Page<User>>(`${environment.apiUrl}/users?idUserStarting=${idUserStarting}`);
   }
 }

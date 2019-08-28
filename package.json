@@ -23,6 +23,7 @@
     "@auth0/angular-jwt": "^3.0.0",
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.5.4",
+    "jw-angular-pagination": "^1.1.0",
     "ngx-openlayers": "^0.8.22",
     "ol": "^5.3.3",
     "rxjs": "~6.3.3",
