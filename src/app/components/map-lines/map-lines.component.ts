@@ -29,10 +29,10 @@ export class MapLinesComponent implements OnInit {
               private lineService: LineService,
               private alertService: AlertService,
               private activatedRoute: ActivatedRoute) {
-    if (!this.authenticationService.isAuthenticated()) {
+    /*if (!this.authenticationService.isAuthenticated()) {
       this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
       this.showMap = false;
-    }
+    }*/
   }
 
   ngOnInit() {

@@ -27,9 +27,6 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
               private router: Router,
               private alertService: AlertService,
               private userService: UserService) {
-    if (!(this.authenticationService.isSysAdmin() || this.authenticationService.isAdmin())) {
-      this.router.navigate(['/home']).catch((reason) => alertService.error(reason));
-    }
   }
 
   ngOnInit() {

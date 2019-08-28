@@ -41,9 +41,6 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
               private stopBusService: StopBusService,
               private availabilityService: AvailabilityService,
               private router: Router) {
-    if (!this.authenticationService.isEscort()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
     this.pollCounter();
     this.pollingData = interval(environment.intervalAvailCheck)
       .subscribe((data) => this.pollCounter());

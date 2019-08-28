@@ -18,9 +18,6 @@ export class ChildrenComponent implements OnInit {
               private childService: ChildService,
               private authenticationService: AuthenticationService,
               private router: Router) {
-    if (!this.authenticationService.isParent()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
   }
 
   ngOnInit() {

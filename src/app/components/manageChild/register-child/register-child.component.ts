@@ -33,9 +33,6 @@ export class RegisterChildComponent implements OnInit {
               private router: Router,
               private formBuilder: FormBuilder,
               private stopBusService: StopBusService) {
-    if (!this.authenticationService.isParent()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
   }
 
   initForm() {

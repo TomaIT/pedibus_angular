@@ -54,9 +54,6 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
               private userService: UserService,
               private alertService: AlertService,
               private activatedRoute: ActivatedRoute) {
-    if (!(this.authenticationService.isAdmin() || this.authenticationService.isSysAdmin())) {
-      this.router.navigate(['/home']);
-    }
   }
 
   ngOnInit() {

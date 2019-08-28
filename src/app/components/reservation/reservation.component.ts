@@ -41,9 +41,6 @@ export class ReservationComponent implements OnInit {
               private busRideService: BusRideService,
               private reservationService: ReservationService,
               private stopBusService: StopBusService) {
-    if (!this.authenticationService.isParent()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
   }
 
   ngOnInit() {

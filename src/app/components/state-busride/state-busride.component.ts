@@ -42,9 +42,6 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
               private activatedRoute: ActivatedRoute,
               private busRideService: BusRideService,
               private lineService: LineService) {
-    if (!this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
   }
 
   ngOnInit() {

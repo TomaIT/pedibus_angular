@@ -26,9 +26,6 @@ export class UserProfileComponent implements OnInit {
               private router: Router,
               private formBuilder: FormBuilder,
               private userService: UserService) {
-    if (!this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
   }
 
 
