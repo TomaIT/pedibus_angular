@@ -37,4 +37,9 @@ export class BusRideService {
       `${environment.apiUrl}/aggregates/presence/${idLine}/${stopBusType.toString()}/${year.toString()}/${month.toString()}/${day.toString()}`);
   }
   // TODO: stringa sopra troppo lunga
+
+  deleteBusride(idBusRide: string): Observable<any> {
+    return this.httpClient.delete(`${environment.apiUrl}/busrides/${idBusRide}`);
+  }
+
 }

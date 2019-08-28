@@ -1,4 +1,5 @@
 <div class="row">
+<div class="row">
 
   <label >Line</label>
 
@@ -10,15 +11,17 @@
   </select>
 
   <div class="row">
-  <div class="col">
-    <label >Andata
-      <input type="radio" name="direction" style="position: absolute" value="out" [checked]="actualDirection === 'out' ? true : false" (click)="getDirection($event)"  />
-    </label>
-
-    <label >Ritorno
-      <input type="radio" name="direction" style="position: absolute" value="ret" [checked]="actualDirection === 'ret' ? true : false" (click)="getDirection($event)" />
-    </label>
-  </div>
+  <div class="col" style="display: inline">
+    <div class="checkboxgroup">
+    <label for="radioOut">Andata</label>
+    <input type="radio" id="radioOut" name="direction" style="position: absolute" value="out" [checked]="actualDirection === 'out' ? true : false" (click)="getDirection($event)"  />
+    </div>
+      &nbsp;
+    <div class="checkboxgroup">
+    <label for="radioRet">Ritorno</label>
+    <input type="radio" id="radioRet" name="direction" style="position: absolute" value="ret" [checked]="actualDirection === 'ret' ? true : false" (click)="getDirection($event)" />
+    </div>
+    </div>
   </div>
 
 <!--agm-map [latitude]='lat' [longitude]='lng'
@@ -47,7 +50,7 @@
   </agm-rectangle>
 </agm-map-->
 
-  <aol-map style="border: none; position: relative; top: 10px; height: 600px; width: 1140px;z-index: 1;" (onClick)="showInfo($event)" *ngIf="showMap">
+  <aol-map style="border: none; position: relative; top: 20px; height: 600px; width: 1140px;z-index: 1;" (onClick)="showInfo($event)" *ngIf="showMap">
     <aol-view [zoom]="14">
       <aol-coordinate [x]="lng" [y]="lat" [srid]="'EPSG:4326'"></aol-coordinate>
     </aol-view>
@@ -107,4 +110,5 @@
     </aol-overlay>
   </aol-map>
 
+</div>
 </div>
