@@ -12,3 +12,11 @@ agm-map { height: 600px; /* height is required */ }
   margin: 0;
   background: white;
 }
+
+.checkboxgroup {
+  display: inline-block;
+  text-align: center;
+}
+.checkboxgroup label {
+  display: block;
+}

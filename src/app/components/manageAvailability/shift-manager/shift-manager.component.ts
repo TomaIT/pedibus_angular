@@ -115,7 +115,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
     if (this.lineSelected !== null) {
       this.loadingOut = true;
       this.busrideService.// tslint:disable-next-line:max-line-length
-      getBusRideByLineAndDirectionAndDate(this.lineSelected.idLine, StopBusType.outward, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
+      getBusRidesFromLineAndStopBusTypeAndData(this.lineSelected.idLine, StopBusType.outward, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
         .subscribe(
           (busride) => {
             console.log(busride);
@@ -152,7 +152,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
         );
       this.loadingRet = true;
       this.busrideService.// tslint:disable-next-line:max-line-length
-      getBusRideByLineAndDirectionAndDate(this.lineSelected.idLine, StopBusType.return, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
+      getBusRidesFromLineAndStopBusTypeAndData(this.lineSelected.idLine, StopBusType.return, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
         .subscribe(
           (busride) => {
             this.availabilityService.getBusRideAvailabilities(busride.id)
@@ -287,7 +287,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
     } else if (direction.localeCompare('ret') === 0) {
       id = this.busRideRet;
     }
-    this.busrideService.deleteBusRide(id)
+    this.busrideService.deleteBusride(id)
       .subscribe(
         (data) => {
           this.alertService.success('BusRide cancellata');
