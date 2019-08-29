@@ -144,10 +144,10 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
       getBusRidesFromLineAndStopBusTypeAndData(idLine, StopBusType.outward, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
         .subscribe(
           (busride) => {
-            this.busRideOut = busride.id;
             this.availabilityService.getBusRideAvailabilities(busride.id)
               .subscribe(
                 (availabilities) => {
+                  this.busRideOut = busride.id;
                   this.kidsOut = busride.idReservations.length;
                   this.totalOut = availabilities.length;
                   const arr: Array<string> = new Array<string>();
@@ -183,16 +183,14 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                   this.avbListOut.sort((a, b) => {
                     return a.startTime - b.startTime;
                   });
-                  if (id.split('_')[1] === this.today()) {
-                    const now = new Date();
-                    const seconds = (now.getHours() * 60) + now.getMinutes();
-                    console.log(seconds);
-                    if (busride.timestampLastStopBus !== null
-                      || this.avbListOut[0].startTime <= seconds) {
+                  const now = new Date();
+                  const seconds = (now.getHours() * 60) + now.getMinutes();
+                  console.log(seconds);
+                  if (busride.timestampLastStopBus !== null
+                      || (id.split('_')[1] === this.today() && this.avbListOut[0].startTime <= seconds)) {
                       this.avbListOut = undefined;
                       this.busRideExistOut = true;
                     }
-                  }
                 },
                 (error) => {
                   this.alertService.error(error);
@@ -215,6 +213,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
       getBusRidesFromLineAndStopBusTypeAndData(idLine, StopBusType.return, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
         .subscribe(
           (busride) => {
+            console.log(busride);
             this.availabilityService.getBusRideAvailabilities(busride.id)
               .subscribe(
                 (availabilities) => {
@@ -254,14 +253,13 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                   this.avbListRet.sort((a, b) => {
                     return a.startTime - b.startTime;
                   });
-                  if (id.split('_')[1] === this.today()) {
-                    const now = new Date();
-                    const seconds = (now.getHours() * 60) + now.getMinutes() ;
-                    if (busride.timestampLastStopBus !== null
-                      || this.avbListRet[0].startTime <= seconds) {
+                  const now = new Date();
+                  const seconds = (now.getHours() * 60) + now.getMinutes() ;
+                  if (busride.timestampLastStopBus !== null
+                    || (id.split('_')[1] === this.today() && this.avbListRet[0].startTime <= seconds)) {
                       this.avbListRet = undefined;
+                      this.busRideExistRet = true;
                     }
-                  }
                   this.loadingRet = false;
                 },
                 (error) => {
