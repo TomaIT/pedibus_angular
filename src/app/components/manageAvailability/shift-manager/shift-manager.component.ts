@@ -22,7 +22,7 @@ declare let $: any;
   styleUrls: ['./shift-manager.component.css']
 })
 export class ShiftManagerComponent implements OnInit, OnDestroy {
-  @ViewChild('myDate', { static: true }) myDate: ElementRef;
+  @ViewChild('myDate') myDate: ElementRef;
   direction: Array<StopBusType> = [StopBusType.outward, StopBusType.return];
   avbstates: Array<AvailabilityState> = [AvailabilityState.available, AvailabilityState.checked,
     AvailabilityState.confirmed, AvailabilityState.readChecked];
