@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {AuthenticationService} from '../../services/authentication.service';
 import {AlertService} from '../../services/alert.service';
 import {RoleGuardService} from '../../services/role-guard.service';
+import {MyRouterService} from '../../services/my-router.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
               private router: Router,
               private authenticationService: AuthenticationService,
               private alertService: AlertService,
-              private roleGuardService: RoleGuardService) {
+              private myRouterService: MyRouterService) {
     // redirect to home if already logged in
     if (this.authenticationService.isAuthenticated()) {
       this.router.navigate(['/home'])
@@ -65,7 +66,7 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.f.username.value, this.f.password.value)
       .subscribe(
         (data) => {
-          const a = this.roleGuardService.urlWhenIsNotLogged;
+          const a = this.myRouterService.getUrlWhenIsNotLogged();
           if (a) {
             this.router.navigate([a]).catch((reason) => this.alertService.error(reason));
           } else {

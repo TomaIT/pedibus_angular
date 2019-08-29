@@ -3,25 +3,21 @@ import {AuthenticationService} from './authentication.service';
 import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
 import {AlertService} from './alert.service';
 import {Role} from '../models/user';
+import {MyRouterService} from './my-router.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleGuardService implements CanActivate {
-  urlWhenIsNotLogged: string;
-
   constructor(private authenticationService: AuthenticationService,
               private router: Router,
-              private alertService: AlertService) {
+              private alertService: AlertService,
+              private myRouterService: MyRouterService) {
   }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     if (!this.authenticationService.isAuthenticated()) {
-      this.urlWhenIsNotLogged = '/';
-      for (const a of route.url) {
-        this.urlWhenIsNotLogged += a.path + '/';
-      }
-      // this.urlWhenIsNotLogged = route.url.toString().replace(',', '/');
+      this.myRouterService.setUrlWhenIsNotLogged(this.router);
       this.router.navigate(['login'])
         .catch((reason) => this.alertService.error(reason));
       this.alertService.error('Please Login.');
