@@ -10,9 +10,16 @@
       Seleziona la Linea
       <select class="form-control" (change)="changeLine($event)">
         <option disabled selected value>--select an option--</option>
-        <option [value]="line.idLine" *ngFor="let line of lines;">
+        <ng-container *ngIf="lineSelected !== undefined">
+        <option [value]="line.idLine" *ngFor="let line of lines;" [selected]="line.idLine === lineSelected.idLine">
           {{line.lineName}}
         </option>
+        </ng-container>
+        <ng-container *ngIf="lineSelected === undefined">
+          <option [value]="line.idLine" *ngFor="let line of lines;">
+            {{line.lineName}}
+          </option>
+        </ng-container>
       </select>
     </label>
   </div>
@@ -35,7 +42,7 @@
             <li *ngFor="let single of avb.availabilities">
               <p>{{single.idUser}}: {{single.state}} <button class="btn" style="border-radius: 50%; font-size: 15px; background: greenyellow" *ngIf="changeState(single.state)" type="button" (click)="updateAvailability(single.idStopBus,single.state,single.id)">Conferma</button>
                 <button class="btn btn-danger" style="border-radius: 50%; font-size: 15px;" *ngIf="!changeState(single.state)" type="button" (click)="deleteAvailability(single.id)">Cancella</button>
-                <button class="btn btn-primary" style="border-radius: 50%; font-size: 15px;" type="button" *ngIf="single.state.toString() === 'Confirmed'" (click)="clearAvailability(single.id, single.idStopBus)">Resetta disponibilità</button>
+                <button class="btn btn-primary" style="border-radius: 50%; font-size: 15px;" type="button" *ngIf="single.state.toString() === 'Confirmed'" (click)="clearAvailability(single.id, single.idStopBus)">Resetta</button>
               </p>
             </li>
           </ul>

@@ -15,6 +15,7 @@ import {UserService} from '../../../services/user.service';
 import {AlertService} from '../../../services/alert.service';
 import {interval} from 'rxjs';
 import {environment} from '../../../../environments/environment';
+import {map} from 'rxjs/operators';
 // jQuery Sign $
 declare let $: any;
 
@@ -144,63 +145,67 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
         .subscribe(
           (busride) => {
             this.busRideOut = busride.id;
-            this.availabilityService.getBusRideAvailabilities(busride.id)
-              .subscribe(
-                (availabilities) => {
-                  this.kidsOut = busride.idReservations.length;
-                  this.totalOut = availabilities.length;
-                  const arr: Array<string> = new Array<string>();
-                  const grouped = availabilities.reduce((objectsByKeyValue: Array<Availability>, obj) => {
-                      const value = obj.stopBusName;
-                      objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
-                      return objectsByKeyValue;
-                    },
-                    {});
-                  this.avbListOut = new Array<GroupedAvailabilities>();
-                  Object.keys(grouped).forEach((key) => {
-                    const parsed: GroupedAvailabilities = new GroupedAvailabilities();
-                    parsed.stopName = key;
-                    arr.push(key);
-                    parsed.availabilities = grouped[key];
-                    parsed.startTime = parsed.availabilities[0].busRide.stopBuses[0].hours;
-                    this.avbListOut.push(parsed);
-                  });
-                  for (const stop of busride.stopBuses) {
-                    for (const avb of this.avbListOut) {
-                      if (stop.name === avb.stopName) {
-                        avb.startTime = stop.hours;
+            if (id.split('_')[1] === this.today()) {
+              const now = new Date();
+              if (busride.startTime <= now) {
+                this.avbListOut = undefined;
+                this.busRideExistOut = true;
+              }
+            } else {
+              this.availabilityService.getBusRideAvailabilities(busride.id)
+                .subscribe(
+                  (availabilities) => {
+                    this.kidsOut = busride.idReservations.length;
+                    this.totalOut = availabilities.length;
+                    const arr: Array<string> = new Array<string>();
+                    const grouped = availabilities.reduce((objectsByKeyValue: Array<Availability>, obj) => {
+                        const value = obj.stopBusName;
+                        objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+                        return objectsByKeyValue;
+                      },
+                      {});
+                    this.avbListOut = new Array<GroupedAvailabilities>();
+                    Object.keys(grouped).forEach((key) => {
+                      const parsed: GroupedAvailabilities = new GroupedAvailabilities();
+                      parsed.stopName = key;
+                      arr.push(key);
+                      parsed.availabilities = grouped[key];
+                      parsed.startTime = parsed.availabilities[0].busRide.stopBuses[0].hours;
+                      this.avbListOut.push(parsed);
+                    });
+                    for (const stop of busride.stopBuses) {
+                      for (const avb of this.avbListOut) {
+                        if (stop.name === avb.stopName) {
+                          avb.startTime = stop.hours;
+                        }
+                      }
+                      if (arr.includes(stop.name) === false) {
+                        const parsed: GroupedAvailabilities = new GroupedAvailabilities();
+                        parsed.stopName = stop.name;
+                        parsed.startTime = stop.hours;
+                        parsed.availabilities = null;
+                        this.avbListOut.push(parsed);
                       }
                     }
-                    if (arr.includes(stop.name) === false) {
-                      const parsed: GroupedAvailabilities = new GroupedAvailabilities();
-                      parsed.stopName = stop.name;
-                      parsed.startTime = stop.hours;
-                      parsed.availabilities = null;
-                      this.avbListOut.push(parsed);
-                    }
+                    this.avbListOut.sort((a, b) => {
+                      return a.startTime - b.startTime;
+                    });
+                  },
+                  (error) => {
+                    this.alertService.error(error);
                   }
-                  this.avbListOut.sort((a, b) => {
-                    return a.startTime - b.startTime;
-                  });
-                  if (id.split('_')[1] === this.today()) {
-                    const now = new Date();
-                    const seconds = (now.getHours() * 60) + now.getMinutes();
-                    console.log(seconds);
-                    if (this.avbListOut[0].startTime <= seconds) {
-                      this.avbListOut = undefined;
-                    }
-                  }
-                },
-                (error) => {
-                  this.alertService.error(error);
-                }
-              );
+                );
+            }
             this.loadingOut = false;
           },
           (error) => {
-            this.loadingOut = false;
-            this.avbListOut = undefined;
-            this.busRideExistOut = false;
+            if (error.toString().includes('404')) {
+              this.loadingOut = false;
+              this.avbListOut = undefined;
+              this.busRideExistOut = false;
+            } else {
+              this.alertService.error(error);
+            }
           }
         );
       this.loadingRet = true;
@@ -208,13 +213,20 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
       getBusRidesFromLineAndStopBusTypeAndData(idLine, StopBusType.return, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
         .subscribe(
           (busride) => {
+            this.busRideRet = busride.id;
+            if (id.split('_')[1] === this.today()) {
+              const now = new Date();
+              const seconds = (now.getHours() * 60) + now.getMinutes() ;
+              if (this.avbListRet[0].startTime <= seconds) {
+                this.avbListRet = undefined;
+                this.busRideExistRet = true;
+              }
+            } else {
             this.availabilityService.getBusRideAvailabilities(busride.id)
               .subscribe(
                 (availabilities) => {
-
                   this.totalRet = availabilities.length;
                   this.kidsRet = busride.idReservations.length;
-                  this.busRideRet = busride.id;
                   const arr: Array<string> = new Array<string>();
                   const grouped = availabilities.reduce((objectsByKeyValue: Array<Availability>, obj) => {
                       const value = obj.stopBusName;
@@ -247,24 +259,23 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                   this.avbListRet.sort((a, b) => {
                     return a.startTime - b.startTime;
                   });
-                  if (id.split('_')[1] === this.today()) {
-                    const now = new Date();
-                    const seconds = (now.getHours() * 60) + now.getMinutes() ;
-                    if (this.avbListRet[0].startTime <= seconds) {
-                      this.avbListRet = undefined;
-                    }
-                  }
                   this.loadingRet = false;
                 },
                 (error) => {
                   this.alertService.error(error);
                 }
               );
+            }
+            this.loadingRet = false;
           },
           (error) => {
-            this.loadingRet = false;
-            this.avbListRet = undefined;
-            this.busRideExistRet = false;
+            if (error.toString().includes('404')) {
+              this.loadingRet = false;
+              this.avbListRet = undefined;
+              this.busRideExistRet = false;
+            } else {
+              this.alertService.error(error);
+            }
           }
         );
     }

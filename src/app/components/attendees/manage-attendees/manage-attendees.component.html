@@ -19,10 +19,12 @@
   <div *ngIf="showBoxSearchChildren" style="max-height: 60%;margin: 10px;">
     <h5>Bambini senza prenotazione</h5>
     Ricerca per nome e/o cognome: <input type="text" class="form-control" [formControl]="nameChild"><br>
-    <div *ngFor="let child of childrenWithoutReservation | myfilterChildrenByNameAndSurname:nameChild.value; let i = index;" class="element">
-      <span style="vertical-align: middle;">{{child.firstname}} {{child.surname}}</span>
-      <div class="container_buttons"><button class="button green" (click)="clickGetInWithoutReservation(child, i)">Salito</button></div>
-    </div>
+    <ng-container *ngIf="childrenWithoutReservation !== undefined">
+      <div *ngFor="let child of childrenWithoutReservation | myfilterChildrenByNameAndSurname:nameChild.value; let i = index;" class="element">
+        <span style="vertical-align: middle;">{{child.firstname}} {{child.surname}}</span>
+        <div class="container_buttons"><button class="button green" (click)="clickGetInWithoutReservation(child, i)">Salito</button></div>
+      </div>
+      </ng-container>
   </div>
 </div>
 <br><br>
