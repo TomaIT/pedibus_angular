@@ -7,7 +7,7 @@ import {BusRideService} from '../../services/bus-ride.service';
 import {StopBusType} from '../../models/stopbus';
 import {LineEnum} from '../../models/line';
 import {LineService} from '../../services/line.service';
-import {PresenceBusRide, PresenceChild} from '../../models/presencebusride';
+import {PresenceBusRide, PresenceChild, PresenceStopBus} from '../../models/presencebusride';
 import {interval} from 'rxjs';
 import {environment} from '../../../environments/environment';
 
@@ -53,9 +53,14 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
       }
     });
     this.presenceBusRide = new PresenceBusRide();
+    this.presenceBusRide.presenceStopBusGETTreeSet = new Array<PresenceStopBus>();
+    this.presenceBusRide.presenceStopBusGETTreeSet.forEach(p => {
+      p.presenceChildGETSet = new Array<PresenceChild>();
+    });
     this.directions = new Array<StopBusType>();
     this.directions.push(StopBusType.outward);
     this.directions.push(StopBusType.return);
+    this.busRide = new BusRide();
     this.activatedRoute.paramMap.subscribe((params: ParamMap) => this.onChangePath(params));
     this.pollingData = interval(environment.intervalTimePolling + 5000)
       .subscribe((data) => this.refreshBusRideAndPresences());
@@ -92,7 +97,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           this.lines = data;
-          if (params.get('idLine') === null || !this.lines.map(l => l.idLine).includes(params.get('idLine'))) {
+          if (params.get('idLine') === null || this.lines.map(l => l.idLine).indexOf(params.get('idLine')) === -1) {
             this.selectedLine = this.lines[0];
             reload = true;
           } else {
@@ -114,7 +119,10 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
       this.selectedDirection, this.selectedYear, this.selectedMonth, this.selectedDay)
       .subscribe(
         (data) => { this.busRide = data; },
-        (error) => { this.alertService.error(error); }
+        (error) => {
+          this.busRide = new BusRide();
+          this.alertService.error(error);
+        }
       );
   }
 
@@ -142,8 +150,8 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
   }
 
   private refreshBusRideAndPresences() {
-    this.loadBusRide();
     this.loadPresence();
+    this.loadBusRide();
   }
 
   reloadWithNewPath() {
