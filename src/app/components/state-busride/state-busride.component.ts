@@ -7,10 +7,9 @@ import {BusRideService} from '../../services/bus-ride.service';
 import {StopBusType} from '../../models/stopbus';
 import {LineEnum} from '../../models/line';
 import {LineService} from '../../services/line.service';
-import {PresenceBusRide, PresenceChild, PresenceStopBus} from '../../models/presencebusride';
+import {PresenceBusRide, PresenceChild} from '../../models/presencebusride';
 import {interval} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {Child} from '../../models/child';
 
 // jQuery Sign $
 declare let $: any;
@@ -26,7 +25,6 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
   lines: Array<LineEnum>;
   busRide: BusRide;
   presenceBusRide: PresenceBusRide;
-  children: Array<Child>;
   directions: Array<StopBusType>;
 
   selectedDirection: StopBusType;
