@@ -20,7 +20,7 @@ declare let $: any;
   styleUrls: ['./reservation.component.css']
 })
 export class ReservationComponent implements OnInit {
-  @ViewChild('myDate', { static: true }) myDate: ElementRef;
+  @ViewChild('myDate') myDate: ElementRef;
   children: Array<Child>;
   childSelected: Child;
   dataSelected: any;
