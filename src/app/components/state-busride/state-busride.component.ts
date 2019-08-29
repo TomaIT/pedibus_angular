@@ -20,7 +20,7 @@ declare let $: any;
   styleUrls: ['./state-busride.component.css']
 })
 export class StateBusrideComponent implements OnInit, OnDestroy {
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', { static: true }) myDate: ElementRef;
   selectedLine: LineEnum;
   selectedData: any;
   selectedDay: number;    // (1-31)
