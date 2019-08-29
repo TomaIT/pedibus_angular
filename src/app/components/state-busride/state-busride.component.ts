@@ -10,6 +10,7 @@ import {LineService} from '../../services/line.service';
 import {PresenceBusRide, PresenceChild, PresenceStopBus} from '../../models/presencebusride';
 import {interval} from 'rxjs';
 import {environment} from '../../../environments/environment';
+import {Child} from '../../models/child';
 
 // jQuery Sign $
 declare let $: any;
@@ -21,18 +22,19 @@ declare let $: any;
 })
 export class StateBusrideComponent implements OnInit, OnDestroy {
   @ViewChild('myDate') myDate: ElementRef;
-  selectedLine: LineEnum;
-  selectedData: any;
-  selectedDay: number;    // (1-31)
-  selectedMonth: number;  // (0-11)
-  selectedYear: number;   // (yyyy)
-  directions: Array<StopBusType>;
-  selectedDirection: StopBusType;
 
   lines: Array<LineEnum>;
-  idBusRide: string;
   busRide: BusRide;
   presenceBusRide: PresenceBusRide;
+  children: Array<Child>;
+  directions: Array<StopBusType>;
+
+  selectedDirection: StopBusType;
+  selectedLine: LineEnum;
+  selectedDay: number;
+  selectedMonth: number;
+  selectedYear: number;
+  selectedData: any;
 
   pollingData: any;
 
@@ -42,7 +44,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
               private activatedRoute: ActivatedRoute,
               private busRideService: BusRideService,
               private lineService: LineService) {
-    if (!this.authenticationService.isAuthenticated()) {
+    if (!this.authenticationService.isParent() && !this.authenticationService.isAdmin() && !this.authenticationService.isSysAdmin()) {
       this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
     }
   }
@@ -55,11 +57,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
         this.selectedDataChange();
       }
     });
-    this.busRide = new BusRide();
     this.presenceBusRide = new PresenceBusRide();
-    this.presenceBusRide.presenceStopBusGETTreeSet = new Array<PresenceStopBus>();
-    this.presenceBusRide.presenceStopBusGETTreeSet.forEach(p => p.presenceChildGETSet = new Array<PresenceChild>());
-    this.lines = new Array<LineEnum>();
     this.directions = new Array<StopBusType>();
     this.directions.push(StopBusType.outward);
     this.directions.push(StopBusType.return);
@@ -108,34 +106,56 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
           if (reload) {
             this.reloadWithNewPath();
           }
-          this.refreshBusRideAndPresences();
+          this.loadBusRide();
+          this.loadPresence();
         },
         (error) => {
           this.alertService.error(error);
         }
       );
-    // alert(this.selectedDay + '/' + this.selectedMonth + '/' + this.selectedYear);
   }
 
-  private refreshBusRideAndPresences() {
+  private loadBusRide() {
     this.busRideService.getBusRidesFromLineAndStopBusTypeAndData(this.selectedLine.idLine,
       this.selectedDirection, this.selectedYear, this.selectedMonth, this.selectedDay)
       .subscribe(
         (data) => { this.busRide = data; },
         (error) => { this.alertService.error(error); }
       );
+  }
+
+  private loadPresence() {
     this.busRideService.getPresenceAggregateFromLineAndStopBusTypeAndData(this.selectedLine.idLine,
       this.selectedDirection, this.selectedYear, this.selectedMonth, this.selectedDay)
       .subscribe(
-        (data) => { this.presenceBusRide = data; },
+        (data) => {
+          this.presenceBusRide = data;
+          const presences = new Array<PresenceChild>();
+          this.presenceBusRide.presenceStopBusGETTreeSet.forEach(x => {
+            x.presenceChildGETSet.forEach(y => {
+              presences.push(y);
+            });
+          });
+          if (this.presenceBusRide.stopBusType === StopBusType.return) {
+            this.presenceBusRide.presenceStopBusGETTreeSet[0].presenceChildGETSet = presences;
+          } else {
+            const length = this.presenceBusRide.presenceStopBusGETTreeSet.length;
+            this.presenceBusRide.presenceStopBusGETTreeSet[length - 1].presenceChildGETSet = presences.filter(p => !p.absent);
+          }
+        },
         (error) => { this.alertService.error(error); }
       );
   }
 
-  convertMinutesToTime(hours: number): string {
-    const h = Math.floor(hours / 60);
-    const m = hours - (h * 60);
-    return (('0' + h).slice(-2) + ':' + ('0' + m).slice(-2));
+  private refreshBusRideAndPresences() {
+    this.loadBusRide();
+    this.loadPresence();
+  }
+
+  reloadWithNewPath() {
+    const strData = ('0' + this.selectedYear).slice(-4) + ('0' + this.selectedMonth).slice(-2) + ('0' + this.selectedDay).slice(-2);
+    this.router.navigate(
+      [`/stateBusRide/${this.selectedLine.idLine}/${this.selectedDirection}/${strData}`]);
   }
 
   selectedLineChange() {
@@ -153,12 +173,6 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
     this.reloadWithNewPath();
   }
 
-  reloadWithNewPath() {
-    const strData = ('0' + this.selectedYear).slice(-4) + ('0' + this.selectedMonth).slice(-2) + ('0' + this.selectedDay).slice(-2);
-    this.router.navigate(
-      [`/stateBusRide/${this.selectedLine.idLine}/${this.selectedDirection}/${strData}`]);
-  }
-
   isBusAlreadyPassed(idStopBus: string): boolean {
     const idStopBuses = this.busRide.stopBuses.map(x => x.id);
     if (idStopBuses.indexOf(idStopBus) <= idStopBuses.indexOf(this.busRide.idLastStopBus)) {
@@ -167,6 +181,11 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  convertMinutesToTime(hours: number): string {
+    const h = Math.floor(hours / 60);
+    const m = hours - (h * 60);
+    return (('0' + h).slice(-2) + ':' + ('0' + m).slice(-2));
+  }
   convertTimestampToTime(timestamp: number): string {
     const date = new Date(timestamp);
     const h = date.getHours();
