@@ -19,7 +19,7 @@ declare let $: any;
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', { static: true }) myDate: ElementRef;
 
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
