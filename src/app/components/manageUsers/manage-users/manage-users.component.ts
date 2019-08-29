@@ -55,7 +55,7 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
   }
 
   usernameStartWithChange() {
-    this.userService.findByUsernameStartWith(this.usernameStartWith, 0, 200)
+    this.userService.findByUsernameStartWith(this.usernameStartWith, 0, 1024)
       .subscribe(
         (data) => {
           const temp = data.content.sort((a, b) => a.username.localeCompare(b.username));
