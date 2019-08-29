@@ -64,7 +64,7 @@
 
           <div *ngIf="stopBus.id === busRide.idLastStopBus" style="margin: 15px 5px 0px 0px;">
             <img src="../../../../assets/images/bus-logo.png" style="margin-right: 10px;min-width: 25px;" width="30px" height="auto">
-            <span *ngIf="!isLastStop">Il Pedibus ha lascito questa fermata alle ore: {{convertTimestampToTime(busRide.timestampLastStopBus)}}</span>
+            <span *ngIf="!isLastStop">Il Pedibus ha lasciato questa fermata alle ore: {{convertTimestampToTime(busRide.timestampLastStopBus)}}</span>
             <span *ngIf="isLastStop">Il Pedibus ha concluso la sua corsa alle ore: {{convertTimestampToTime(busRide.timestampLastStopBus)}}</span>
           </div>
         </div>

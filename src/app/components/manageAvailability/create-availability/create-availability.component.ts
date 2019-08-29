@@ -168,7 +168,6 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
     if (busRide && stopBus) {
       const temp = new Date();
       temp.setFullYear(busRide.year, busRide.month, busRide.day);
-      const temp2 = new Date();
       const h = Math.floor(stopBus.hours / 60);
       const m = stopBus.hours - (h * 60);
       temp.setHours(h, m, 0, 0);

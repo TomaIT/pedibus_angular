@@ -18,7 +18,7 @@ Disponibilità confermate da oggi in avanti.<br>
       </thead>
       <tbody>
       <tr *ngFor="let av of confirmedAvailabilities;" scope="row">
-        <td>{{av.busRide.day}}/{{av.busRide.month}}/{{av.busRide.year}}</td>
+        <td>{{('0' + av.busRide.day).slice(-2)}}/{{('0' + (av.busRide.month+1)).slice(-2)}}/{{av.busRide.year}}</td>
         <td>{{av.busRide.lineName}}</td>
         <td>{{av.busRide.stopBusType}}</td>
         <td>{{getEscortStartStopBus(av).name}}</td>

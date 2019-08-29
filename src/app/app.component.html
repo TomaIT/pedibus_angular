@@ -16,7 +16,8 @@
         <a class="nav-link" routerLink="/login">Login</a>
       </li>
 
-      <li *ngIf="authenticationService.isAdmin()||authenticationService.isSysAdmin()" [routerLinkActive]="['active']" class="nav-item">
+      <li *ngIf="authenticationService.isAdmin()||authenticationService.isSysAdmin()" [routerLinkActive]="['active']"
+          class="nav-item">
         <a class="nav-link" routerLink="/createUser">Registrazione</a>
       </li>
 
@@ -32,12 +33,15 @@
         <a class="nav-link" routerLink="/busridesEscort">Corse</a>
       </li>
 
-      <li *ngIf="authenticationService.isAdmin()||authenticationService.isSysAdmin()||authenticationService.isParent()" [routerLinkActive]="['active']" class="nav-item">
+      <li *ngIf="authenticationService.isAdmin()||authenticationService.isSysAdmin()||authenticationService.isParent()"
+          [routerLinkActive]="['active']" class="nav-item">
         <a class="nav-link" routerLink="/stateBusRide">Stato Corse</a>
       </li>
 
       <li *ngIf="authenticationService.isAuthenticated()" [routerLinkActive]="['active']" class="nav-item">
-        <a class="nav-link" routerLink="/messages">Messaggi ({{messageService.counterMessageNotRead}})</a>
+        <a class="nav-link" routerLink="/messages">Messaggi
+          (<span [ngClass]="{'color-red' : messageService.counterMessageNotRead}">{{messageService.counterMessageNotRead}}</span>)
+        </a>
       </li>
 
       <li *ngIf="authenticationService.isAuthenticated()" [routerLinkActive]="['active']" class="nav-item">
@@ -50,8 +54,9 @@
       </li>
 
       <!-- Dropdown -->
-      <li *ngIf="authenticationService.isEscort() || authenticationService.isAdmin() || authenticationService.isSysAdmin()"
-          [routerLinkActive]="['active']" class="nav-item dropdown">
+      <li
+        *ngIf="authenticationService.isEscort() || authenticationService.isAdmin() || authenticationService.isSysAdmin()"
+        [routerLinkActive]="['active']" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLinkHomeS" data-toggle="dropdown"
            aria-haspopup="true" aria-expanded="false">Gestione Accompagnatori</a>
         <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLinkHomeS">

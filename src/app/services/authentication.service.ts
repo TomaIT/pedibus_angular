@@ -6,7 +6,9 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 import {Login} from '../models/login';
-import {Router} from '@angular/router';
+import {ActivatedRouteSnapshot, Router} from '@angular/router';
+import {RoleGuardService} from './role-guard.service';
+import {MyRouterService} from './my-router.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,8 @@ export class AuthenticationService {
 
   constructor(private httpClient: HttpClient,
               private router: Router,
-              private alertService: AlertService) {
+              private alertService: AlertService,
+              private myRouterService: MyRouterService) {
     this.currentUserSubject = new BehaviorSubject<Login>(
       JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
@@ -32,6 +35,7 @@ export class AuthenticationService {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this.myRouterService.setUrlWhenIsNotLogged(this.router);
     this.router.navigate(['/login']).catch((reason) => this.alertService.error(reason));
   }
 

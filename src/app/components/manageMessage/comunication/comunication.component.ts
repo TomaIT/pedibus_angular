@@ -13,8 +13,11 @@ import {environment} from '../../../../environments/environment';
   styleUrls: ['./comunication.component.css']
 })
 export class ComunicationComponent implements OnInit, OnDestroy {
+  pageSize = 5;
   messages: Array<Message>;
   pollingData: any;
+  p = 1;
+
 
   private refreshMessages() {
     this.messageService.findMessageByIdUser(this.authenticationService.currentUserValue.username)
@@ -33,7 +36,6 @@ export class ComunicationComponent implements OnInit, OnDestroy {
               private router: Router,
               private messageService: MessageService) {
   }
-
 
 
   ngOnDestroy(): void {
@@ -64,5 +66,9 @@ export class ComunicationComponent implements OnInit, OnDestroy {
           this.alertService.error(error);
         }
       );
+  }
+
+  onChangePage(event: number) {
+    this.p = event;
   }
 }
