@@ -23,9 +23,6 @@ export class EscortBusridesComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private availabilityService: AvailabilityService,
               private busRideService: BusRideService) {
-    if (!this.authenticationService.isEscort()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
   }
 
   ngOnInit() {

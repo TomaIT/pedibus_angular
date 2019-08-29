@@ -22,9 +22,6 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
               private alertService: AlertService,
               private busRidesService: BusRideService,
               private router: Router) {
-    if (!this.authenticationService.isEscort()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
     this.pollCounter();
     this.pollingData = interval(environment.intervalAvailCheck)
       .subscribe((data) => this.pollCounter());

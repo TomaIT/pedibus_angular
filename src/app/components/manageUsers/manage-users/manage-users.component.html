@@ -30,7 +30,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let a of pageOfItems;">
+      <tr *ngFor="let a of users | paginate: { itemsPerPage: pageSize, currentPage: p }">
         <td>{{a.username|| '-' }}</td>
         <td>{{a.firstname || '-' }}</td>
         <td>{{a.surname || '-' }}</td>
@@ -55,11 +55,11 @@
       </tr>
       </tbody>
     </table>
-    <!--<div *ngFor="let item of pageOfItems">{{item.username}}</div>-->
+
   </div>
   <div class="card-footer pb-0 pt-3">
-
-    <jw-pagination class="my" [maxPages]="3" [items]="users" [initialPage]="numberPageOfView" [pageSize]="pageSize"
-                   (changePage)="onChangePage($event)"></jw-pagination>
+    <pagination-controls (pageChange)="onChangePage($event)"></pagination-controls>
   </div>
 </div>
+
+

@@ -20,7 +20,7 @@ declare let $: any;
   styleUrls: ['./state-busride.component.css']
 })
 export class StateBusrideComponent implements OnInit, OnDestroy {
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', { static: true }) myDate: ElementRef;
   selectedLine: LineEnum;
   selectedData: any;
   selectedDay: number;    // (1-31)
@@ -42,9 +42,6 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
               private activatedRoute: ActivatedRoute,
               private busRideService: BusRideService,
               private lineService: LineService) {
-    if (!this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
   }
 
   ngOnInit() {

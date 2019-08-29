@@ -22,7 +22,7 @@ declare let $: any;
   styleUrls: ['./shift-manager.component.css']
 })
 export class ShiftManagerComponent implements OnInit, OnDestroy {
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', { static: true }) myDate: ElementRef;
   direction: Array<StopBusType> = [StopBusType.outward, StopBusType.return];
   avbstates: Array<AvailabilityState> = [AvailabilityState.available, AvailabilityState.checked,
     AvailabilityState.confirmed, AvailabilityState.readChecked];
@@ -62,9 +62,6 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
               private userService: UserService,
               private alertService: AlertService,
               private activatedRoute: ActivatedRoute) {
-    if (!(this.authenticationService.isAdmin() || this.authenticationService.isSysAdmin())) {
-      this.router.navigate(['/home']);
-    }
   }
 
   ngOnInit() {

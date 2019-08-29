@@ -22,10 +22,6 @@ export class CreateUserComponent implements OnInit {
               private authenticationService: AuthenticationService,
               private alertService: AlertService,
               private userService: UserService) {
-    // redirect to login if already not logged in
-    if (!this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['/login']).catch((reason) => this.alertService.error(reason));
-    }
   }
 
   ngOnInit() {
