@@ -1,3 +1,5 @@
+
+
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
@@ -121,9 +123,9 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
     b.setHours(0, 0, 0, 0);
     a.setHours(0, 0, 0, 0);
     if (a.getTime() >= b.getTime()) {
-        if (this.lineSelected !== undefined) {
-          this.router.navigate(['/shiftManage/', this.lineSelected.idLine + '_' + this.dataSelected]);
-        }
+      if (this.lineSelected !== undefined) {
+        this.router.navigate(['/shiftManage/', this.lineSelected.idLine + '_' + this.dataSelected]);
+      }
     }
   }
 
@@ -319,15 +321,34 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
 
   // clearAvilability(id: string) {
 
-    /*if (direction.localeCompare('out') === 0) {
-      for (const list of this.avbListOut) {
-        for (const data of list.availabilities) {
-          if (data.state === AvailabilityState.confirmed) {
+  /*if (direction.localeCompare('out') === 0) {
+    for (const list of this.avbListOut) {
+      for (const data of list.availabilities) {
+        if (data.state === AvailabilityState.confirmed) {
+        const avbPut: AvailabilityPUT = new AvailabilityPUT();
+        avbPut.idStopBus = data.idStopBus;
+        avbPut.state = AvailabilityState.available;
+        const id: string = data.id;
+        this.availabilityService.updateAvailability(avbPut, id)
+          .subscribe(
+            (cleared) => {
+              this.alertService.success('Availability updated');
+            },
+            (error) => {
+              this.alertService.error(error);
+            }
+          );
+        }
+      }
+    }
+  } else {
+    for (const list of this.avbListRet) {
+      for (const data of list.availabilities) {
+        if (data.state === AvailabilityState.confirmed) {
           const avbPut: AvailabilityPUT = new AvailabilityPUT();
           avbPut.idStopBus = data.idStopBus;
           avbPut.state = AvailabilityState.available;
-          const id: string = data.id;
-          this.availabilityService.updateAvailability(avbPut, id)
+          this.availabilityService.updateAvailability(avbPut, data.id)
             .subscribe(
               (cleared) => {
                 this.alertService.success('Availability updated');
@@ -336,29 +357,10 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                 this.alertService.error(error);
               }
             );
-          }
         }
       }
-    } else {
-      for (const list of this.avbListRet) {
-        for (const data of list.availabilities) {
-          if (data.state === AvailabilityState.confirmed) {
-            const avbPut: AvailabilityPUT = new AvailabilityPUT();
-            avbPut.idStopBus = data.idStopBus;
-            avbPut.state = AvailabilityState.available;
-            this.availabilityService.updateAvailability(avbPut, data.id)
-              .subscribe(
-                (cleared) => {
-                  this.alertService.success('Availability updated');
-                },
-                (error) => {
-                  this.alertService.error(error);
-                }
-              );
-          }
-        }
-      }
-    }*/
+    }
+  }*/
 
   deleteBusride(direction: string) {
     let id: string;
@@ -397,8 +399,8 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
     this.availabilityService.deleteAvailability(id)
       .subscribe(
         (data) => {
-         this.checkUrlParams();
-         this.alertService.success('Availability deleted');
+          this.checkUrlParams();
+          this.alertService.success('Availability deleted');
         },
         (error) => {
           this.alertService.error(error);

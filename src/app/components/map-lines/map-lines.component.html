@@ -10,7 +10,6 @@
     </option>
   </select>
 
-  <div class="row">
   <div class="col" style="display: inline">
     <div class="checkboxgroup">
     <label for="radioOut">Andata</label>
@@ -22,7 +21,6 @@
     <input type="radio" id="radioRet" name="direction" style="position: absolute" value="ret" [checked]="actualDirection === 'ret' ? true : false" (click)="getDirection($event)" />
     </div>
     </div>
-  </div>
 
 <!--agm-map [latitude]='lat' [longitude]='lng'
          [mapTypeId]='mapType' [zoom]="14" >
