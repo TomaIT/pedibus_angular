@@ -44,9 +44,6 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
               private activatedRoute: ActivatedRoute,
               private busRideService: BusRideService,
               private lineService: LineService) {
-    if (!this.authenticationService.isParent() && !this.authenticationService.isAdmin() && !this.authenticationService.isSysAdmin()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
   }
 
   ngOnInit() {
@@ -106,8 +103,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
           if (reload) {
             this.reloadWithNewPath();
           }
-          this.loadBusRide();
-          this.loadPresence();
+          this.refreshBusRideAndPresences();
         },
         (error) => {
           this.alertService.error(error);

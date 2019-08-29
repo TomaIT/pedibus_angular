@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../services/authentication.service';
 import {AlertService} from '../../services/alert.service';
-import {RouterExtService} from '../../services/router-ext.service';
+import {RoleGuardService} from '../../services/role-guard.service';
 
 @Component({
   selector: 'app-login',
@@ -20,10 +20,11 @@ export class LoginComponent implements OnInit {
               private router: Router,
               private authenticationService: AuthenticationService,
               private alertService: AlertService,
-              private routerExtService: RouterExtService) {
+              private roleGuardService: RoleGuardService) {
     // redirect to home if already logged in
     if (this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
+      this.router.navigate(['/home'])
+        .catch((reason) => this.alertService.error(reason));
     }
   }
 
@@ -64,8 +65,8 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.f.username.value, this.f.password.value)
       .subscribe(
         (data) => {
-          const a = this.routerExtService.getPreviousUrl();
-          if (a && a !== '/login') {
+          const a = this.roleGuardService.urlWhenIsNotLogged;
+          if (a) {
             this.router.navigate([a]).catch((reason) => this.alertService.error(reason));
           } else {
             this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));

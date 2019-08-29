@@ -19,16 +19,13 @@ declare let $: any;
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', { static: true }) myDate: ElementRef;
 
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
               private router: Router,
               private formBuilder: FormBuilder,
               private userService: UserService) {
-    if (!this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
   }
 
 

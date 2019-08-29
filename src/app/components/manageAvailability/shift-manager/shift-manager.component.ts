@@ -22,7 +22,7 @@ declare let $: any;
   styleUrls: ['./shift-manager.component.css']
 })
 export class ShiftManagerComponent implements OnInit, OnDestroy {
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', { static: true }) myDate: ElementRef;
   direction: Array<StopBusType> = [StopBusType.outward, StopBusType.return];
   avbstates: Array<AvailabilityState> = [AvailabilityState.available, AvailabilityState.checked,
     AvailabilityState.confirmed, AvailabilityState.readChecked];
@@ -34,6 +34,10 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
   directionSelected: StopBusType;
   totalRet = 0;
   totalOut = 0;
+  kidsOut = 0;
+  kidsRet = 0;
+  busRideExistRet = true;
+  busRideExistOut = true;
   pollingData: any;
   busRideOut: string;
   busRideRet: string;
@@ -42,7 +46,11 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
 
   private pollAvailabilities() {
     if (this.lineSelected !== undefined) {
-      this.getAvailabilities();
+      this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
+        if (params.get('id') !== null) {
+          this.getAvailabilities(params);
+        }
+      });
     }
   }
   constructor(private authenticationService: AuthenticationService,
@@ -54,9 +62,6 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
               private userService: UserService,
               private alertService: AlertService,
               private activatedRoute: ActivatedRoute) {
-    if (!(this.authenticationService.isAdmin() || this.authenticationService.isSysAdmin())) {
-      this.router.navigate(['/home']);
-    }
   }
 
   ngOnInit() {
@@ -77,6 +82,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
             for (const uLine of user.user.idLines) {
               if (uLine.localeCompare(x.idLine) === 0) {
                 this.lines.push(x);
+                this.checkUrlParams();
               }
             }
           }
@@ -87,7 +93,22 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
       );
     this.pollingData = interval(environment.intervalTimePolling + 5000)
       .subscribe((data) => this.pollAvailabilities());
-    // this.activatedRoute.paramMap.subscribe((params: ParamMap) => this.getAvailabilities(params));
+  }
+
+  private checkUrlParams() {
+    this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
+      if (params.get('id') !== null) {
+        this.lineSelected = new LineEnum();
+        this.lineSelected.idLine = params.get('id').split('_')[0];
+        for (const x of this.lines) {
+          if (this.lineSelected.idLine === x.idLine) {
+            this.lineSelected = x;
+          }
+        }
+        this.dataSelected = params.get('id').split('_')[1];
+        this.getAvailabilities(params);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -101,7 +122,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
     a.setHours(0, 0, 0, 0);
     if (a.getTime() >= b.getTime()) {
         if (this.lineSelected !== undefined) {
-          this.getAvailabilities();
+          this.router.navigate(['/shiftManage/', this.lineSelected.idLine + '_' + this.dataSelected]);
         }
     }
   }
@@ -110,21 +131,23 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
     return (new Date()).toISOString().split('T')[0];
   }
 
-  getAvailabilities() {
-    const data = new Date(this.dataSelected);
-    if (this.lineSelected !== null) {
+  getAvailabilities(params: ParamMap) {
+    const id = params.get('id');
+    if (id !== null) {
+      const data = new Date(id.split('_')[1]);
+      const idLine = id.split('_')[0];
       this.loadingOut = true;
       this.busrideService.// tslint:disable-next-line:max-line-length
-      getBusRidesFromLineAndStopBusTypeAndData(this.lineSelected.idLine, StopBusType.outward, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
+      getBusRidesFromLineAndStopBusTypeAndData(idLine, StopBusType.outward, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
         .subscribe(
           (busride) => {
-            console.log(busride);
             this.busRideOut = busride.id;
             this.availabilityService.getBusRideAvailabilities(busride.id)
               .subscribe(
                 (availabilities) => {
-
+                  this.kidsOut = busride.idReservations.length;
                   this.totalOut = availabilities.length;
+                  const arr: Array<string> = new Array<string>();
                   const grouped = availabilities.reduce((objectsByKeyValue: Array<Availability>, obj) => {
                       const value = obj.stopBusName;
                       objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
@@ -135,9 +158,36 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                   Object.keys(grouped).forEach((key) => {
                     const parsed: GroupedAvailabilities = new GroupedAvailabilities();
                     parsed.stopName = key;
+                    arr.push(key);
                     parsed.availabilities = grouped[key];
+                    parsed.startTime = parsed.availabilities[0].busRide.stopBuses[0].hours;
                     this.avbListOut.push(parsed);
                   });
+                  for (const stop of busride.stopBuses) {
+                    for (const avb of this.avbListOut) {
+                      if (stop.name === avb.stopName) {
+                        avb.startTime = stop.hours;
+                      }
+                    }
+                    if (arr.includes(stop.name) === false) {
+                      const parsed: GroupedAvailabilities = new GroupedAvailabilities();
+                      parsed.stopName = stop.name;
+                      parsed.startTime = stop.hours;
+                      parsed.availabilities = null;
+                      this.avbListOut.push(parsed);
+                    }
+                  }
+                  this.avbListOut.sort((a, b) => {
+                    return a.startTime - b.startTime;
+                  });
+                  if (id.split('_')[1] === this.today()) {
+                    const now = new Date();
+                    const seconds = (now.getHours() * 60) + now.getMinutes();
+                    console.log(seconds);
+                    if (this.avbListOut[0].startTime <= seconds) {
+                      this.avbListOut = undefined;
+                    }
+                  }
                 },
                 (error) => {
                   this.alertService.error(error);
@@ -148,11 +198,12 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
           (error) => {
             this.loadingOut = false;
             this.avbListOut = undefined;
+            this.busRideExistOut = false;
           }
         );
       this.loadingRet = true;
       this.busrideService.// tslint:disable-next-line:max-line-length
-      getBusRidesFromLineAndStopBusTypeAndData(this.lineSelected.idLine, StopBusType.return, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
+      getBusRidesFromLineAndStopBusTypeAndData(idLine, StopBusType.return, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
         .subscribe(
           (busride) => {
             this.availabilityService.getBusRideAvailabilities(busride.id)
@@ -160,7 +211,9 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                 (availabilities) => {
 
                   this.totalRet = availabilities.length;
+                  this.kidsRet = busride.idReservations.length;
                   this.busRideRet = busride.id;
+                  const arr: Array<string> = new Array<string>();
                   const grouped = availabilities.reduce((objectsByKeyValue: Array<Availability>, obj) => {
                       const value = obj.stopBusName;
                       objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
@@ -171,9 +224,34 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                   Object.keys(grouped).forEach((key) => {
                     const parsed: GroupedAvailabilities = new GroupedAvailabilities();
                     parsed.stopName = key;
+                    arr.push(key);
                     parsed.availabilities = grouped[key];
                     this.avbListRet.push(parsed);
                   });
+                  for (const stop of busride.stopBuses) {
+                    for (const avb of this.avbListRet) {
+                      if (stop.name === avb.stopName) {
+                        avb.startTime = stop.hours;
+                      }
+                    }
+                    if (arr.includes(stop.name) === false) {
+                      const parsed: GroupedAvailabilities = new GroupedAvailabilities();
+                      parsed.stopName = stop.name;
+                      parsed.startTime = stop.hours;
+                      parsed.availabilities = null;
+                      this.avbListRet.push(parsed);
+                    }
+                  }
+                  this.avbListRet.sort((a, b) => {
+                    return a.startTime - b.startTime;
+                  });
+                  if (id.split('_')[1] === this.today()) {
+                    const now = new Date();
+                    const seconds = (now.getHours() * 60) + now.getMinutes() ;
+                    if (this.avbListRet[0].startTime <= seconds) {
+                      this.avbListRet = undefined;
+                    }
+                  }
                   this.loadingRet = false;
                 },
                 (error) => {
@@ -184,6 +262,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
           (error) => {
             this.loadingRet = false;
             this.avbListRet = undefined;
+            this.busRideExistRet = false;
           }
         );
     }
@@ -197,7 +276,8 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
         this.lineSelected = x;
       }
     }
-    this.getAvailabilities();
+    this.router.navigate(['/shiftManage/', this.lineSelected.idLine + '_' + this.dataSelected]);
+    // this.getAvailabilities();
   }
 
   getUserName(idUser: string): string {
@@ -229,7 +309,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           this.alertService.success('Availability updated');
-          this.getAvailabilities();
+          this.checkUrlParams();
         },
         (error) => {
           this.alertService.error(error);
@@ -237,8 +317,9 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
       );
   }
 
-  clearAllAvilabilties(direction: string) {
-    if (direction.localeCompare('out') === 0) {
+  // clearAvilability(id: string) {
+
+    /*if (direction.localeCompare('out') === 0) {
       for (const list of this.avbListOut) {
         for (const data of list.availabilities) {
           if (data.state === AvailabilityState.confirmed) {
@@ -277,8 +358,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
           }
         }
       }
-    }
-  }
+    }*/
 
   deleteBusride(direction: string) {
     let id: string;
@@ -293,8 +373,10 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
           this.alertService.success('BusRide cancellata');
           if (direction.localeCompare('out') === 0) {
             this.avbListOut = undefined;
+            this.busRideExistOut = false;
           } else if (direction.localeCompare('ret') === 0) {
             this.avbListRet = undefined;
+            this.busRideExistRet = false;
           }
         },
         (error) => {
@@ -303,4 +385,40 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
       );
   }
 
+  changeState(state: AvailabilityState): boolean {
+    if (state === AvailabilityState.available || state === AvailabilityState.readChecked) {
+      return true;
+    } else if (state === AvailabilityState.checked || state === AvailabilityState.confirmed) {
+      return false;
+    }
+  }
+
+  deleteAvailability(id: string) {
+    this.availabilityService.deleteAvailability(id)
+      .subscribe(
+        (data) => {
+         this.checkUrlParams();
+         this.alertService.success('Availability deleted');
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+  }
+
+  clearAvailability(id: string, idStopBus: string) {
+    const avbPut: AvailabilityPUT = new AvailabilityPUT();
+    avbPut.idStopBus = idStopBus;
+    avbPut.state = AvailabilityState.available;
+    this.availabilityService.updateAvailability(avbPut, id)
+      .subscribe(
+        (cleared) => {
+          this.checkUrlParams();
+          this.alertService.success('Availability updated');
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+  }
 }

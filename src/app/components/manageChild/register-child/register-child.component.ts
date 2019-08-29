@@ -17,7 +17,7 @@ declare let $: any;
   styleUrls: ['./register-child.component.css']
 })
 export class RegisterChildComponent implements OnInit {
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', { static: true }) myDate: ElementRef;
   form: FormGroup;
   loading = false;
   submitted = false;
@@ -33,9 +33,6 @@ export class RegisterChildComponent implements OnInit {
               private router: Router,
               private formBuilder: FormBuilder,
               private stopBusService: StopBusService) {
-    if (!this.authenticationService.isParent()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
   }
 
   initForm() {

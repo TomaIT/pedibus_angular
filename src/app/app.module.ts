@@ -18,10 +18,7 @@ import {UpdateChildComponent} from './components/manageChild/update-child/update
 import {ReservationComponent} from './components/reservation/reservation.component';
 import {ComunicationComponent} from './components/manageMessage/comunication/comunication.component';
 import {MessageComponent} from './components/manageMessage/message/message.component';
-import {
-  ManageAttendeesComponent,
-  MyFilterChildrenPipe,
-} from './components/attendees/manage-attendees/manage-attendees.component';
+import {ManageAttendeesComponent, MyFilterChildrenPipe} from './components/attendees/manage-attendees/manage-attendees.component';
 import {EscortBusridesComponent} from './components/escort-busrides/escort-busrides.component';
 import {UserProfileComponent} from './components/user-profile/user-profile.component';
 import {ManageUsersComponent} from './components/manageUsers/manage-users/manage-users.component';
@@ -29,36 +26,162 @@ import {CreateAvailabilityComponent} from './components/manageAvailability/creat
 import {ViewAvailabilityComponent} from './components/manageAvailability/view-availability/view-availability.component';
 import {ShiftManagerComponent} from './components/manageAvailability/shift-manager/shift-manager.component';
 import {MapLinesComponent} from './components/map-lines/map-lines.component';
-import { ManageUserComponent } from './components/manageUsers/manage-user/manage-user.component';
+import {ManageUserComponent} from './components/manageUsers/manage-user/manage-user.component';
 import {AgmCoreModule} from '@agm/core';
 import {AngularOpenlayersModule} from 'ngx-openlayers';
-import { StateBusrideComponent } from './components/state-busride/state-busride.component';
-import { JwPaginationComponent } from 'jw-angular-pagination';
-
+import {StateBusrideComponent} from './components/state-busride/state-busride.component';
+import {JwPaginationComponent} from 'jw-angular-pagination';
+import {RoleGuardService} from './services/role-guard.service';
+import {Role} from './models/user';
+import {NgxPaginationModule} from 'ngx-pagination';
+import {MatButtonModule, MatTooltipModule} from '@angular/material';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'forgotPassword', component: ForgotPasswordComponent},
-  {path: 'createUser', component: CreateUserComponent},
-  {path: 'children', component: ChildrenComponent},
-  {path: 'reservation', component: ReservationComponent},
-  {path: 'messages', component: ComunicationComponent},
-  {path: 'messages/:id', component: MessageComponent},
-  {path: 'children/register', component: RegisterChildComponent},
-  {path: 'children/update/:id', component: UpdateChildComponent},
-  {path: 'attendees/manage/:idBusRide/:idCurrentStopBus', component: ManageAttendeesComponent},
+  {
+    path: 'createUser',
+    component: CreateUserComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.admin, Role.sysAdmin]
+    }
+  },
+  {
+    path: 'children',
+    component: ChildrenComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.parent]
+    }
+  },
+  {
+    path: 'reservation', component: ReservationComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.parent]
+    }
+  },
+  {
+    path: 'messages', component: ComunicationComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.parent, Role.escort, Role.admin, Role.sysAdmin]
+    }
+  },
+  {
+    path: 'messages/:id', component: MessageComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.parent, Role.escort, Role.admin, Role.sysAdmin]
+    }
+  },
+  {
+    path: 'children/register', component: RegisterChildComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.parent]
+    }
+  },
+  {
+    path: 'children/update/:id', component: UpdateChildComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.parent]
+    }
+  },
+  {
+    path: 'attendees/manage/:idBusRide/:idCurrentStopBus', component: ManageAttendeesComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.escort]
+    }
+  },
   {path: 'home', component: HomeComponent},
-  {path: 'createAvailabilities', component: CreateAvailabilityComponent},
-  {path: 'viewAvailabilities', component: ViewAvailabilityComponent},
-  {path: 'shiftManage', component: ShiftManagerComponent},
-  {path: 'shiftManage/:id', component: ShiftManagerComponent},
-  {path: 'manageUsers', component: ManageUsersComponent},
-  {path: 'manageUsers/:id', component: ManageUserComponent},
-  {path: 'mapLines', component: MapLinesComponent},
-  {path: 'mapLines/:id', component: MapLinesComponent},
-  {path: 'userProfile', component: UserProfileComponent},
-  {path: 'busridesEscort', component: EscortBusridesComponent},
-  {path: 'stateBusRide', component: StateBusrideComponent},
-  {path: 'stateBusRide/:idLine/:stopBusType/:data', component: StateBusrideComponent},
+  {
+    path: 'createAvailabilities', component: CreateAvailabilityComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.escort]
+    }
+  },
+  {
+    path: 'viewAvailabilities', component: ViewAvailabilityComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.escort]
+    }
+  },
+  {
+    path: 'shiftManage', component: ShiftManagerComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.admin, Role.sysAdmin]
+    }
+  },
+  {
+    path: 'shiftManage/:id', component: ShiftManagerComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.admin, Role.sysAdmin]
+    }
+  },
+  {
+    path: 'manageUsers', component: ManageUsersComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.admin, Role.sysAdmin]
+    }
+  },
+  {
+    path: 'manageUsers/:id', component: ManageUserComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.admin, Role.sysAdmin]
+    }
+  },
+  {
+    path: 'mapLines', component: MapLinesComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.parent, Role.escort, Role.admin, Role.sysAdmin]
+    }
+  },
+  {
+    path: 'mapLines/:id', component: MapLinesComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.parent, Role.admin, Role.escort, Role.sysAdmin]
+    }
+  },
+  {
+    path: 'userProfile', component: UserProfileComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.parent, Role.escort, Role.sysAdmin, Role.admin]
+    }
+  },
+  {
+    path: 'busridesEscort', component: EscortBusridesComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.escort]
+    }
+  },
+  {
+    path: 'stateBusRide', component: StateBusrideComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.parent, Role.sysAdmin, Role.admin]
+    }
+  },
+  {
+    path: 'stateBusRide/:idLine/:stopBusType/:data', component: StateBusrideComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.parent, Role.sysAdmin, Role.admin]
+    }
+  },
   {path: '**', redirectTo: 'home'}
 ];
 
@@ -97,6 +220,10 @@ const routes: Routes = [
     FormsModule,
     AgmCoreModule.forRoot({apiKey: 'AIzaSyCJLZTtvkOWHf2YjAKg0fRZbk9Z-0ksCkM'}),
     AngularOpenlayersModule,
+    MatButtonModule,
+    MatTooltipModule,
+    NgxPaginationModule,
+    BrowserAnimationsModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},

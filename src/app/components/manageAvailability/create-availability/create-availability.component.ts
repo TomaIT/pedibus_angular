@@ -21,7 +21,7 @@ declare let $: any;
 })
 export class CreateAvailabilityComponent implements OnInit, OnDestroy {
 
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', { static: true }) myDate: ElementRef;
   retBusRides: Array<BusRide>;
   outBusRides: Array<BusRide>;
   retStopBuses: Array<StopBus>;
@@ -41,9 +41,6 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
               private stopBusService: StopBusService,
               private availabilityService: AvailabilityService,
               private router: Router) {
-    if (!this.authenticationService.isEscort()) {
-      this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
-    }
     this.pollCounter();
     this.pollingData = interval(environment.intervalAvailCheck)
       .subscribe((data) => this.pollCounter());
@@ -287,5 +284,23 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
           }
         );
     }
+  }
+
+  getOutNameStopBusSelected(sbid: string): string {
+    for (const stb of this.outStopBuses) {
+      if (stb.id === sbid) {
+        return stb.name;
+      }
+    }
+    return 'stopbus error';
+  }
+
+  getRetNameStopBusSelected(sbid: string): string {
+    for (const stb of this.retStopBuses) {
+      if (stb.id === sbid) {
+        return stb.name;
+      }
+    }
+    return 'stopbus error';
   }
 }
