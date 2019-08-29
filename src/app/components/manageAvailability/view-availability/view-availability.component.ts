@@ -73,12 +73,25 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
     );
   }
 
-  visualizeData(time: Date): Date {
+  visualizeData(avl: Availability): Date {
+    const temp = new Date();
+    temp.setFullYear(avl.busRide.year, avl.busRide.month, avl.busRide.day);
+    for (const stopB of avl.busRide.stopBuses) {
+      if (stopB.id === avl.idStopBus) {
+        const h = Math.floor(stopB.hours / 60);
+        const m = stopB.hours - (h * 60);
+        temp.setHours(h, m, 0, 0);
+        return temp;
+      }
+    }
+    return null;
+  }
+  /* visualizeData(time: Date): Date {
     const temp = new Date(time);
     temp.setFullYear(temp.getFullYear(), temp.getMonth(), temp.getDate());
     temp.setHours(temp.getHours(), temp.getMinutes(), 0, 0);
     return temp;
-  }
+  } */
 
   confirm(avl: Availability) {
     const temp = new AvailabilityPUT();
