@@ -10,7 +10,7 @@
       Seleziona la Linea
       <select class="form-control" (change)="changeLine($event)">
         <option disabled selected value>--select an option--</option>
-        <option [value]="line.idLine" *ngFor="let line of lines;" [selected]="line.idLine === lineSelected.idLine">
+        <option [value]="line.idLine" *ngFor="let line of lines;">
           {{line.lineName}}
         </option>
       </select>
