@@ -285,4 +285,22 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
         );
     }
   }
+
+  getOutNameStopBusSelected(sbid: string): string {
+    for (const stb of this.outStopBuses) {
+      if (stb.id === sbid) {
+        return stb.name;
+      }
+    }
+    return 'stopbus error';
+  }
+
+  getRetNameStopBusSelected(sbid: string): string {
+    for (const stb of this.retStopBuses) {
+      if (stb.id === sbid) {
+        return stb.name;
+      }
+    }
+    return 'stopbus error';
+  }
 }
