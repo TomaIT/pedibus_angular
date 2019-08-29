@@ -25,16 +25,17 @@
       <td>{{visualizeData(a.startDateOfBusRide) | date:'HH:mm - dd/MM/yy'}}</td>
       <td>{{a.state || '-'}}</td>
       <td>
-        <button *ngIf="checkConfirm(a.state)" (click)="confirm(a)">Conferma</button>
-        <button *ngIf="checkAvail(a.state)" disabled mat-raised-button matTooltip="La tua disponibilità è stata inviata. Attendi che un amministratore dia una prima conferma" aria-label="Button that displays a tooltip when focused or hovered over">Attesa conferma Admin</button>
-        <img *ngIf="checkDel(a.state)" style="height: 5px; width: 5px;" disabled mat-raised-button matTooltip="La tua disponibilità è stata confermata. Se vuoi richiederne la cancellazione contatta l'amministratore" aria-label="Disponibilità definita, cancellazione non possibile" src="../../../../assets/images/info.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-        <!--<button *ngIf="checkDel(a.state)" disabled>Disponibilità già data</button>-->
+        <button mat-raised-button *ngIf="checkConfirm(a.state)" (click)="confirm(a)">Conferma</button>
+        <img *ngIf="checkAvail(a.state)" disabled matTooltip="La tua disponibilità è stata inviata. Attendi che un amministratore ne prenda visione" aria-label="Disponibilità inviata"
+             src="../../../../assets/images/info.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="30%" height="30%">
+        <img *ngIf="checkDel(a.state)" disabled
+             matTooltip="La tua disponibilità è stata confermata." aria-label="Disponibilità definita" src="../../../../assets/images/info.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="30%" height="30%">
         <button *ngIf="checkrc(a.state)" disabled>Attesa completamento Admin</button>
       </td>
       <td>
         <img *ngIf="!checkDel(a.state)" (click)="delete(a)" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-        <button *ngIf="checkDel(a.state)" (click)="confirm(a)" disabled>info mouse over</button>
-        <!--TODO l'ideale sarebbe un'iconcina con il ? (ma anche icone per il resto) dove se ci si passa sopra il mouse o ci si clicca dice che bisogna contattare l'admin per la cancellazione-->
+        <img *ngIf="checkDel(a.state)" disabled matTooltip="Rimozione disabilitata, rivolgersi ad un amministratore" aria-label="Cancellazione disabilitata" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+        <!-- <button *ngIf="checkDel(a.state)" (click)="confirm(a)" disabled>info mouse over</button> -->
       </td>
     </tr>
     </tbody>
