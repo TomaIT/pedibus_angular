@@ -34,8 +34,7 @@ import {JwPaginationComponent} from 'jw-angular-pagination';
 import {RoleGuardService} from './services/role-guard.service';
 import {Role} from './models/user';
 import {NgxPaginationModule} from 'ngx-pagination';
-import {MatButtonModule, MatTooltipModule} from '@angular/material';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'forgotPassword', component: ForgotPasswordComponent},
@@ -220,10 +219,7 @@ const routes: Routes = [
     FormsModule,
     AgmCoreModule.forRoot({apiKey: 'AIzaSyCJLZTtvkOWHf2YjAKg0fRZbk9Z-0ksCkM'}),
     AngularOpenlayersModule,
-    MatButtonModule,
-    MatTooltipModule,
     NgxPaginationModule,
-    BrowserAnimationsModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},

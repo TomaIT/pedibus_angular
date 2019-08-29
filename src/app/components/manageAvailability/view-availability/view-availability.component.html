@@ -26,9 +26,8 @@
       <td>{{a.state || '-'}}</td>
       <td>
         <button *ngIf="checkConfirm(a.state)" (click)="confirm(a)">Conferma</button>
-        <button *ngIf="checkAvail(a.state)" disabled mat-raised-button matTooltip="La tua disponibilità è stata inviata. Attendi che un amministratore dia una prima conferma" aria-label="Button that displays a tooltip when focused or hovered over">Attesa conferma Admin</button>
-        <img *ngIf="checkDel(a.state)" style="height: 5px; width: 5px;" disabled mat-raised-button matTooltip="La tua disponibilità è stata confermata. Se vuoi richiederne la cancellazione contatta l'amministratore" aria-label="Disponibilità definita, cancellazione non possibile" src="../../../../assets/images/info.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-        <!--<button *ngIf="checkDel(a.state)" disabled>Disponibilità già data</button>-->
+        <button *ngIf="checkAvail(a.state)" disabled>Attesa conferma Admin</button>
+        <button *ngIf="checkDel(a.state)" disabled>Disponibilità già data</button>
         <button *ngIf="checkrc(a.state)" disabled>Attesa completamento Admin</button>
       </td>
       <td>

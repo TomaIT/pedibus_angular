@@ -17,7 +17,7 @@ declare let $: any;
   styleUrls: ['./register-child.component.css']
 })
 export class RegisterChildComponent implements OnInit {
-  @ViewChild('myDate', { static: true }) myDate: ElementRef;
+  @ViewChild('myDate') myDate: ElementRef;
   form: FormGroup;
   loading = false;
   submitted = false;

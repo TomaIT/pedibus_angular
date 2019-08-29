@@ -24,7 +24,7 @@
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
         <p>
-          {{a.lineName}}: {{getOutNameStopBusSelected(outStopBusSelectedId)}} - {{a.stopBuses[a.stopBuses.length-1].name}}
+          {{a.lineName}}: {{getOutNameStopBusSelected(outStopBusSelectedId)}} - {{a.stopBuses[a.stopBuses.length - 1].name}}
         </p>
         <p>
           {{getTimeStopBus(a,getOutStopBusSelected()) | date:'dd MMM yy - HH:mm'}}
@@ -32,9 +32,10 @@
         <p *ngIf="!loading">
           <button *ngIf="!isBooked(a.id) && !checkBookedDate(a.id, a.lineName, a.startTime)" (click)="giveAvailability(a.id, this.outStopBusSelectedId)" class="btn btn-primary" type="button">Invia</button>
           <!--<button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button" disabled>-->
-          <button *ngIf="isBooked(a.id)"  class="btn btn-danger" type="button" disabled>
-            Disponibilità inviata </button> <!-- TODO cambiare colore, la cancellazione e la modifica verrà effettuta nell'altra pagina -->
-          <button *ngIf="!isBooked(a.id) && checkBookedDate(a.id, a.lineName, a.startTime)"  class="btn btn-danger" type="button" disabled>
+          <button *ngIf="isBooked(a.id)"  class="btn btn-danger" type="button" disabled matTooltip="La tua disponibilità è stata inviata correttamente. Verificane lo stato nell'apposita sezione" aria-label="Disponibilità inviata">
+            Disponibilità inviata </button> <!-- TODO cambiare colore -->
+          <button *ngIf="!isBooked(a.id) && checkBookedDate(a.id, a.lineName, a.startTime)"  class="btn btn-danger"
+                  type="button" matTooltip="Hai già effettuato una prenotazione per questo periodo. Annulla quella precedente se desideri prenotare questa" aria-label="Altra disponibilità rilevata"disabled>
           Altra disponibilità presente!</button>
         </p>
         <div *ngIf="loading" class="spinner-border text-info" role="status"></div>
@@ -56,7 +57,7 @@
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
         <p>
-          {{a.lineName}}: {{getRetNameStopBusSelected(retStopBusSelectedId)}} - {{a.stopBuses[a.stopBuses.length-1].name}}
+          {{a.lineName}}: {{getRetNameStopBusSelected(retStopBusSelectedId)}} - {{a.stopBuses[a.stopBuses.length -1].name}}
         </p>
         <p>
           {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'dd MMM yy - HH:mm'}}

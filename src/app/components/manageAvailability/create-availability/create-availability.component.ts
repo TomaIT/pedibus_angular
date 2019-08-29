@@ -21,7 +21,7 @@ declare let $: any;
 })
 export class CreateAvailabilityComponent implements OnInit, OnDestroy {
 
-  @ViewChild('myDate', { static: true }) myDate: ElementRef;
+  @ViewChild('myDate') myDate: ElementRef;
   retBusRides: Array<BusRide>;
   outBusRides: Array<BusRide>;
   retStopBuses: Array<StopBus>;
