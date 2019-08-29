@@ -18,9 +18,7 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
   users: Array<User>;
   pollingData: any;
   usernameStartWith: string;
-  pageOfItems: Array<any>;
-  numberPageOfView = 1;
-  historyPage = 1;
+  p = 1;
 
 
   constructor(private authenticationService: AuthenticationService,
@@ -36,13 +34,6 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
       .subscribe((data) => this.usernameStartWithChange());
   }
 
-  onChangePage(pageOfItems: Array<any>) {
-    const index = this.users.findIndex(x => x.username === pageOfItems[0].username);
-    if (index >= 0) {
-      this.historyPage = (index / this.pageSize) + 1;
-    }
-    this.pageOfItems = pageOfItems;
-  }
 
   ngOnDestroy(): void {
     if (!isNullOrUndefined(this.pollingData)) {
@@ -70,11 +61,11 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
           const temp = data.content.sort((a, b) => a.username.localeCompare(b.username));
           temp.forEach(x => x.roles = x.roles.sort((a, b) => a.localeCompare(b)));
           this.users = temp;
-          this.numberPageOfView = this.historyPage;
-         /* if (!this.users || this.users.length !== temp.length ||
-            temp.filter(y => this.users.findIndex(x => this.equals(x, y)) < 0).length > 0) {
-            this.users = temp;
-          }*/
+
+          /* if (!this.users || this.users.length !== temp.length ||
+             temp.filter(y => this.users.findIndex(x => this.equals(x, y)) < 0).length > 0) {
+             this.users = temp;
+           }*/
         },
         (error) => {
           this.alertService.error(error);
@@ -126,4 +117,7 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
       );
   }
 
+  onChangePage(event: number) {
+    this.p = event;
+  }
 }

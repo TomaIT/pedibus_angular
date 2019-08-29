@@ -33,6 +33,7 @@ import {StateBusrideComponent} from './components/state-busride/state-busride.co
 import {JwPaginationComponent} from 'jw-angular-pagination';
 import {RoleGuardService} from './services/role-guard.service';
 import {Role} from './models/user';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -218,6 +219,7 @@ const routes: Routes = [
     FormsModule,
     AgmCoreModule.forRoot({apiKey: 'AIzaSyCJLZTtvkOWHf2YjAKg0fRZbk9Z-0ksCkM'}),
     AngularOpenlayersModule,
+    NgxPaginationModule,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
