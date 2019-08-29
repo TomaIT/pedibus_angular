@@ -1,8 +1,8 @@
-<h2 align="center">Messaggi</h2>
-<div class="row">
-  <div class="table-responsive">
-  <table class="table table-responsive table-striped" style="font-family: Lato;">
-    <thead>
+<div class="card text-center m-3">
+  <h3 class="card-header">Messaggi</h3>
+  <div class="card-body">
+    <table class="table table-responsive table-striped" style="font-family: Lato;">
+      <thead>
       <tr>
         <th scope="col" width="auto">Mittente</th>
         <!--<th scope="col" width="auto">To</th>-->
@@ -13,9 +13,9 @@
         <th scope="col" width="8%">Open</th>
         <th scope="col" width="8%">Delete</th>
       </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let a of messages;" scope="row"
+      </thead>
+      <tbody>
+      <tr *ngFor="let a of messages | paginate: { itemsPerPage: pageSize, currentPage: p }"
           [ngClass]="{'notRead': !a.readConfirm}">
         <td>{{a.idUserFrom || '-' }}</td>
         <!--<td>{{a.idUserTo || '-' }}</td>-->
@@ -31,8 +31,10 @@
           <img (click)="deleteMessage(a)" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
         </td>
       </tr>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer pb-0 pt-3">
+    <pagination-controls (pageChange)="onChangePage($event)"></pagination-controls>
   </div>
 </div>
-
