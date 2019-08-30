@@ -58,28 +58,24 @@ export class EscortBusridesComponent implements OnInit {
       .subscribe(
         (data) => {
           busRide = data;
-          if (this.checkIfCanStart(busRide)) {
-            if (busRide.timestampLastStopBus === null) {
-              if (busRide.stopBusType === StopBusType.outward) {
-                idStartStopBus = ca.idStopBus;
-              } else {
-                idStartStopBus = busRide.stopBuses[0].id;
-              }
-              this.router.navigate(
-                [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
+          if (busRide.timestampLastStopBus === null) {
+            if (busRide.stopBusType === StopBusType.outward) {
+              idStartStopBus = ca.idStopBus;
             } else {
-              let x = 0;
-              for (const stop of busRide.stopBuses) {
-                if (stop.id === busRide.idLastStopBus) {
-                  idStartStopBus = busRide.stopBuses[x + 1].id;
-                }
-                x++;
-              }
-              this.router.navigate(
-                [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
+              idStartStopBus = busRide.stopBuses[0].id;
             }
+            this.router.navigate(
+              [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
           } else {
-            this.alertService.error('La corsa non pu ancora essere iniziata');
+            let x = 0;
+            for (const stop of busRide.stopBuses) {
+              if (stop.id === busRide.idLastStopBus) {
+                idStartStopBus = busRide.stopBuses[x + 1].id;
+              }
+              x++;
+            }
+            this.router.navigate(
+              [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
           }
         },
         (error) => {

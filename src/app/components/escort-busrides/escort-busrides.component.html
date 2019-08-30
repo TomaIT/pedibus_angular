@@ -26,7 +26,8 @@ Disponibilità confermate da oggi in avanti.<br>
         <td>{{getEscortEndStopBus(av).name}}</td>
         <td>{{convertMinutesToTime(getEscortEndStopBus(av).hours)}}</td>
         <td *ngIf="av.busRide.idLastStopBus === av.busRide.stopBuses[av.busRide.stopBuses.length-1].id">Corsa effettuata</td>
-        <td *ngIf="av.busRide.idLastStopBus !== av.busRide.stopBuses[av.busRide.stopBuses.length-1].id"><button (click)="clickOnBusRide(av)" class="btn btn-primary">Effettua corsa</button></td>
+        <td *ngIf="av.busRide.idLastStopBus !== av.busRide.stopBuses[av.busRide.stopBuses.length-1].id && checkIfCanStart(av.busRide)"><button (click)="clickOnBusRide(av)" class="btn btn-primary">Effettua corsa</button></td>
+        <td *ngIf="av.busRide.idLastStopBus !== av.busRide.stopBuses[av.busRide.stopBuses.length-1].id && !checkIfCanStart(av.busRide)"><span>Corsa da effettuare</span></td>
         <td><button (click)="clickOnBusRide(av)">Effettua corsa</button></td>
       </tbody>
     </table>
