@@ -32,8 +32,8 @@
 
         </td>
         <td *ngIf="authenticationService.isSysAdmin()">
-          <button *ngIf="a.accountNonLocked" (click)="blockUser(a)" type="button" class="btn btn-link" style="color: red;">Blocca</button>
-          <button *ngIf="!a.accountNonLocked" (click)="unblockUser(a)" type="button" class="btn btn-link">Sblocca</button>
+          <button *ngIf="a.accountNonLocked" [disabled]="a.username === actualUser.username" (click)="blockUser(a)" type="button" class="btn btn-link" style="color: red;">Blocca</button>
+          <button *ngIf="!a.accountNonLocked" [disabled]="a.username === actualUser.username" (click)="unblockUser(a)" type="button" class="btn btn-link">Sblocca</button>
         </td>
         <td>
           <img *ngIf="a.enabled" src="../../../../assets/images/check-box.png" style="margin-left: 13px;min-width: 25px;" width="50%" height="auto">

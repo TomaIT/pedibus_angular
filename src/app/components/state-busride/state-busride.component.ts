@@ -109,7 +109,11 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
           this.refreshBusRideAndPresences();
         },
         (error) => {
-          this.alertService.error(error);
+          console.log(error.toString());
+          if (error.toString().includes('404') === true) {
+            this.alertService.error(error);
+          }
+
         }
       );
   }
@@ -120,8 +124,10 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => { this.busRide = data; },
         (error) => {
+          if (!error.toString().includes('404')) {
+            this.alertService.error(error);
+          }
           this.busRide = new BusRide();
-          this.alertService.error(error);
         }
       );
   }
@@ -145,7 +151,10 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
             this.presenceBusRide.presenceStopBusGETTreeSet[length - 1].presenceChildGETSet = presences.filter(p => !p.absent);
           }
         },
-        (error) => { this.alertService.error(error); }
+        (error) => {
+          if (!error.toString().includes('404')) {
+          this.alertService.error(error);
+        }}
       );
   }
 

@@ -38,6 +38,19 @@ export class EscortBusridesComponent implements OnInit {
       );
   }
 
+  checkIfCanStart(busride: BusRide): boolean {
+    const today = new Date();
+    const data = (today.getHours() * 60) + today.getMinutes();
+    const minutes = busride.stopBuses[0].hours;
+    const br = new Date(busride.startTime);
+    if (br.getUTCMonth() === today.getUTCMonth() && br.getUTCDate() === today.getUTCDate()) {
+      if ( (minutes - 5) < data) {
+       return true;
+      }
+    }
+    return false;
+  }
+
   clickOnBusRide(ca: Availability) {
     let busRide = new BusRide();
     let idStartStopBus: string;
@@ -45,13 +58,29 @@ export class EscortBusridesComponent implements OnInit {
       .subscribe(
         (data) => {
           busRide = data;
-          if (busRide.stopBusType === StopBusType.outward) {
-            idStartStopBus = ca.idStopBus;
+          if (this.checkIfCanStart(busRide)) {
+            if (busRide.timestampLastStopBus === null) {
+              if (busRide.stopBusType === StopBusType.outward) {
+                idStartStopBus = ca.idStopBus;
+              } else {
+                idStartStopBus = busRide.stopBuses[0].id;
+              }
+              this.router.navigate(
+                [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
+            } else {
+              let x = 0;
+              for (const stop of busRide.stopBuses) {
+                if (stop.id === busRide.idLastStopBus) {
+                  idStartStopBus = busRide.stopBuses[x + 1].id;
+                }
+                x++;
+              }
+              this.router.navigate(
+                [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
+            }
           } else {
-            idStartStopBus = busRide.stopBuses[0].id;
+            this.alertService.error('La corsa non pu ancora essere iniziata');
           }
-          this.router.navigate(
-            [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
         },
         (error) => {
           this.alertService.error(error);

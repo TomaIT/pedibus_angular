@@ -7,6 +7,7 @@ import {Role, User} from '../../../models/user';
 import {interval} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {isNullOrUndefined} from 'util';
+import {Login} from '../../../models/login';
 
 @Component({
   selector: 'app-manage-users',
@@ -19,7 +20,7 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
   pollingData: any;
   usernameStartWith: string;
   p = 1;
-
+  actualUser: Login = JSON.parse(localStorage.getItem('currentUser'));
 
   constructor(private authenticationService: AuthenticationService,
               private router: Router,
