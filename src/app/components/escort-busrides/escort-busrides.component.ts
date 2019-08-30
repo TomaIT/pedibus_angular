@@ -59,24 +59,24 @@ export class EscortBusridesComponent implements OnInit {
         (data) => {
           busRide = data;
           if (busRide.timestampLastStopBus === null) {
-              if (busRide.stopBusType === StopBusType.outward) {
-                idStartStopBus = ca.idStopBus;
-              } else {
-                idStartStopBus = busRide.stopBuses[0].id;
-              }
-              this.router.navigate(
-                [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
+            if (busRide.stopBusType === StopBusType.outward) {
+              idStartStopBus = ca.idStopBus;
             } else {
-              let x = 0;
-              for (const stop of busRide.stopBuses) {
-                if (stop.id === busRide.idLastStopBus) {
-                  idStartStopBus = busRide.stopBuses[x + 1].id;
-                }
-                x++;
-              }
-              this.router.navigate(
-                [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
+              idStartStopBus = busRide.stopBuses[0].id;
             }
+            this.router.navigate(
+              [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
+          } else {
+            let x = 0;
+            for (const stop of busRide.stopBuses) {
+              if (stop.id === busRide.idLastStopBus) {
+                idStartStopBus = busRide.stopBuses[x + 1].id;
+              }
+              x++;
+            }
+            this.router.navigate(
+              [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
+          }
         },
         (error) => {
           this.alertService.error(error);
