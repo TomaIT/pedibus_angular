@@ -58,8 +58,7 @@ export class EscortBusridesComponent implements OnInit {
       .subscribe(
         (data) => {
           busRide = data;
-          if (this.checkIfCanStart(busRide)) {
-            if (busRide.timestampLastStopBus === null) {
+          if (busRide.timestampLastStopBus === null) {
               if (busRide.stopBusType === StopBusType.outward) {
                 idStartStopBus = ca.idStopBus;
               } else {
@@ -78,9 +77,6 @@ export class EscortBusridesComponent implements OnInit {
               this.router.navigate(
                 [`/attendees/manage/${ca.idBusRide}/${idStartStopBus}`]);
             }
-          } else {
-            this.alertService.error('La corsa non pu ancora essere iniziata');
-          }
         },
         (error) => {
           this.alertService.error(error);

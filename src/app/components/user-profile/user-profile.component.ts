@@ -158,7 +158,7 @@ export class UserProfileComponent implements OnInit {
           this.userService.findById(this.authenticationService.currentUserValue.username)
             .subscribe(
               (user) => {
-                const saved: Login = JSON.parse(localStorage.getItem('currentUser'));
+                const saved: Login = this.authenticationService.currentUserValue;
                 saved.user = user;
                 localStorage.setItem('currentUser', JSON.stringify(saved));
                 this.authenticationService.setCurrentUser(saved);

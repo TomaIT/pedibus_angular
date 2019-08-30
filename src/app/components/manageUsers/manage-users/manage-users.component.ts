@@ -20,7 +20,7 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
   pollingData: any;
   usernameStartWith: string;
   p = 1;
-  actualUser: Login = JSON.parse(localStorage.getItem('currentUser'));
+  actualUser: string;
 
   constructor(private authenticationService: AuthenticationService,
               private router: Router,
@@ -31,6 +31,7 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.usernameStartWith = '';
     this.usernameStartWithChange();
+    this.actualUser = this.authenticationService.currentUserValue.username;
     this.pollingData = interval(environment.intervalTimePolling + 5000)
       .subscribe((data) => this.usernameStartWithChange());
   }
