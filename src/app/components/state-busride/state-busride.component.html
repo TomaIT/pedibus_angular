@@ -27,6 +27,7 @@
   </div>
 </div>
 <div class="row" style="margin-top: 30px;" *ngIf="busRide !== undefined">
+  <ng-container *ngIf="!notStarted">
   <div class="col">
     <ul class="timeline">
       <li *ngFor="let stopBus of busRide.stopBuses; let i = index;last as isLastStop;first as isFirstStop;" [class.nopassed]="!isBusAlreadyPassed(stopBus.id)" [class.passed]="isBusAlreadyPassed(stopBus.id)">
@@ -71,7 +72,14 @@
       </li>
     </ul>
     <br>
-    <div>
+  </div>
+  </ng-container>
+  <ng-container *ngIf="notStarted">
+    <div class="col">
+      <h2>La corsa non è ancora iniziata</h2>
+    </div>
+  </ng-container>
+    <div class="col">
       <span><i>Legenda:</i></span>
       <ul>
         <li>[nero] Prenotato ma stato non aggiornato</li>
@@ -80,5 +88,4 @@
         <li class="red">[rosso] Assente</li>
       </ul>
     </div>
-  </div>
 </div>

@@ -65,6 +65,10 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
               private userService: UserService,
               private alertService: AlertService,
               private activatedRoute: ActivatedRoute) {
+    const user: Login = this.authenticationService.currentUserValue;
+    if (user.user.idLines.length === 0) {
+      this.alertService.error('Non ti è stata assegnata nessuna linea. Contatta il sys admin per fartene assegnare una');
+    }
   }
 
   ngOnInit() {
@@ -77,7 +81,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
         this.dataSelectedChange();
       }});
     this.lines = new Array<LineEnum>();
-    const user: Login = JSON.parse(localStorage.getItem('currentUser'));
+    const user: Login = this.authenticationService.currentUserValue;
     this.lineService.getLinesEnum()
       .subscribe(
         (data) => {

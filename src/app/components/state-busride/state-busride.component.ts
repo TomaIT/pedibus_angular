@@ -35,6 +35,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
   selectedData: any;
 
   pollingData: any;
+  notStarted = false;
 
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
@@ -45,6 +46,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.notStarted = false;
     $('#date').datepicker({
       dateFormat: 'yy-mm-dd',
       onSelect: (selDate, inst) => {
@@ -122,7 +124,13 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
     this.busRideService.getBusRidesFromLineAndStopBusTypeAndData(this.selectedLine.idLine,
       this.selectedDirection, this.selectedYear, this.selectedMonth, this.selectedDay)
       .subscribe(
-        (data) => { this.busRide = data; },
+        (data) => {
+          this.busRide = data;
+          if (this.busRide.timestampLastStopBus === null) {
+            this.notStarted = true;
+            console.log(this.notStarted);
+          }
+          },
         (error) => {
           if (!error.toString().includes('404')) {
             this.alertService.error(error);
