@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit {
       .subscribe(
         (data) => {
           const a = this.myRouterService.getUrlWhenIsNotLogged();
-          if (a) {
+          if (a && a !== '/login') {
             this.router.navigate([a]).catch((reason) => this.alertService.error(reason));
           } else {
             this.router.navigate(['/home']).catch((reason) => this.alertService.error(reason));
