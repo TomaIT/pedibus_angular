@@ -71,7 +71,8 @@ export class RegisterChildComponent implements OnInit {
     $('#date').datepicker({
       dateFormat: 'yy-mm-dd',
       changeYear: true,
-      yearRange: '1980:c',
+      maxDate: '-4y',
+      minDate: '-13y'
     });
     this.childService.getGenders()
       .subscribe(
