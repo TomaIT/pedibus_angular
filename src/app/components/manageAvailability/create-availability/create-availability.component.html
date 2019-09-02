@@ -75,7 +75,8 @@
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
         <p>
-          {{a.lineName}}: {{getRetNameStopBusSelected(retStopBusSelectedId)}} - {{a.stopBuses[a.stopBuses.length -1].name}}
+          <!-- {{a.lineName}}: {{getRetNameStopBusSelected(retStopBusSelectedId)}} - {{a.stopBuses[a.stopBuses.length -1].name}} -->
+          {{a.lineName}}: {{a.stopBuses[0].name}} - {{getRetNameStopBusSelected(retStopBusSelectedId)}}
         </p>
         <p>
           {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'dd MMM yy - HH:mm'}}

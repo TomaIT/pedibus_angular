@@ -95,7 +95,12 @@ export class UserProfileComponent implements OnInit {
         (user) => {
           this.user = user;
           this.changeFormValue(this.user);
-          $('#date').datepicker({dateFormat: 'yy-mm-dd'});
+          $('#date').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeYear: true,
+            maxDate: '-18y',
+            minDate: '-130y'
+          });
           this.myDate.nativeElement.value = UserProfileComponent.getDate(this.user.birth)
             .toISOString().split('T')[0];
         },
