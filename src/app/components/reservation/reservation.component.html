@@ -42,9 +42,6 @@
         <p *ngIf="getOutStopBusSelected().name !== lastStopBusOut">
           <a routerLink="/mapLines/{{a.idLine+'_out'}}">{{a.lineName}}</a> - {{getOutStopBusSelected().name}} - {{lastStopBusOut}}
         </p>
-        <p *ngIf="getOutStopBusSelected().name === lastStopBusOut">
-          <a routerLink="/mapLines/{{a.idLine+'_out'}}">{{a.lineName}}</a> - {{getOutStopBusSelected().name}} (ultima fermata)
-        </p>
         <p>
           {{getTimeStopBus(a,getOutStopBusSelected()) | date: 'medium'}}
         </p>
@@ -77,10 +74,7 @@
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
         <p *ngIf="getRetStopBusSelected().name !== lastStopBusRet">
-          <a routerLink="/mapLines/{{a.idLine+'_ret'}}">{{a.lineName}}</a> - {{getRetStopBusSelected().name}} - {{lastStopBusRet}}
-        </p>
-        <p *ngIf="getRetStopBusSelected().name === lastStopBusRet">
-          <a routerLink="/mapLines/{{a.idLine+'_ret'}}">{{a.lineName}}</a> - {{getRetStopBusSelected().name}} (ultima fermata)
+          <a routerLink="/mapLines/{{a.idLine+'_ret'}}">{{a.lineName}}</a> -  {{lastStopBusRet}} - {{getRetStopBusSelected().name}}
         </p>
         <p>
           {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'medium'}}
