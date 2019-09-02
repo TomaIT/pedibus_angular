@@ -27,6 +27,7 @@
   </div>
 </div>
 <div class="row" style="margin-top: 30px;" *ngIf="busRide !== undefined">
+  <div class="col">
   <ng-container *ngIf="!notStarted">
   <div class="col">
     <ul class="timeline">
@@ -74,18 +75,20 @@
     <br>
   </div>
   </ng-container>
-  <ng-container *ngIf="notStarted">
-    <div class="col">
+    <div class="col" *ngIf="notStarted">
       <h2>La corsa non è ancora iniziata</h2>
     </div>
-  </ng-container>
-    <div class="col">
-      <span><i>Legenda:</i></span>
-      <ul>
-        <li>[nero] Prenotato ma stato non aggiornato</li>
-        <li class="green">[verde] Salito</li>
-        <li class="orange">[arancio] Sceso</li>
-        <li class="red">[rosso] Assente</li>
-      </ul>
-    </div>
+  <div class="col" *ngIf="notExist">
+    <h2>La corsa non esiste</h2>
+  </div>
+  <div class="col">
+    <span><button style="background: white;border-color: blue; border-radius: 8px" (click)="showLegend = !showLegend">Legenda:</button></span>
+    <ul *ngIf="showLegend">
+      <li>[nero] Prenotato ma stato non aggiornato</li>
+      <li class="green">[verde] Salito</li>
+      <li class="orange">[arancio] Sceso</li>
+      <li class="red">[rosso] Assente</li>
+    </ul>
+  </div>
+  </div>
 </div>

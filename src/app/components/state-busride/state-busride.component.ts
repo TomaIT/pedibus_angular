@@ -36,6 +36,9 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
 
   pollingData: any;
   notStarted = false;
+  notExist = false;
+
+  showLegend = false;
 
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
@@ -67,6 +70,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
     this.pollingData = interval(environment.intervalTimePolling + 5000)
       .subscribe((data) => this.refreshBusRideAndPresences());
   }
+
   ngOnDestroy(): void {
     this.pollingData.unsubscribe();
   }
@@ -125,15 +129,18 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
       this.selectedDirection, this.selectedYear, this.selectedMonth, this.selectedDay)
       .subscribe(
         (data) => {
+          this.notExist = false;
           this.busRide = data;
           if (this.busRide.timestampLastStopBus === null) {
             this.notStarted = true;
-            console.log(this.notStarted);
           }
           },
         (error) => {
           if (!error.toString().includes('404')) {
             this.alertService.error(error);
+          } else {
+            this.notExist = true;
+            this.notStarted = false;
           }
           this.busRide = new BusRide();
         }

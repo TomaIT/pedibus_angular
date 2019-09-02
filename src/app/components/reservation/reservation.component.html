@@ -3,9 +3,16 @@
     <label>
       Seleziona il bambino
       <select class="form-control" [(ngModel)]="childSelected" (ngModelChange)="childSelectedChange()">
+        <ng-container *ngIf="children !== undefined">
         <option [ngValue]="a" *ngFor="let a of children;">
           {{a.firstname}} {{a.surname}}
         </option>
+        </ng-container>
+        <ng-container *ngIf="children !== undefined">
+          <option disabled selected *ngIf="children.length === 0">
+            Non hai bambini registrati
+          </option>
+        </ng-container>
       </select>
     </label>
   </div>
@@ -32,8 +39,11 @@
       <li *ngFor="let a of outBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
-        <p>
-          <a routerLink="/mapLines/{{a.idLine+'_out'}}">{{a.lineName}}</a> - {{getOutStopBusSelected().name}}
+        <p *ngIf="getOutStopBusSelected().name !== lastStopBusOut">
+          <a routerLink="/mapLines/{{a.idLine+'_out'}}">{{a.lineName}}</a> - {{getOutStopBusSelected().name}} - {{lastStopBusOut}}
+        </p>
+        <p *ngIf="getOutStopBusSelected().name === lastStopBusOut">
+          <a routerLink="/mapLines/{{a.idLine+'_out'}}">{{a.lineName}}</a> - {{getOutStopBusSelected().name}} (ultima fermata)
         </p>
         <p>
           {{getTimeStopBus(a,getOutStopBusSelected()) | date: 'medium'}}
@@ -66,8 +76,11 @@
       <li *ngFor="let a of retBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
-        <p>
-          <a routerLink="/mapLines/{{a.idLine+'_ret'}}">{{a.lineName}}</a> - {{getRetStopBusSelected().name}}
+        <p *ngIf="getRetStopBusSelected().name !== lastStopBusRet">
+          <a routerLink="/mapLines/{{a.idLine+'_ret'}}">{{a.lineName}}</a> - {{getRetStopBusSelected().name}} - {{lastStopBusRet}}
+        </p>
+        <p *ngIf="getRetStopBusSelected().name === lastStopBusRet">
+          <a routerLink="/mapLines/{{a.idLine+'_ret'}}">{{a.lineName}}</a> - {{getRetStopBusSelected().name}} (ultima fermata)
         </p>
         <p>
           {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'medium'}}

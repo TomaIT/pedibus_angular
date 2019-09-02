@@ -32,7 +32,8 @@ export class ReservationComponent implements OnInit {
   loading = false;
   idOutStopBusSelected: string;
   idRetStopBusSelected: string;
-
+  lastStopBusOut: string;
+  lastStopBusRet: string;
 
   constructor(private alertService: AlertService,
               private childService: ChildService,
@@ -60,6 +61,7 @@ export class ReservationComponent implements OnInit {
             this.childSelected = this.children[0];
             this.childSelectedChange();
           }
+          console.log(this.children);
         },
         (error) => {
           this.alertService.error(error);
@@ -257,6 +259,8 @@ export class ReservationComponent implements OnInit {
     if (this.idOutStopBusSelected) {
       const index = this.outStopBuses.findIndex(x => x.id === this.idOutStopBusSelected);
       if (index >= 0) {
+        const last = this.outStopBuses.length;
+        this.lastStopBusOut = this.outStopBuses[last - 1].name;
         return this.outStopBuses[index];
       }
     }
@@ -267,6 +271,8 @@ export class ReservationComponent implements OnInit {
     if (this.idRetStopBusSelected) {
       const index = this.retStopBuses.findIndex(x => x.id === this.idRetStopBusSelected);
       if (index >= 0) {
+        const last = this.retStopBuses.length;
+        this.lastStopBusRet = this.retStopBuses[last - 1].name;
         return this.retStopBuses[index];
       }
     }

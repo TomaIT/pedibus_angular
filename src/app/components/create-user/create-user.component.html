@@ -9,8 +9,11 @@
 
         <input type="text" formControlName="username"
                class="form-control" placeholder="pippo@gmail.com"
-               [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+               [ngClass]="{ 'is-invalid': submitted && f.username.errors }" (change)="checkIfExists($event)"/>
 
+        <div class="invalid-feedback">
+          <div *ngIf="exists">Questo account è gia esistente</div>
+        </div>
         <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
           <div *ngIf="f.username.errors.required">Email is required</div>
           <div *ngIf="f.username.errors.email">Email format is wrong</div>

@@ -58,4 +58,5 @@ export class UserService {
     /* &page=${page}&size=${size}*/
     return this.httpClient.get<Page<User>>(`${environment.apiUrl}/users?idUserStarting=${idUserStarting}`);
   }
+
 }

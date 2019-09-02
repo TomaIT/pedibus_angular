@@ -7,6 +7,7 @@ import {AvailabilityService} from '../../services/availability.service';
 import {Availability, AvailabilityState} from '../../models/availability';
 import {BusRideService} from '../../services/bus-ride.service';
 import {StopBus, StopBusType} from '../../models/stopbus';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-escort-busrides',
@@ -44,7 +45,7 @@ export class EscortBusridesComponent implements OnInit {
     const minutes = busride.stopBuses[0].hours;
     const br = new Date(busride.startTime);
     if (br.getUTCMonth() === today.getUTCMonth() && br.getUTCDate() === today.getUTCDate()) {
-      if ( (minutes - 5) < data) {
+      if ( (minutes - environment.startingInterval) < data && data < (minutes + environment.startingInterval)) {
        return true;
       }
     }

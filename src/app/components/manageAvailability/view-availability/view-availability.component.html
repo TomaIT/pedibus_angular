@@ -27,9 +27,9 @@
       <td>{{a.state || '-'}}</td>
       <td>
         <button *ngIf="checkConfirm(a.state)" (click)="confirm(a)">Conferma</button>
-        <button *ngIf="checkAvail(a.state)" disabled>Attesa conferma Admin</button>
+        <p *ngIf="checkAvail(a.state)" disabled>Attesa conferma Admin</p>
         <button *ngIf="checkDel(a.state)" disabled>Disponibilità già data</button>
-        <button *ngIf="checkrc(a.state)" disabled>Attesa completamento Admin</button>
+        <label *ngIf="checkrc(a.state)" disabled>Attesa completamento Admin</label>
       </td>
       <td>
         <img *ngIf="!checkDel(a.state)" (click)="delete(a)" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">

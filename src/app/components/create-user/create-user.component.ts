@@ -16,6 +16,7 @@ export class CreateUserComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
   submitted = false;
+  exists = false;
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
@@ -84,4 +85,18 @@ export class CreateUserComponent implements OnInit {
 
   }
 
+  checkIfExists(event) {
+    const username = event.target.value;
+    this.userService.findById(username)
+      .subscribe(
+        (data) => {
+          this.exists = true;
+        },
+        (error) => {
+          if (error.toString().includes('404')) {
+            this.exists = false;
+          }
+        }
+      );
+  }
 }
