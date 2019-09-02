@@ -34,12 +34,16 @@ export class BusRideService {
   getPresenceAggregateFromLineAndStopBusTypeAndData(idLine: string, stopBusType: StopBusType,
                                                     year: number, month: number, day: number): Observable<PresenceBusRide> {
     return this.httpClient.get<PresenceBusRide>(
+      // tslint:disable-next-line:max-line-length
       `${environment.apiUrl}/aggregates/presence/${idLine}/${stopBusType.toString()}/${year.toString()}/${month.toString()}/${day.toString()}`);
   }
-  // TODO: stringa sopra troppo lunga
 
   deleteBusride(idBusRide: string): Observable<any> {
     return this.httpClient.delete(`${environment.apiUrl}/busrides/${idBusRide}`);
   }
 
+  getDownloadableBusRideInfo(idBusRide: string): Observable<any> {
+    return this.httpClient.get(`${environment.apiUrl}/busrides/${idBusRide}/downloadInfo`);
+  }
+  // TODO da implementare e decidere il formato
 }
