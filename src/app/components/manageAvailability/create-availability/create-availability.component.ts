@@ -10,6 +10,8 @@ import {Availability, AvailabilityPOST, AvailabilityState} from '../../../models
 import {AvailabilityService} from '../../../services/availability.service';
 import {interval} from 'rxjs';
 import {environment} from '../../../../environments/environment';
+import {LineEnum} from '../../../models/line';
+import {LineService} from '../../../services/line.service';
 
 // jQuery Sign $
 declare let $: any;
@@ -34,13 +36,17 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
   loading = false;
   currentUser: string;
   pollingData: any;
+  linesToSelect: Array<LineEnum>;
+  outLineSelectedId: string;
+  retLineSelectedId: string;
 
   constructor(private authenticationService: AuthenticationService,
               private busRideService: BusRideService,
               private alertService: AlertService,
               private stopBusService: StopBusService,
               private availabilityService: AvailabilityService,
-              private router: Router) {
+              private router: Router,
+              private lineService: LineService) {
     this.pollCounter();
     this.pollingData = interval(environment.intervalAvailCheck)
       .subscribe((data) => this.pollCounter());
@@ -65,8 +71,8 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
         this.dataSelectedChange();
       }
     });
-    this.retStopBuses = new Array<StopBus>();
-    this.outStopBuses = new Array<StopBus>();
+    // this.retStopBuses = new Array<StopBus>();
+    // this.outStopBuses = new Array<StopBus>();
     this.availabilities = new Array<Availability>();
     this.avbstates = new Array<AvailabilityState>();
     this.avbstates.push(AvailabilityState.available);
@@ -74,14 +80,22 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
     this.avbstates.push(AvailabilityState.checked);
     this.avbstates.push(AvailabilityState.confirmed);
     this.dataSelected = this.today();
+    this.lineService.getLinesEnum()
+      .subscribe(
+        (data) => {
+          this.linesToSelect = data;
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
     this.dataSelectedChange();
-    this.refreshStopBuses();
+    // this.refreshStopBuses();
     this.availabilityService.getAvailabilitiesByUser(this.currentUser).subscribe(
       (data) => { this.availabilities = data; },
       (error) => { this.alertService.error(error);
       }
     );
-
   }
 
   today() {
@@ -106,7 +120,7 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
   }
 
   private getBusRides() {
-    if (this.dataSelected && this.outStopBusSelectedId && this.retStopBusSelectedId) {
+    if (this.dataSelected && (this.outStopBusSelectedId || this.retStopBusSelectedId)) {
       const temp = new Date(this.dataSelected);
       const nowT = new Date();
       nowT.setHours(0, 0, 0, 0);
@@ -115,24 +129,28 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
         const now = new Date();
         temp.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
       }
-      this.busRideService.getBusRidesFromStartDate(this.retStopBusSelectedId.toString(), temp)
-        .subscribe(
-          (data) => {
-            this.retBusRides = data;
-          },
-          (error) => {
-            this.alertService.error(error);
-          }
-        );
-      this.busRideService.getBusRidesFromStartDate(this.outStopBusSelectedId.toString(), temp)
-        .subscribe(
-          (data) => {
-            this.outBusRides = data;
-          },
-          (error) => {
-            this.alertService.error(error);
-          }
-        );
+      if (this.retStopBusSelectedId) {
+        this.busRideService.getBusRidesFromStartDate(this.retStopBusSelectedId.toString(), temp)
+          .subscribe(
+            (data) => {
+              this.retBusRides = data;
+            },
+            (error) => {
+              this.alertService.error(error);
+            }
+          );
+      }
+      if (this.outStopBusSelectedId) {
+        this.busRideService.getBusRidesFromStartDate(this.outStopBusSelectedId.toString(), temp)
+          .subscribe(
+            (data) => {
+              this.outBusRides = data;
+            },
+            (error) => {
+              this.alertService.error(error);
+            }
+          );
+      }
     }
   }
 
@@ -174,6 +192,38 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
       return temp;
     }
     return null;
+  }
+
+  getOutStopBuses() {
+    this.outStopBuses = new Array<StopBus>();
+    this.stopBusService.getStopBusByType(StopBusType.outward)
+      .subscribe(
+        (data) => {
+          this.outStopBuses = data.filter( stop =>
+            stop.idLine === this.outLineSelectedId);
+          this.outStopBuses.sort( (a , b) =>
+            a.hours - b.hours);
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+  }
+
+  getRetStopBuses() {
+    this.retStopBuses = new Array<StopBus>();
+    this.stopBusService.getStopBusByType(StopBusType.return)
+      .subscribe(
+        (data) => {
+          this.retStopBuses = data.filter( stop =>
+            stop.idLine === this.retLineSelectedId);
+          this.retStopBuses.sort( (a, b) =>
+            a.hours - b.hours);
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
   }
 
   getOutStopBusSelected(): StopBus {
@@ -301,5 +351,19 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
       }
     }
     return 'stopbus error';
+  }
+
+  outLineSelectedChange() {
+    this.outBusRides = undefined;
+    this.outStopBuses = undefined;
+    this.outStopBusSelectedId = undefined;
+    this.getOutStopBuses();
+  }
+
+  retLineSelectedChange() {
+    this.retBusRides = undefined;
+    this.retStopBuses = undefined;
+    this.retStopBusSelectedId = undefined;
+    this.getRetStopBuses();
   }
 }

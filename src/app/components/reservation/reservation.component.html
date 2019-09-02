@@ -24,33 +24,46 @@
   </div>
 </div>
 
+<ng-container *ngIf="children !== undefined">
 <div class="row" style="margin-top: 30px;">
   <div class="col">
     <h4>Andata</h4>
     <label>
-      Seleziona la fermata
-      <select class="form-control" [(ngModel)]="idOutStopBusSelected" (ngModelChange)="outStopBusSelectedChange()">
-        <option [ngValue]="a.id" *ngFor="let a of outStopBuses;">
-          {{a.name}} ({{a.lineName}})
+      Seleziona la linea
+      <select class="form-control" [(ngModel)]="idOutLineSelected" (ngModelChange)="outLineSelectedChange()">
+        <ng-container *ngIf="linesToSelect !== undefined">
+        <option [ngValue]="a.idLine" *ngFor="let a of linesToSelect;" [selected]="a.idLine === defaultLineOut">
+          {{a.lineName}}
         </option>
+        </ng-container>
       </select>
     </label>
-    <ul class="timeline">
+    &nbsp;
+    <br>
+    <label *ngIf="outStopBuses !== undefined">
+      Seleziona la fermata
+      <select style="width: 300px" class="form-control" [(ngModel)]="idOutStopBusSelected" (ngModelChange)="outStopBusSelectedChange()">
+          <option [ngValue]="a.id" *ngFor="let a of outStopBuses;" [selected]="a.id === idOutStopBusSelected">
+            {{a.name}}
+          </option>
+      </select>
+    </label>
+    <ul class="timeline" *ngIf="outBusRides !== undefined || outBusRides !== null">
+
       <li *ngFor="let a of outBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
-        <p *ngIf="getOutStopBusSelected().name !== lastStopBusOut">
+        <p>
           <a routerLink="/mapLines/{{a.idLine+'_out'}}">{{a.lineName}}</a> - {{getOutStopBusSelected().name}} - {{lastStopBusOut}}
         </p>
         <p>
           {{getTimeStopBus(a,getOutStopBusSelected()) | date: 'medium'}}
         </p>
         <p *ngIf="!loading">
-          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,idOutStopBusSelected)" class="btn btn-primary" type="button">Prenota</button>
+          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,idOutLineSelected)" class="btn btn-primary" type="button">Prenota</button>
           <button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button">
             Cancella Prenotazione
 
-          <!--<label *ngIf="isBooked(a)">-->
             ({{getStopBus(isBooked(a).idStopBus).lineName}} - {{getStopBus(isBooked(a).idStopBus).name}})
           </button>
         </p>
@@ -59,31 +72,43 @@
       </li>
     </ul>
   </div>
-  <div class="col">
+  <div class="col" >
     <h4>Ritorno</h4>
     <label>
+      Seleziona la linea
+      <select class="form-control" [(ngModel)]="idRetLineSelected" (ngModelChange)="retLineSelectedChange()">
+        <ng-container *ngIf="linesToSelect !== undefined">
+          <option [ngValue]="a.idLine" *ngFor="let a of linesToSelect;" [selected]="a.idLine === defaultLineRet">
+            {{a.lineName}}
+          </option>
+        </ng-container>
+      </select>
+    </label>
+    &nbsp;
+    <br>
+    <label *ngIf="retStopBuses !== undefined">
       Seleziona la fermata
-      <select class="form-control" [(ngModel)]="idRetStopBusSelected" (ngModelChange)="retStopBusSelectedChange()">
-        <option [ngValue]="a.id" *ngFor="let a of retStopBuses;">
-          {{a.name}} ({{a.lineName}})
+      <select style="width: 300px" class="form-control" [(ngModel)]="idRetStopBusSelected" (ngModelChange)="retStopBusSelectedChange()">
+        <option [ngValue]="a.id" *ngFor="let a of retStopBuses;" [selected]="a.id === idRetStopBusSelected">
+          {{a.name}}
         </option>
       </select>
     </label>
-    <ul class="timeline">
+    <ul class="timeline" *ngIf="retBusRides !== undefined || retBusRides !== null">
       <li *ngFor="let a of retBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
-        <p *ngIf="getRetStopBusSelected().name !== lastStopBusRet">
+        <p>
           <a routerLink="/mapLines/{{a.idLine+'_ret'}}">{{a.lineName}}</a> -  {{lastStopBusRet}} - {{getRetStopBusSelected().name}}
         </p>
         <p>
           {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'medium'}}
         </p>
         <p *ngIf="!loading">
-          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,idRetStopBusSelected)" class="btn btn-primary" type="button">Prenota</button>
+          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,idRetLineSelected)" class="btn btn-primary" type="button">Prenota</button>
           <button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button">
             Cancella Prenotazione
-            <!--<label *ngIf="isBooked(a)">-->
+
             ({{getStopBus(isBooked(a).idStopBus).lineName}} - {{getStopBus(isBooked(a).idStopBus).name}})
           </button>
         </p>
@@ -93,4 +118,4 @@
     </ul>
   </div>
 </div>
-
+</ng-container>

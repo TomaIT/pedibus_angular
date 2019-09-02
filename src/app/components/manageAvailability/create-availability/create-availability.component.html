@@ -8,14 +8,24 @@
   <div class="col">
     <h4>Andata</h4>
     <label>
+      Seleziona la linea
+      <select style="width: 200px" class="form-control" [(ngModel)]="outLineSelectedId" (ngModelChange)="outLineSelectedChange()">
+          <option [ngValue]="a.idLine" *ngFor="let a of linesToSelect;">
+            {{a.lineName}}
+          </option>
+      </select>
+    </label>
+    &nbsp;
+    <br>
+    <label *ngIf="outStopBuses !== undefined">
       Seleziona la fermata
-      <select class="form-control" [(ngModel)]="outStopBusSelectedId" (ngModelChange)="outStopBusSelectedChange()">
-        <option [ngValue]="a.id" [selected]="a.id" *ngFor="let a of outStopBuses;">
-          {{a.name}} ({{a.lineName}})
+      <select style="width: 300px" class="form-control" [(ngModel)]="outStopBusSelectedId" (ngModelChange)="outStopBusSelectedChange()">
+        <option [ngValue]="a.id" *ngFor="let a of outStopBuses;">
+          {{a.name}}
         </option>
       </select>
     </label>
-    <ul class="timeline">
+    <ul class="timeline" *ngIf="outBusRides !== undefined">
       <li *ngFor="let a of outBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
@@ -41,14 +51,26 @@
   <div class="col">
     <h4>Ritorno</h4>
     <label>
+      Seleziona la linea
+      <select style="width: 200px" class="form-control" [(ngModel)]="retLineSelectedId" (ngModelChange)="retLineSelectedChange()">
+        <ng-container *ngIf="linesToSelect !== undefined">
+          <option [ngValue]="a.idLine" *ngFor="let a of linesToSelect;">
+            {{a.lineName}}
+          </option>
+        </ng-container>
+      </select>
+    </label>
+    &nbsp;
+    <br>
+    <label *ngIf="retStopBuses !== undefined">
       Seleziona la fermata
-      <select class="form-control" [(ngModel)]="retStopBusSelectedId" (ngModelChange)="retStopBusSelectedChange()">
-        <option [ngValue]="a.id" [selected]="a.id" *ngFor="let a of retStopBuses;">
-          {{a.name}} ({{a.lineName}})
+      <select style="width: 300px" class="form-control" [(ngModel)]="retStopBusSelectedId" (ngModelChange)="retStopBusSelectedChange()">
+        <option [ngValue]="a.id" *ngFor="let a of retStopBuses;">
+          {{a.name}}
         </option>
       </select>
     </label>
-    <ul class="timeline">
+    <ul class="timeline" *ngIf="retBusRides !== undefined">
       <li *ngFor="let a of retBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
