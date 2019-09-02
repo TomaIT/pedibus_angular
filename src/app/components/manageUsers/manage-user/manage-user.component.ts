@@ -96,7 +96,7 @@ export class ManageUserComponent implements OnInit {
       }
       return temp;
     }
-    return null;
+    return new Array<Role>();
   }
 
   getRolesAddable(): Array<Role> {
@@ -107,7 +107,7 @@ export class ManageUserComponent implements OnInit {
       return this.allRoles.filter(x => this.user.roles.findIndex(y => y === x) < 0)
         .filter(x => x !== Role.sysAdmin);
     }
-    return null;
+    return new Array<Role>();
   }
 
   getLinesRemovable(): Array<LineEnum> {
@@ -136,7 +136,7 @@ export class ManageUserComponent implements OnInit {
       return this.linesEnum.filter(x => this.user.idLines.findIndex(y => y === x.idLine) < 0 &&
         this.authenticationService.idLines().findIndex(y => y === x.idLine) >= 0);
     }
-    return null;
+    return new Array<LineEnum>();
   }
 
   removeRole() {
