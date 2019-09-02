@@ -272,7 +272,7 @@ export class ReservationComponent implements OnInit {
       const index = this.retStopBuses.findIndex(x => x.id === this.idRetStopBusSelected);
       if (index >= 0) {
         const last = this.retStopBuses.length;
-        this.lastStopBusRet = this.retStopBuses[last - 1].name;
+        this.lastStopBusRet = this.retStopBuses[0].name;
         return this.retStopBuses[index];
       }
     }
