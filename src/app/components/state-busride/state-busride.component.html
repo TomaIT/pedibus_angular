@@ -42,7 +42,7 @@
       <li *ngFor="let stopBus of busRide.stopBuses; let i = index;last as isLastStop;first as isFirstStop;" [class.nopassed]="!isBusAlreadyPassed(stopBus.id)" [class.passed]="isBusAlreadyPassed(stopBus.id)">
         <div style="padding:0px 0px 15px 10px;">
           <h5 style="font-style: italic;color: #22c0e8;" class="left">{{convertMinutesToTime(stopBus.hours)}} - {{stopBus.name}}</h5>
-          <ng-container *ngIf="presenceBusRide !== undefined && presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet !== undefined">
+          <ng-container *ngIf="presenceBusRide !== undefined && presenceBusRide.presenceStopBusGETTreeSet[i] !== undefined && presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet !== undefined">
           <span *ngFor="let child of presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet;last as isLast;">
 
             <ng-container *ngIf="stopBus.stopBusType === 'Outward'">
