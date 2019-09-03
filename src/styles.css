@@ -7,3 +7,11 @@ h1{
   -o-hyphens: auto;
   hyphens: auto;
 }
+.myText{
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  hyphens: auto;
+}
