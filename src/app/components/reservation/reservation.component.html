@@ -63,8 +63,7 @@
           <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,idOutStopBusSelected)" class="btn btn-primary" type="button">Prenota</button>
           <button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button">
             Cancella Prenotazione
-
-            ({{getStopBus(isBooked(a).idStopBus).lineName}} - {{getStopBus(isBooked(a).idStopBus).name}})
+            {{getStopBus(isBooked(a).idStopBus).lineName}} - {{getStopBus(isBooked(a).idStopBus).name}})
           </button>
         </p>
 
@@ -94,7 +93,7 @@
         </option>
       </select>
     </label>
-    <ul class="timeline" *ngIf="retBusRides !== undefined || retBusRides !== null">
+    <ul class="timeline" *ngIf="retBusRides !== undefined">
       <li *ngFor="let a of retBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
