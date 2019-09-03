@@ -95,11 +95,12 @@ export class UserProfileComponent implements OnInit {
         (user) => {
           this.user = user;
           this.changeFormValue(this.user);
+          const today = new Date();
           $('#date').datepicker({
             dateFormat: 'yy-mm-dd',
             changeYear: true,
-            maxDate: '-18y',
-            minDate: '-130y'
+            maxDate: new Date(today.getUTCFullYear() - 18, 11, 31),
+            minDate: new Date(today.getUTCFullYear() - 130, 11, 31)
           });
           this.myDate.nativeElement.value = UserProfileComponent.getDate(this.user.birth)
             .toISOString().split('T')[0];
