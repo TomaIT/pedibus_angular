@@ -294,11 +294,13 @@ export class ReservationComponent implements OnInit {
 
   getOutStopBuses() {
     this.outStopBuses = this.totalStopBusOut.filter(x => x.idLine === this.idOutLineSelected);
+    this.outStopBuses.sort((a, b) => a.hours - b.hours);
     this.outStopBusSelectedChange();
   }
 
   getRetStopBuses() {
     this.retStopBuses = this.totalStopBusRet.filter(x => x.idLine === this.idRetLineSelected);
+    this.retStopBuses.sort((a, b) => a.hours - b.hours);
     this.retStopBusSelectedChange();
   }
 
