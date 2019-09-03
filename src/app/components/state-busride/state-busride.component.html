@@ -28,14 +28,17 @@
 </div>
 <div class="row" style="margin-top: 30px;" *ngIf="busRide !== undefined">
   <div class="col">
+    <div class="col" *ngIf="notExist">
+      <label class="red">La corsa non esiste</label>
+    </div>
     <div class="col" *ngIf="notStarted">
-      <h2>La corsa non è ancora iniziata</h2>
+      <label style="color: blue">La corsa non è ancora iniziata</label>
     </div>
     <div class="col" *ngIf="isPast">
-      <h2>La corsa è gia passata</h2>
+      <label class="red">La corsa è gia passata</label>
     </div>
     <div class="col" *ngIf="isPastNotStarted">
-      <h2>La corsa passata non è iniziata</h2>
+      <label class="red">La corsa non è mai iniziata</label>
     </div>
   <div class="col">
     <ul class="timeline">
@@ -83,9 +86,6 @@
       </li>
     </ul>
     <br>
-  </div>
-  <div class="col" *ngIf="notExist">
-    <h2>La corsa non esiste</h2>
   </div>
   <div class="col">
     <span><button style="background: white;border-color: blue; border-radius: 8px" (click)="showLegend = !showLegend">Legenda:</button></span>

@@ -3,12 +3,12 @@
     <label>
       Seleziona il bambino
       <select class="form-control" [(ngModel)]="childSelected" (ngModelChange)="childSelectedChange()">
-        <ng-container *ngIf="children !== undefined">
+        <ng-container *ngIf="children">
         <option [ngValue]="a" *ngFor="let a of children;">
           {{a.firstname}} {{a.surname}}
         </option>
         </ng-container>
-        <ng-container *ngIf="children !== undefined">
+        <ng-container *ngIf="children">
           <option disabled selected *ngIf="children.length === 0">
             Non hai bambini registrati
           </option>
@@ -24,14 +24,14 @@
   </div>
 </div>
 
-<ng-container *ngIf="children !== undefined">
+<ng-container *ngIf="children">
 <div class="row" style="margin-top: 30px;">
   <div class="col">
     <h4>Andata</h4>
     <label>
       Seleziona la linea
       <select class="form-control" [(ngModel)]="idOutLineSelected" (ngModelChange)="outLineSelectedChange()">
-        <ng-container *ngIf="linesToSelect !== undefined">
+        <ng-container *ngIf="linesToSelect">
         <option [ngValue]="a.idLine" *ngFor="let a of linesToSelect;" [selected]="a.idLine === defaultLineOut">
           {{a.lineName}}
         </option>
@@ -40,7 +40,7 @@
     </label>
     &nbsp;
     <br>
-    <label *ngIf="outStopBuses !== undefined">
+    <label *ngIf="outStopBuses">
       Seleziona la fermata
       <select style="width: 300px" class="form-control" [(ngModel)]="idOutStopBusSelected" (ngModelChange)="outStopBusSelectedChange()">
           <option [ngValue]="a.id" *ngFor="let a of outStopBuses;" [selected]="a.id === idOutStopBusSelected">
@@ -48,12 +48,12 @@
           </option>
       </select>
     </label>
-    <ul class="timeline" *ngIf="outBusRides !== undefined">
+    <ul class="timeline" *ngIf="outBusRides">
 
       <li *ngFor="let a of outBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
-        <p>
+        <p *ngIf="getOutStopBusSelected()">
           <a routerLink="/mapLines/{{a.idLine+'_out'}}">{{a.lineName}}</a> - {{getOutStopBusSelected().name}} - {{lastStopBusOut}}
         </p>
         <p>
@@ -76,7 +76,7 @@
     <label>
       Seleziona la linea
       <select class="form-control" [(ngModel)]="idRetLineSelected" (ngModelChange)="retLineSelectedChange()">
-        <ng-container *ngIf="linesToSelect !== undefined">
+        <ng-container *ngIf="linesToSelect">
           <option [ngValue]="a.idLine" *ngFor="let a of linesToSelect;" [selected]="a.idLine === defaultLineRet">
             {{a.lineName}}
           </option>
@@ -85,7 +85,7 @@
     </label>
     &nbsp;
     <br>
-    <label *ngIf="retStopBuses !== undefined">
+    <label *ngIf="retStopBuses">
       Seleziona la fermata
       <select style="width: 300px" class="form-control" [(ngModel)]="idRetStopBusSelected" (ngModelChange)="retStopBusSelectedChange()">
         <option [ngValue]="a.id" *ngFor="let a of retStopBuses;" [selected]="a.id === idRetStopBusSelected">
@@ -93,11 +93,11 @@
         </option>
       </select>
     </label>
-    <ul class="timeline" *ngIf="retBusRides !== undefined">
+    <ul class="timeline" *ngIf="retBusRides && idRetStopBusSelected">
       <li *ngFor="let a of retBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
         <p></p>
-        <p>
+        <p *ngIf="getRetStopBusSelected()">
           <a routerLink="/mapLines/{{a.idLine+'_ret'}}">{{a.lineName}}</a> -  {{lastStopBusRet}} - {{getRetStopBusSelected().name}}
         </p>
         <p>

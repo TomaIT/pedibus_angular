@@ -141,7 +141,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
             this.notStarted = false;
           } else if (this.busRide.timestampLastStopBus === null) {
             if (this.busRide.month <= today.getUTCMonth()
-              && this.busRide.day < today.getUTCDay()) {
+              && this.busRide.day < (today.getUTCDay() + 1)) {
               this.isPastNotStarted = true;
               this.isPast = false;
               this.notStarted = false;
