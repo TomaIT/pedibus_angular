@@ -35,10 +35,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
   selectedData: any;
 
   pollingData: any;
-  notStarted = false;
   notExist = false;
-  isPast = false;
-  isPastNotStarted = false;
 
   showLegend = false;
 
@@ -51,7 +48,6 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.notStarted = false;
     $('#date').datepicker({
       dateFormat: 'yy-mm-dd',
       onSelect: (selDate, inst) => {
@@ -67,7 +63,6 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
     this.directions = new Array<StopBusType>();
     this.directions.push(StopBusType.outward);
     this.directions.push(StopBusType.return);
-    this.busRide = new BusRide();
     this.activatedRoute.paramMap.subscribe((params: ParamMap) => this.onChangePath(params));
     this.pollingData = interval(environment.intervalTimePolling + 5000)
       .subscribe((data) => this.refreshBusRideAndPresences());
@@ -134,35 +129,18 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
         (data) => {
           this.notExist = false;
           this.busRide = data;
-          if (this.busRide.timestampLastStopBus !== null
-            && this.busRide.timestampLastStopBus < today.getTime()) {
-            this.isPast = true;
-            this.isPastNotStarted = false;
-            this.notStarted = false;
-          } else if (this.busRide.timestampLastStopBus === null) {
-            if (this.busRide.month <= today.getUTCMonth()
-              && this.busRide.day < (today.getUTCDay() + 1)) {
-              this.isPastNotStarted = true;
-              this.isPast = false;
-              this.notStarted = false;
-            } else {
-              this.isPastNotStarted = false;
-              this.isPast = false;
-              this.notStarted = true;
-            }
-          }
           },
         (error) => {
           if (!error.toString().includes('404')) {
             this.alertService.error(error);
           } else {
             this.notExist = true;
-            this.notStarted = false;
+            this.busRide = undefined;
           }
-          this.busRide = new BusRide();
         }
       );
   }
+
 
   private loadPresence() {
     this.busRideService.getPresenceAggregateFromLineAndStopBusTypeAndData(this.selectedLine.idLine,
