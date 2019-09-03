@@ -48,7 +48,7 @@
           </option>
       </select>
     </label>
-    <ul class="timeline" *ngIf="outBusRides !== undefined || outBusRides !== null">
+    <ul class="timeline" *ngIf="outBusRides !== undefined">
 
       <li *ngFor="let a of outBusRides">
         <label style="font-style: italic;color: #22c0e8;">{{a.startTime | date:'fullDate'}}</label>
@@ -60,7 +60,7 @@
           {{getTimeStopBus(a,getOutStopBusSelected()) | date: 'medium'}}
         </p>
         <p *ngIf="!loading">
-          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,idOutLineSelected)" class="btn btn-primary" type="button">Prenota</button>
+          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,idOutStopBusSelected)" class="btn btn-primary" type="button">Prenota</button>
           <button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button">
             Cancella Prenotazione
 
@@ -105,7 +105,7 @@
           {{getTimeStopBus(a,getRetStopBusSelected()) | date: 'medium'}}
         </p>
         <p *ngIf="!loading">
-          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,idRetLineSelected)" class="btn btn-primary" type="button">Prenota</button>
+          <button *ngIf="!isBooked(a)" (click)="booking(a.id,childSelected.id,idRetStopBusSelected)" class="btn btn-primary" type="button">Prenota</button>
           <button *ngIf="isBooked(a)" (click)="delete(isBooked(a).id)" class="btn btn-danger" type="button">
             Cancella Prenotazione
 

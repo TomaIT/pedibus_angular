@@ -7,6 +7,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {StopBusService} from '../../../services/stop-bus.service';
 import {Child, ChildPOST} from '../../../models/child';
 import {StopBus, StopBusType} from '../../../models/stopbus';
+import {LineEnum} from '../../../models/line';
+import {LineService} from '../../../services/line.service';
 
 // jQuery Sign $
 declare let $: any;
@@ -25,6 +27,13 @@ export class UpdateChildComponent implements OnInit {
   outStopBuses: Array<StopBus>;
   retStopBuses: Array<StopBus>;
   genders: Array<string>;
+  lineEnum: Array<LineEnum>;
+  outIsChange = false;
+  retIsChange = false;
+  defaultLineOut: string;
+  defaultStopOut: string;
+  defaultLineRet: string;
+  defaultStopRet: string;
 
   constructor(private alertService: AlertService,
               private childService: ChildService,
@@ -32,7 +41,8 @@ export class UpdateChildComponent implements OnInit {
               private router: Router,
               private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
-              private stopBusService: StopBusService) {
+              private stopBusService: StopBusService,
+              private lineService: LineService) {
   }
 
   private static getDate(date: any): Date {
@@ -64,12 +74,20 @@ export class UpdateChildComponent implements OnInit {
             Validators.required
           ]
         )],
-        outwardStopBus: [child.idStopBusOutDef, Validators.compose(
+        outwardLine: ['', Validators.compose(
+          [Validators.required
+          ]
+        )],
+        outwardStopBus: ['', Validators.compose(
           [
             Validators.required
           ]
         )],
-        returnStopBus: [child.idStopBusRetDef, Validators.compose(
+        returnLine: ['', Validators.compose(
+          [Validators.required
+          ]
+        )],
+        returnStopBus: ['', Validators.compose(
           [
             Validators.required
           ]
@@ -99,9 +117,17 @@ export class UpdateChildComponent implements OnInit {
             Validators.required
           ]
         )],
+        outwardLine: ['', Validators.compose(
+          [Validators.required
+          ]
+        )],
         outwardStopBus: ['', Validators.compose(
           [
             Validators.required
+          ]
+        )],
+        returnLine: ['', Validators.compose(
+          [Validators.required
           ]
         )],
         returnStopBus: ['', Validators.compose(
@@ -120,6 +146,15 @@ export class UpdateChildComponent implements OnInit {
       .subscribe(
         (data) => {
           this.genders = data;
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+    this.lineService.getLinesEnum()
+      .subscribe(
+        (data) => {
+          this.lineEnum = data;
         },
         (error) => {
           this.alertService.error(error);
@@ -163,6 +198,12 @@ export class UpdateChildComponent implements OnInit {
       .subscribe(
         (data) => {
           this.childPath = data;
+          this.defaultLineOut = this.childPath.stopBusOutDef.idLine;
+          this.defaultStopOut = this.childPath.stopBusOutDef.id;
+          this.outIsChange = true;
+          this.defaultLineRet = this.childPath.stopBusRetDef.idLine;
+          this.defaultStopRet = this.childPath.stopBusRetDef.id;
+          this.retIsChange = true;
           this.initForm(data);
         },
         (error) => {
@@ -228,5 +269,39 @@ export class UpdateChildComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  changeOutLine(event) {
+    const id = event.target.value;
+    this.stopBusService.getStopBusByType(StopBusType.outward)
+      .subscribe(
+        (data) => {
+          this.outStopBuses = data.filter( stop =>
+            stop.idLine === id);
+          this.outStopBuses.sort((a, b) =>
+            a.hours - b.hours);
+          this.outIsChange = true;
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
+  }
+
+  changeRetLine(event) {
+    const id = event.target.value;
+    this.stopBusService.getStopBusByType(StopBusType.return)
+      .subscribe(
+        (data) => {
+          this.retStopBuses = data.filter( stop =>
+            stop.idLine === id);
+          this.retStopBuses.sort((a, b) =>
+            a.hours - b.hours);
+          this.retIsChange = true;
+        },
+        (error) => {
+          this.alertService.error(error);
+        }
+      );
   }
 }

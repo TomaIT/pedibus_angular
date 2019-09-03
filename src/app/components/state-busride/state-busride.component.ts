@@ -37,6 +37,8 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
   pollingData: any;
   notStarted = false;
   notExist = false;
+  isPast = false;
+  isPastNotStarted = false;
 
   showLegend = false;
 
@@ -125,14 +127,29 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
   }
 
   private loadBusRide() {
+    const today = new Date();
     this.busRideService.getBusRidesFromLineAndStopBusTypeAndData(this.selectedLine.idLine,
       this.selectedDirection, this.selectedYear, this.selectedMonth, this.selectedDay)
       .subscribe(
         (data) => {
           this.notExist = false;
           this.busRide = data;
-          if (this.busRide.timestampLastStopBus === null) {
-            this.notStarted = true;
+          if (this.busRide.timestampLastStopBus !== null
+            && this.busRide.timestampLastStopBus < today.getTime()) {
+            this.isPast = true;
+            this.isPastNotStarted = false;
+            this.notStarted = false;
+          } else if (this.busRide.timestampLastStopBus === null) {
+            if (this.busRide.month <= today.getUTCMonth()
+              && this.busRide.day < today.getUTCDay()) {
+              this.isPastNotStarted = true;
+              this.isPast = false;
+              this.notStarted = false;
+            } else {
+              this.isPastNotStarted = false;
+              this.isPast = false;
+              this.notStarted = true;
+            }
           }
           },
         (error) => {

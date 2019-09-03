@@ -162,6 +162,7 @@ export class ManageAttendeesComponent implements OnInit, OnDestroy {
   }
 
   private onChangePath(params: ParamMap) {
+    const today = new Date();
     this.idBusRide = params.get('idBusRide');
     this.idCurrentStopBus = params.get('idCurrentStopBus');
     this.showBoxSearchChildren = false;
@@ -194,11 +195,16 @@ export class ManageAttendeesComponent implements OnInit, OnDestroy {
             this.isFirstStop = true;
             this.isLastStop = false;
           } else {
-            this.isFirstStop = false;
-            if (index === (this.busRide.stopBuses.length - 1)) {
-              this.isLastStop = true;
+            const busRideDate = new Date(this.busRide.year, this.busRide.month, this.busRide.day, this.busRide.stopBuses[index].hours);
+            if (busRideDate.getTime() < (today.getTime() - 1800) || busRideDate.getTime() > (today.getTime() + 1800)) {
+              this.router.navigate(['/busridesEscort']);
             } else {
-              this.isLastStop = false;
+              this.isFirstStop = false;
+              if (index === (this.busRide.stopBuses.length - 1)) {
+                this.isLastStop = true;
+              } else {
+                this.isLastStop = false;
+              }
             }
           }
           if (!this.isLastStop) {

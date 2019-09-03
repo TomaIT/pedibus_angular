@@ -28,12 +28,21 @@
 </div>
 <div class="row" style="margin-top: 30px;" *ngIf="busRide !== undefined">
   <div class="col">
-  <ng-container *ngIf="!notStarted">
+    <div class="col" *ngIf="notStarted">
+      <h2>La corsa non è ancora iniziata</h2>
+    </div>
+    <div class="col" *ngIf="isPast">
+      <h2>La corsa è gia passata</h2>
+    </div>
+    <div class="col" *ngIf="isPastNotStarted">
+      <h2>La corsa passata non è iniziata</h2>
+    </div>
   <div class="col">
     <ul class="timeline">
       <li *ngFor="let stopBus of busRide.stopBuses; let i = index;last as isLastStop;first as isFirstStop;" [class.nopassed]="!isBusAlreadyPassed(stopBus.id)" [class.passed]="isBusAlreadyPassed(stopBus.id)">
         <div style="padding:0px 0px 15px 10px;">
           <h5 style="font-style: italic;color: #22c0e8;" class="left">{{convertMinutesToTime(stopBus.hours)}} - {{stopBus.name}}</h5>
+          <ng-container *ngIf="presenceBusRide !== undefined && presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet !== undefined">
           <span *ngFor="let child of presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet;last as isLast;">
 
             <ng-container *ngIf="stopBus.stopBusType === 'Outward'">
@@ -62,8 +71,9 @@
               </ng-container>
             </ng-container>
           </span>
-          <span *ngIf="presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet.length === 0"><i>Non ci sono bambini prenotati.</i></span>
 
+          <span *ngIf="presenceBusRide.presenceStopBusGETTreeSet[i].presenceChildGETSet.length === 0"><i>Non ci sono bambini prenotati.</i></span>
+          </ng-container>
           <div *ngIf="stopBus.id === busRide.idLastStopBus" style="margin: 15px 5px 0px 0px;">
             <img src="../../../../assets/images/bus-logo.png" style="margin-right: 10px;min-width: 25px;" width="30px" height="auto">
             <span *ngIf="!isLastStop">Il Pedibus ha lasciato questa fermata alle ore: {{convertTimestampToTime(busRide.timestampLastStopBus)}}</span>
@@ -74,10 +84,6 @@
     </ul>
     <br>
   </div>
-  </ng-container>
-    <div class="col" *ngIf="notStarted">
-      <h2>La corsa non è ancora iniziata</h2>
-    </div>
   <div class="col" *ngIf="notExist">
     <h2>La corsa non esiste</h2>
   </div>
