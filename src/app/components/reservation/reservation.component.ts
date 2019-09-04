@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AlertService} from '../../services/alert.service';
 import {ChildService} from '../../services/child.service';
 import {AuthenticationService} from '../../services/authentication.service';
@@ -23,7 +23,8 @@ declare let $: any;
   templateUrl: './reservation.component.html',
   styleUrls: ['./reservation.component.css']
 })
-export class ReservationComponent implements OnInit {
+export class ReservationComponent implements OnInit, OnDestroy {
+
   @ViewChild('myDate') myDate: ElementRef;
   children: Array<Child>;
   childSelected: Child;
@@ -120,6 +121,12 @@ export class ReservationComponent implements OnInit {
       .subscribe((data) => this.pollAvailabilities());
   }
 
+  ngOnDestroy(): void {
+    if (this.pollingData) {
+      this.pollingData.unsubscribe();
+    }
+  }
+
   today() {
     return (new Date()).toISOString().split('T')[0];
   }
@@ -193,7 +200,7 @@ export class ReservationComponent implements OnInit {
       .subscribe(
         (data) => {
           this.reservations = data;
-          },
+        },
         (error) => {
           this.alertService.error(error);
         }
