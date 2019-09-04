@@ -22,7 +22,7 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
   p = 1;
   actualUser: string;
 
-  constructor(private authenticationService: AuthenticationService,
+  constructor(public authenticationService: AuthenticationService,
               private router: Router,
               private alertService: AlertService,
               private userService: UserService) {
