@@ -311,6 +311,7 @@ export class ReservationComponent implements OnInit {
     if (this.totalStopBusOut) {
       this.outStopBuses = this.totalStopBusOut.filter(x => x.idLine === this.idOutLineSelected);
       this.outStopBuses.sort((a, b) => a.hours - b.hours);
+      this.outStopBuses.splice(this.outStopBuses.length - 1, 1);
     }
   }
 
@@ -318,6 +319,7 @@ export class ReservationComponent implements OnInit {
     if (this.totalStopBusRet) {
       this.retStopBuses = this.totalStopBusRet.filter(x => x.idLine === this.idRetLineSelected);
       this.retStopBuses.sort((a, b) => a.hours - b.hours);
+      this.retStopBuses.splice(0, 1);
     }
   }
 
