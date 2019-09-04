@@ -203,6 +203,7 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
             stop.idLine === this.outLineSelectedId);
           this.outStopBuses.sort( (a , b) =>
             a.hours - b.hours);
+          this.outStopBuses.splice(this.outStopBuses.length - 1, 1);
         },
         (error) => {
           this.alertService.error(error);
@@ -219,6 +220,7 @@ export class CreateAvailabilityComponent implements OnInit, OnDestroy {
             stop.idLine === this.retLineSelectedId);
           this.retStopBuses.sort( (a, b) =>
             a.hours - b.hours);
+          this.retStopBuses.splice(0, 1);
         },
         (error) => {
           this.alertService.error(error);
