@@ -148,6 +148,9 @@ export class MapLinesComponent implements OnInit {
       console.log(smallestDiff[0] + ' ' + smallestDiff[1]);
       if ((smallestDiff[0] > 0.001) || (smallestDiff[1] > 0.001)) {
         this.addOverlay = undefined;
+      } else {
+        this.lat = this.addOverlay.lat;
+        this.lng = this.addOverlay.lng;
       }
     }
   }
@@ -160,4 +163,5 @@ export class MapLinesComponent implements OnInit {
     this.actualDirection = event.target.value;
     this.prepareNavigation();
   }
+
 }

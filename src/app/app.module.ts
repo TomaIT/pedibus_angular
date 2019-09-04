@@ -34,6 +34,7 @@ import {JwPaginationComponent} from 'jw-angular-pagination';
 import {RoleGuardService} from './services/role-guard.service';
 import {Role} from './models/user';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { CreateBusrideComponent } from './components/create-busride/create-busride.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -133,7 +134,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'manageUsers/:id', component: ManageUserComponent,
+    path: 'createLine', component: CreateBusrideComponent,
     canActivate: [RoleGuardService],
     data: {
       rolesPermitted: [Role.admin, Role.sysAdmin]
@@ -209,7 +210,8 @@ const routes: Routes = [
     ManageUserComponent,
     MyFilterChildrenPipe,
     StateBusrideComponent,
-    JwPaginationComponent
+    JwPaginationComponent,
+    CreateBusrideComponent,
   ],
   imports: [
     BrowserModule,

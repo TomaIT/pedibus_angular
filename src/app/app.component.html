@@ -53,6 +53,11 @@
         <a class="nav-link" routerLink="/manageUsers">Gestione Utenti</a>
       </li>
 
+      <li *ngIf="authenticationService.isAdmin()||authenticationService.isSysAdmin()"
+          [routerLinkActive]="['active']" class="nav-item">
+        <a class="nav-link" routerLink="/createLine">Crea corsa</a>
+      </li>
+
       <!-- Dropdown -->
       <li
         *ngIf="authenticationService.isEscort() || authenticationService.isAdmin() || authenticationService.isSysAdmin()"

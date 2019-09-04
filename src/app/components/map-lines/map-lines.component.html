@@ -74,8 +74,8 @@
         </aol-feature>
         <ng-container *ngIf="markers !== null">
         <aol-feature *ngFor="let marker of markers">
-          <aol-geometry-point >
-            <aol-coordinate [x]="marker.lng" [y]="marker.lat" [srid]="'EPSG:4326'"></aol-coordinate>
+          <aol-geometry-point>
+            <aol-coordinate [x]="marker.lng" [y]="marker.lat" [srid]="'EPSG:4326'" ></aol-coordinate>
           </aol-geometry-point>
           <aol-style>
             <aol-style-icon
@@ -91,7 +91,7 @@
         </ng-container>
       </aol-source-vector>
     </aol-layer-vector>
-    <aol-overlay *ngIf="addOverlay!==undefined">
+    <aol-overlay *ngIf="addOverlay!==undefined" >
       <aol-coordinate
         [x]="addOverlay.lng"
         [y]="addOverlay.lat"

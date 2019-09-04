@@ -87,7 +87,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
         (data) => {
           for (const x of data) {
             for (const uLine of user.user.idLines) {
-              if (uLine.localeCompare(x.idLine) === 0) {
+              if (x.idLine === uLine) {
                 this.lines.push(x);
                 this.checkUrlParams();
               }
@@ -189,7 +189,6 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                   });
                   const now = new Date();
                   const seconds = (now.getHours() * 60) + now.getMinutes();
-                  console.log(seconds);
                   if (busride.timestampLastStopBus !== null
                       || (id.split('_')[1] === this.today() && this.avbListOut[0].startTime <= seconds)) {
                       this.avbListOut = undefined;
@@ -217,7 +216,6 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
       getBusRidesFromLineAndStopBusTypeAndData(idLine, StopBusType.return, data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
         .subscribe(
           (busride) => {
-            console.log(busride);
             this.availabilityService.getBusRideAvailabilities(busride.id)
               .subscribe(
                 (availabilities) => {

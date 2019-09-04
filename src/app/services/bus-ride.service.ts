@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {BusRide, BusRidePUT} from '../models/busride';
+import {BusRide, BusRidePost, BusRidePUT} from '../models/busride';
 import {environment} from '../../environments/environment';
 import {StopBusType} from '../models/stopbus';
 import {PresenceBusRide} from '../models/presencebusride';
@@ -44,6 +44,10 @@ export class BusRideService {
 
   getDownloadableBusRideInfo(idBusRide: string): Observable<any> {
     return this.httpClient.get(`${environment.apiUrl}/busrides/${idBusRide}/downloadInfo`, { responseType: 'blob' });
+  }
+
+  createBusRide(busRide: BusRidePost): Observable<any> {
+    return this.httpClient.post(`${environment.apiUrl}/busrides`, busRide);
   }
   // TODO da implementare e decidere il formato
 }

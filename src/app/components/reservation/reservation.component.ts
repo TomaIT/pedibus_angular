@@ -319,6 +319,8 @@ export class ReservationComponent implements OnInit, OnDestroy {
       this.outStopBuses = this.totalStopBusOut.filter(x => x.idLine === this.idOutLineSelected);
       this.outStopBuses.sort((a, b) => a.hours - b.hours);
       this.outStopBuses.splice(this.outStopBuses.length - 1, 1);
+      const last = this.outStopBuses.length;
+      this.lastStopBusOut = this.outStopBuses[last - 1].name;
     }
   }
 
@@ -327,6 +329,7 @@ export class ReservationComponent implements OnInit, OnDestroy {
       this.retStopBuses = this.totalStopBusRet.filter(x => x.idLine === this.idRetLineSelected);
       this.retStopBuses.sort((a, b) => a.hours - b.hours);
       this.retStopBuses.splice(0, 1);
+      this.lastStopBusRet = this.retStopBuses[0].name;
     }
   }
 
@@ -364,13 +367,10 @@ export class ReservationComponent implements OnInit, OnDestroy {
 
   outStopBusSelectedChange() {
     this.getBusRides();
-    const last = this.outStopBuses.length;
-    this.lastStopBusOut = this.outStopBuses[last - 1].name;
   }
 
   retStopBusSelectedChange() {
     this.getBusRides();
-    this.lastStopBusRet = this.retStopBuses[0].name;
   }
 
 }

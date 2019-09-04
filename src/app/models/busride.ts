@@ -20,3 +20,11 @@ export class BusRidePUT {
   idLastStopBus: string;
   timestampLastStopBus: number;
 }
+
+export class BusRidePost {
+  day: number;
+  month: number;
+  year: number;
+  stopBusType: StopBusType;
+  idLine: string;
+}

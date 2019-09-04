@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="col-sm-6 offset-sm-3">
+    <h2>Crea Nuova Corsa</h2>
+    <form [formGroup]="busRideForm" (ngSubmit)="onSubmit();">
+
+      <div class="form-group">
+        <label >Data</label>
+        <input #myDate type="text" id="date" class="form-control" autocomplete="off"/>
+
+      </div>
+
+      <div class="form-group">
+        <label>Verso</label>
+
+        <select class="form-control" formControlName="stopBusType"
+                [ngClass]="{ 'is-invalid': submitted && f.stopBusType.errors }" >
+          <option disabled selected value> -- select an option -- </option>
+          <option [value]="dir" *ngFor="let dir of directions">
+            {{dir}}
+          </option>
+        </select>
+
+        <div *ngIf="submitted && f.stopBusType.errors" class="invalid-feedback">
+          <div *ngIf="f.stopBusType.errors.required">stopBusType is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Linea</label>
+
+        <select class="form-control" formControlName="idLine"
+                [ngClass]="{ 'is-invalid': submitted && f.idLine.errors }" >
+          <option disabled selected value> -- select an option -- </option>
+          <option [value]="line.idLine" *ngFor="let line of lines">
+            {{line.lineName}}
+          </option>
+        </select>
+
+        <div *ngIf="submitted && f.idLine.errors" class="invalid-feedback">
+          <div *ngIf="f.idLine.errors.required">idLine is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button *ngIf="!loading" class="btn btn-primary">Crea</button>
+        <div *ngIf="loading" class="spinner-border text-info" role="status"></div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
