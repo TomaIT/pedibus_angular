@@ -10,7 +10,7 @@ import {MessageService} from './services/message.service';
 })
 export class AppComponent {
 
-  constructor(private authenticationService: AuthenticationService,
+  constructor(public authenticationService: AuthenticationService,
               private router: Router,
               private messageService: MessageService) {}
 

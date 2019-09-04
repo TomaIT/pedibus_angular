@@ -20,7 +20,7 @@ export class CreateUserComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
-              private authenticationService: AuthenticationService,
+              public authenticationService: AuthenticationService,
               private alertService: AlertService,
               private userService: UserService) {
   }
