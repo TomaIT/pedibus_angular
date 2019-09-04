@@ -43,7 +43,7 @@ export class BusRideService {
   }
 
   getDownloadableBusRideInfo(idBusRide: string): Observable<any> {
-    return this.httpClient.get(`${environment.apiUrl}/busrides/${idBusRide}/downloadInfo`);
+    return this.httpClient.get(`${environment.apiUrl}/busrides/${idBusRide}/downloadInfo`, { responseType: 'blob' });
   }
   // TODO da implementare e decidere il formato
 }
