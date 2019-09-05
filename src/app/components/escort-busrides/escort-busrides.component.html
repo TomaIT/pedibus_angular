@@ -13,8 +13,6 @@
         <th scope="col" width="auto">Ora arrivo</th>
         <th scope="col" width="auto">Stato corsa</th> <!-- corsa effettuata / effettua corsa / corsa da effettuare -->
         <th scope="col" width="auto">PER DEBUGGING</th>
-        <th scope="col" width="auto">Download</th>
-        <th scope="col" width="auto">ext</th>
       </tr>
       </thead>
       <tbody>
@@ -30,11 +28,6 @@
         <td *ngIf="av.busRide.idLastStopBus !== av.busRide.stopBuses[av.busRide.stopBuses.length-1].id && checkIfCanStart(av.busRide)"><button (click)="clickOnBusRide(av)" class="btn btn-primary">Effettua corsa</button></td>
         <td *ngIf="av.busRide.idLastStopBus !== av.busRide.stopBuses[av.busRide.stopBuses.length-1].id && !checkIfCanStart(av.busRide)"><span>La corsa non può ancora inziare</span></td>
         <td><button (click)="clickOnBusRide(av)">Effettua corsa</button></td>
-        <td><button (click)="downloadChoice( av.idBusRide, extensionSelected)" value="download data">asd</button></td>
-        <td><select class="form-control" [(ngModel)]="extensionSelected">
-          <option [ngValue]="ext" *ngFor="let ext of arrExtensions;"> {{ext}} </option>
-        </select>
-        </td>
       </tbody>
     </table>
   </div>
