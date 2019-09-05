@@ -315,6 +315,15 @@ export class ManageAttendeesComponent implements OnInit, OnDestroy {
           },
           (error) => {
             this.alertService.error(error);
+            // TODO: aggiungo il navigate anche in caso di errore perché se la fermata è gia stata visita il btn non funziona
+            // TODO: in questo modo però funziona sempre (PROBLEMA?!)
+            if (this.isLastStop || (this.isOutwardStop && this.idCurrentStopBus === this.idLastStopForThisEscort)) {
+              this.router.navigate(
+                [`/busridesEscort`]);
+            } else {
+              this.router.navigate(
+                [`/attendees/manage/${this.idBusRide}/${this.idNextStopBus}`]);
+            }
           }
         );
     }
