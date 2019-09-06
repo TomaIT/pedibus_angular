@@ -220,6 +220,7 @@ export class RegisterChildComponent implements OnInit {
             stop.idLine === id);
           this.outStopBuses.sort((a, b) =>
           a.hours - b.hours);
+          this.outStopBuses.splice(this.outStopBuses.length - 1, 1);
           this.outIsChange = true;
         },
         (error) => {
@@ -237,6 +238,7 @@ export class RegisterChildComponent implements OnInit {
             stop.idLine === id);
           this.retStopBuses.sort((a, b) =>
             a.hours - b.hours);
+          this.retStopBuses.splice(0, 1);
           this.retIsChange = true;
         },
         (error) => {
