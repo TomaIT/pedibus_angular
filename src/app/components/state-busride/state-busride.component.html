@@ -90,5 +90,10 @@
       <li class="red">[rosso] Assente</li>
     </ul>
   </div>
+    <div class="col">
+      <select class="form-control" [(ngModel)]="extensionSelected" style="width: auto">
+        <option [ngValue]="ext" *ngFor="let ext of arrExtensions;"> {{ext}} </option>
+      </select> <button (click)="downloadFile(presenceBusRide)" value="download data">Download File</button>
+      </div>
   </div>
 </div>
