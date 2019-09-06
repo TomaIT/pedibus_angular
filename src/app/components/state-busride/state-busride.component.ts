@@ -61,7 +61,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.arrExtensions = ['xlsx', 'xml', 'json'];
+    this.arrExtensions = ['xlsx', 'xml', 'json', 'csv'];
     this.extensionSelected = this.arrExtensions[0];
     this.presenceBusRide = new PresenceBusRide();
     this.presenceBusRide.presenceStopBusGETTreeSet = new Array<PresenceStopBus>();
@@ -222,7 +222,59 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
     return (('0' + h).slice(-2) + ':' + ('0' + m).slice(-2));
   }
 
+  private convertToCSV(presenceBusRide: PresenceBusRide) {
+    let csvContent = '';
+    let titles = '';
+    titles += 'idLine,';
+    titles += 'lineName,';
+    titles += 'idBusRide,';
+    titles += 'stopBusType,';
+    titles += 'idLastStopBus,';
+    titles += 'nameLastStopBus,';
+    titles += 'idStopBus,';
+    titles += 'nameStopBus,';
+    titles += 'hours,';
+    titles += 'idChild,';
+    titles += 'nameChild,';
+    titles += 'idReservation,';
+    titles += 'getOut,';
+    titles += 'absent,';
+    titles += 'getIn,';
+    titles += 'booked';
+    titles += '\r\n';
+    csvContent += titles;
+    let busrideInfo = '';
+    busrideInfo += presenceBusRide.idLine + ',';
+    busrideInfo += presenceBusRide.lineName + ',';
+    busrideInfo += presenceBusRide.idBusRide + ',';
+    busrideInfo += presenceBusRide.stopBusType + ',';
+    busrideInfo += presenceBusRide.idLastStopBus + ',';
+    busrideInfo += presenceBusRide.nameLastStopBus;
+    presenceBusRide.presenceStopBusGETTreeSet.forEach(stop => {
+      let stopbusInfo = '';
+      stopbusInfo += stop.idStopBus + ',';
+      stopbusInfo += stop.nameStopBus + ',';
+      stopbusInfo += stop.hours;
+      stop.presenceChildGETSet.forEach(pres => {
+        let presInfo = '';
+        presInfo += pres.idChild + ',';
+        presInfo += pres.nameChild + ',';
+        presInfo += pres.idReservation + ',';
+        presInfo += pres.getOut + ',';
+        presInfo += pres.absent + ',';
+        presInfo += pres.getIn + ',';
+        presInfo += pres.booked;
+        let row = '';
+        row += busrideInfo + ',' + stopbusInfo + ',' + presInfo;
+        row += '\r\n';
+        csvContent += row;
+      });
+    });
+    return csvContent;
+  }
+
   downloadFile(passedPresBr: PresenceBusRide) { // "menù"
+
     if ( this.extensionSelected === 'xlsx') {
       this.downloadXlsx(this.busRide.id);
     } else {
@@ -233,10 +285,14 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
         const options = {compact: true, ignoreComment: true, spaces: 4};
         const tempBlob = json2xml(source, options);
         blob = new Blob([tempBlob], {type: 'application/' + this.extensionSelected});
-      } else { // json
+      }
+      if (this.extensionSelected === 'json') { // json
         blob = new Blob([source], {type: 'application/' + this.extensionSelected});
       }
-
+      if (this.extensionSelected === 'csv') {
+        const sourceCSV = this.convertToCSV(passedPresBr);
+        blob = new Blob([sourceCSV], {type: 'application/' + this.extensionSelected});
+      }
       fileSaver.saveAs(blob, `${this.busRide.id}.${this.extensionSelected}`);
     }
   }
