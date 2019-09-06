@@ -54,3 +54,17 @@ ul.timeline > .passed:before {
   color: orange;
   font-weight: bold;
 }
+
+.container_export {
+  background-color: #cccccc;
+  border-radius: 20px;
+}
+
+.container_export h5{
+  text-align: center;
+}
+
+.container_export button{
+  width: 160px;
+  height: 60px;
+}

@@ -26,15 +26,16 @@
     </label>
   </div>
 </div>
-<div class="col" *ngIf="notExist">
-  <label style="font-size: 30px" class="red">La corsa non esiste</label>
-</div>
-<div class="row" style="margin-top: 30px;">
-  <div class="col" *ngIf="busRide">
-    <div class="col">
-      <label style="color: blue; font-size: 30px; font-weight: bold" *ngIf="busRide.timestampLastStopBus === null">La corsa non è iniziata</label>
-    </div>
+<div class="row" *ngIf="notExist">
   <div class="col">
+    <label style="font-size: 30px" class="red">La corsa non esiste</label>
+  </div>
+</div>
+<div class="col" style="margin-top: 30px;" *ngIf="busRide">
+  <div>
+    <label style="color: blue; font-size: 30px; font-weight: bold" *ngIf="busRide.timestampLastStopBus === null">La corsa non è iniziata</label>
+  </div>
+  <div>
     <ul class="timeline">
       <li *ngFor="let stopBus of busRide.stopBuses; let i = index;last as isLastStop;first as isFirstStop;" [class.nopassed]="!isBusAlreadyPassed(stopBus.id)" [class.passed]="isBusAlreadyPassed(stopBus.id)">
         <div style="padding:0px 0px 15px 10px;">
@@ -79,9 +80,9 @@
         </div>
       </li>
     </ul>
-    <br>
   </div>
-  <div class="col">
+  <br>
+  <div>
     <span><button style="background: white;border-color: blue; border-radius: 8px" (click)="showLegend = !showLegend">Legenda:</button></span>
     <ul *ngIf="showLegend">
       <li>[nero] Prenotato ma stato non aggiornato</li>
@@ -90,10 +91,23 @@
       <li class="red">[rosso] Assente</li>
     </ul>
   </div>
-    <div class="col">
-      <select class="form-control" [(ngModel)]="extensionSelected" style="width: auto">
-        <option [ngValue]="ext" *ngFor="let ext of arrExtensions;"> {{ext}} </option>
-      </select> <button (click)="downloadFile(presenceBusRide)" value="download data">Download File</button>
+  <br><br><br>
+  <div class="col container_export">
+    <div class="col" style="margin: 10px;">
+      <h5><span>Esporta i dati delle presenze su file</span></h5>
+    </div>
+    <div class="row" style="padding: 20px;">
+      <div class="col-sm-6 text-center">
+        <label>
+          Seleziona il formato
+          <select class="form-control" [(ngModel)]="extensionSelected" style="width: 160px;">
+            <option [ngValue]="ext" *ngFor="let ext of arrExtensions;"> {{ext}} </option>
+          </select>
+        </label>
       </div>
+      <div class="col-sm-6 text-center">
+        <button (click)="downloadFile(presenceBusRide)" value="download data" class="btn btn-primary" style="margin: 10px;">Download File</button>
+      </div>
+    </div>
   </div>
 </div>
