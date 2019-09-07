@@ -38,6 +38,10 @@ export class UserProfileComponent implements OnInit {
   loading = false;
   submitted = false;
   user: User;
+  today: Date = new Date();
+  maxDate: Date = new Date(this.today.getUTCFullYear() - 18, 11, 31);
+  minDate: Date = new Date(this.today.getUTCFullYear() - 130, 11, 31);
+  selectedDate: Date;
 
   private static getDate(date: any): Date {
     const year = Number(date.split('-')[0]);
@@ -95,12 +99,19 @@ export class UserProfileComponent implements OnInit {
         (user) => {
           this.user = user;
           this.changeFormValue(this.user);
-          const today = new Date();
           $('#date').datepicker({
             dateFormat: 'yy-mm-dd',
             changeYear: true,
-            maxDate: new Date(today.getUTCFullYear() - 18, 11, 31),
-            minDate: new Date(today.getUTCFullYear() - 130, 11, 31)
+            maxDate: this.maxDate,
+            minDate: this.minDate,
+            onClose: (selDate, inst) => {
+              this.selectedDate = selDate;
+              this.checkInsertedDate();
+            },
+            onSelect: (selDate, inst) => {
+              this.selectedDate = selDate;
+              this.checkInsertedDate();
+            }
           });
           this.myDate.nativeElement.value = UserProfileComponent.getDate(this.user.birth)
             .toISOString().split('T')[0];
@@ -144,6 +155,7 @@ export class UserProfileComponent implements OnInit {
     this.f.surname.setValue(user.surname);
     this.f.street.setValue(user.street);
     this.f.phoneNumber.setValue(user.phoneNumber);
+    // this.f.birth.setValue(user.birth);
   }
 
   onSubmit() {
@@ -180,6 +192,20 @@ export class UserProfileComponent implements OnInit {
           this.alertService.error(error);
         }
       );
+  }
+
+  checkInsertedDate() {
+    const checkvar: Date = new Date(this.selectedDate);
+    if ( checkvar < this.minDate) {
+      this.alertService.error('Date out of range (min exception)');
+      this.myDate.nativeElement.value = this.minDate.getFullYear() + '-' + this.minDate.getMonth() + '-' + this.minDate.getDate();
+      this.selectedDate = this.minDate;
+    }
+    if ( checkvar > this.maxDate) {
+      this.alertService.error('Date out of range (max exception)');
+      this.myDate.nativeElement.value = this.maxDate.getFullYear() + '-' + this.maxDate.getMonth() + '-' + this.maxDate.getDate();
+      this.selectedDate = this.maxDate;
+    }
   }
 
   /*checkInput(event) {

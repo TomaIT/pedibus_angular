@@ -291,7 +291,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
       }
       if (this.extensionSelected === 'csv') {
         const sourceCSV = this.convertToCSV(passedPresBr);
-        blob = new Blob([sourceCSV], {type: 'application/' + this.extensionSelected});
+        blob = new Blob([sourceCSV], {type: 'text/' + this.extensionSelected});
       }
       fileSaver.saveAs(blob, `${this.busRide.id}.${this.extensionSelected}`);
     }

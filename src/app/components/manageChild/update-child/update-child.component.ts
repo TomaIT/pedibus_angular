@@ -34,6 +34,10 @@ export class UpdateChildComponent implements OnInit {
   defaultStopOut: string;
   defaultLineRet: string;
   defaultStopRet: string;
+  today: Date = new Date();
+  maxDate: Date = new Date(this.today.getUTCFullYear() - 3, 11, 31);
+  minDate: Date = new Date(this.today.getUTCFullYear() - 11, 11, 31);
+  selectedDate: Date;
 
   constructor(private alertService: AlertService,
               private childService: ChildService,
@@ -140,7 +144,15 @@ export class UpdateChildComponent implements OnInit {
   }
 
   ngOnInit() {
-    $('#date').datepicker({dateFormat: 'yy-mm-dd'});
+    $('#date').datepicker({
+      dateFormat: 'yy-mm-dd',
+      maxDate: this.maxDate,
+      minDate: this.minDate,
+      onClose: (selDate, inst) => {
+        this.selectedDate = selDate;
+        this.checkInsertedDate();
+      }
+    });
 
     this.childService.getGenders()
       .subscribe(
@@ -303,5 +315,19 @@ export class UpdateChildComponent implements OnInit {
           this.alertService.error(error);
         }
       );
+  }
+
+  checkInsertedDate() {
+    const checkvar: Date = new Date(this.selectedDate);
+    if ( checkvar < this.minDate) {
+      this.alertService.error('Date out of range (min exception)');
+      this.myDate.nativeElement.value = this.minDate.getFullYear() + '-' + this.minDate.getMonth() + '-' + this.minDate.getDate();
+      this.selectedDate = this.minDate;
+    }
+    if ( checkvar > this.maxDate) {
+      this.alertService.error('Date out of range (max exception)');
+      this.myDate.nativeElement.value = this.maxDate.getFullYear() + '-' + this.maxDate.getMonth() + '-' + this.maxDate.getDate();
+      this.selectedDate = this.maxDate;
+    }
   }
 }
