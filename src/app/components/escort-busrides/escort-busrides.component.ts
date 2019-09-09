@@ -8,16 +8,8 @@ import {Availability, AvailabilityState} from '../../models/availability';
 import {BusRideService} from '../../services/bus-ride.service';
 import {StopBus, StopBusType} from '../../models/stopbus';
 import {environment} from '../../../environments/environment';
-import * as fileSaver from 'file-saver';
-import {json2xml} from 'xml-js';
 
-/*
-enum FileExtensions {
-  excel = 'xlsx',
-  json = 'json',
-  xml = 'xml'
-}
-*/
+
 @Component({
   selector: 'app-escort-busrides',
   templateUrl: './escort-busrides.component.html',
@@ -26,8 +18,6 @@ enum FileExtensions {
 export class EscortBusridesComponent implements OnInit {
 
   confirmedAvailabilities: Array<Availability>;
-  arrExtensions: Array<string>;
-  extensionSelected: string;
 
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
@@ -48,13 +38,6 @@ export class EscortBusridesComponent implements OnInit {
           this.alertService.error(error);
         }
       );
-    this.arrExtensions = ['xlsx', 'xml', 'json'];
-    this.extensionSelected = this.arrExtensions[0];
-    /*
-    this.arrExtensions = new Array<FileExtensions>();
-    this.arrExtensions.push(FileExtensions.excel);
-    this.arrExtensions.push(FileExtensions.xml);
-    this.arrExtensions.push(FileExtensions.json);*/
   }
 
   checkIfCanStart(busride: BusRide): boolean {
@@ -122,38 +105,5 @@ export class EscortBusridesComponent implements OnInit {
     } else {
       return availability.busRide.stopBuses.filter(sb => sb.id === availability.idStopBus).pop();
     }
-  }
-
-  dlXmlIOrJson(idBusRide: string, type: string) {
-    this.busRideService.getBusRideById(idBusRide).subscribe( response => {
-      let blob;
-      const source = JSON.stringify(response);
-
-      if (type === 'xml') {
-        const options = {compact: true, ignoreComment: true, spaces: 4};
-        const tempBlob = json2xml(source, options);
-        blob = new Blob([tempBlob], {type: 'application/' + type});
-      } else { // json
-        blob = new Blob([source], {type: 'application/' + type});
-      }
-
-      fileSaver.saveAs(blob, `${idBusRide}.${type}`);
-    }, (error) => { this.alertService.error(error); });
-  }
-
-  downloadChoice(idBusRide: string, type: string) { // "menù"
-    if (type === 'xlsx') {
-      this.downloadXlsx(idBusRide);
-    } else {
-      this.dlXmlIOrJson(idBusRide, type);
-    }
-  }
-
-  downloadXlsx(idBusRide: string) {
-    this.busRideService.getDownloadableBusRideInfo(idBusRide).subscribe( (data) => {
-        const blobtest = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-        fileSaver.saveAs(blobtest, `${idBusRide}.xlsx`);
-      }, (error) => { this.alertService.error(error); }
-    );
   }
 }

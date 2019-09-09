@@ -1,8 +1,3 @@
-<p>
-  <!--TODO-->
-  Qui ESCORT puo vedere tutte le sue availability e il loro stato, inoltre può confermare la presa visione,
-  del fatto che l'availability sia stata accetta dall' admin/sysAdmin
-</p>
 <h2 align="center">Elenco disponibilità</h2>
 <div class="row">
   <table class="table table-responsive table-striped" style="font-family: Lato;">
@@ -34,7 +29,6 @@
       <td>
         <img *ngIf="!checkDel(a.state)" (click)="delete(a)" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
         <label *ngIf="checkDel(a.state)" (click)="confirm(a)" disabled>Contatta l'amministratore per cancellare</label>
-        <!--TODO l'ideale sarebbe un'iconcina con il ? (ma anche icone per il resto) dove se ci si passa sopra il mouse o ci si clicca dice che bisogna contattare l'admin per la cancellazione-->
       </td>
     </tr>
     </tbody>

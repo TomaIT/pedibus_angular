@@ -49,5 +49,4 @@ export class BusRideService {
   createBusRide(busRide: BusRidePost): Observable<any> {
     return this.httpClient.post(`${environment.apiUrl}/busrides`, busRide);
   }
-  // TODO da implementare e decidere il formato
 }

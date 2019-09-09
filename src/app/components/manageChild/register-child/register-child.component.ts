@@ -29,6 +29,10 @@ export class RegisterChildComponent implements OnInit {
   outIsChange = false;
   retIsChange = false;
   lineEnum: Array<LineEnum>;
+  today: Date = new Date();
+  maxDate: Date = new Date(this.today.getUTCFullYear() - 3, 11, 31);
+  minDate: Date = new Date(this.today.getUTCFullYear() - 11, 11, 31);
+  selectedDate: Date;
 
 
   constructor(private alertService: AlertService,
@@ -81,12 +85,15 @@ export class RegisterChildComponent implements OnInit {
   }
 
   ngOnInit() {
-    const today = new Date();
     $('#date').datepicker({
       dateFormat: 'yy-mm-dd',
       changeYear: true,
-      maxDate: new Date(today.getUTCFullYear() - 4, 11, 31),
-      minDate: new Date(today.getUTCFullYear() - 13, 11, 31)
+      maxDate: this.maxDate,
+      minDate: this.minDate,
+      onClose: (selDate, inst) => {
+        this.selectedDate = selDate;
+        this.checkInsertedDate();
+      }
     });
     this.childService.getGenders()
       .subscribe(
@@ -220,6 +227,7 @@ export class RegisterChildComponent implements OnInit {
             stop.idLine === id);
           this.outStopBuses.sort((a, b) =>
           a.hours - b.hours);
+          this.outStopBuses.splice(this.outStopBuses.length - 1, 1);
           this.outIsChange = true;
         },
         (error) => {
@@ -237,11 +245,26 @@ export class RegisterChildComponent implements OnInit {
             stop.idLine === id);
           this.retStopBuses.sort((a, b) =>
             a.hours - b.hours);
+          this.retStopBuses.splice(0, 1);
           this.retIsChange = true;
         },
         (error) => {
           this.alertService.error(error);
         }
       );
+  }
+
+  checkInsertedDate() {
+    const checkvar: Date = new Date(this.selectedDate);
+    if ( checkvar < this.minDate) {
+      this.alertService.error('Date out of range (min exception)');
+      this.myDate.nativeElement.value = this.minDate.getFullYear() + '-' + this.minDate.getMonth() + '-' + this.minDate.getDate();
+      this.selectedDate = this.minDate;
+    }
+    if ( checkvar > this.maxDate) {
+      this.alertService.error('Date out of range (max exception)');
+      this.myDate.nativeElement.value = this.maxDate.getFullYear() + '-' + this.maxDate.getMonth() + '-' + this.maxDate.getDate();
+      this.selectedDate = this.maxDate;
+    }
   }
 }

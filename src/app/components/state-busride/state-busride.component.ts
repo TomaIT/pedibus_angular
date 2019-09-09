@@ -10,6 +10,8 @@ import {LineService} from '../../services/line.service';
 import {PresenceBusRide, PresenceChild, PresenceStopBus} from '../../models/presencebusride';
 import {interval} from 'rxjs';
 import {environment} from '../../../environments/environment';
+import * as fileSaver from 'file-saver';
+import {json2xml} from 'xml-js';
 
 // jQuery Sign $
 declare let $: any;
@@ -39,6 +41,9 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
 
   showLegend = false;
 
+  arrExtensions: Array<string>;
+  extensionSelected: string;
+
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
               private router: Router,
@@ -55,6 +60,9 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
         this.selectedDataChange();
       }
     });
+
+    this.arrExtensions = ['xlsx', 'xml', 'json', 'csv'];
+    this.extensionSelected = this.arrExtensions[0];
     this.presenceBusRide = new PresenceBusRide();
     this.presenceBusRide.presenceStopBusGETTreeSet = new Array<PresenceStopBus>();
     this.presenceBusRide.presenceStopBusGETTreeSet.forEach(p => {
@@ -213,4 +221,88 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
     const m = date.getMinutes();
     return (('0' + h).slice(-2) + ':' + ('0' + m).slice(-2));
   }
+
+  private convertToCSV(presenceBusRide: PresenceBusRide) {
+    let csvContent = '';
+    let titles = '';
+    titles += 'idLine,';
+    titles += 'lineName,';
+    titles += 'idBusRide,';
+    titles += 'stopBusType,';
+    titles += 'idLastStopBus,';
+    titles += 'nameLastStopBus,';
+    titles += 'idStopBus,';
+    titles += 'nameStopBus,';
+    titles += 'hours,';
+    titles += 'idChild,';
+    titles += 'nameChild,';
+    titles += 'idReservation,';
+    titles += 'getOut,';
+    titles += 'absent,';
+    titles += 'getIn,';
+    titles += 'booked';
+    titles += '\r\n';
+    csvContent += titles;
+    let busrideInfo = '';
+    busrideInfo += presenceBusRide.idLine + ',';
+    busrideInfo += presenceBusRide.lineName + ',';
+    busrideInfo += presenceBusRide.idBusRide + ',';
+    busrideInfo += presenceBusRide.stopBusType + ',';
+    busrideInfo += presenceBusRide.idLastStopBus + ',';
+    busrideInfo += presenceBusRide.nameLastStopBus;
+    presenceBusRide.presenceStopBusGETTreeSet.forEach(stop => {
+      let stopbusInfo = '';
+      stopbusInfo += stop.idStopBus + ',';
+      stopbusInfo += stop.nameStopBus + ',';
+      stopbusInfo += stop.hours;
+      stop.presenceChildGETSet.forEach(pres => {
+        let presInfo = '';
+        presInfo += pres.idChild + ',';
+        presInfo += pres.nameChild + ',';
+        presInfo += pres.idReservation + ',';
+        presInfo += pres.getOut + ',';
+        presInfo += pres.absent + ',';
+        presInfo += pres.getIn + ',';
+        presInfo += pres.booked;
+        let row = '';
+        row += busrideInfo + ',' + stopbusInfo + ',' + presInfo;
+        row += '\r\n';
+        csvContent += row;
+      });
+    });
+    return csvContent;
+  }
+
+  downloadFile(passedPresBr: PresenceBusRide) { // "menù"
+
+    if ( this.extensionSelected === 'xlsx') {
+      this.downloadXlsx(this.busRide.id);
+    } else {
+      let blob;
+      const source = JSON.stringify(passedPresBr);
+
+      if (this.extensionSelected === 'xml') {
+        const options = {compact: true, ignoreComment: true, spaces: 4};
+        const tempBlob = json2xml(source, options);
+        blob = new Blob([tempBlob], {type: 'application/' + this.extensionSelected});
+      }
+      if (this.extensionSelected === 'json') { // json
+        blob = new Blob([source], {type: 'application/' + this.extensionSelected});
+      }
+      if (this.extensionSelected === 'csv') {
+        const sourceCSV = this.convertToCSV(passedPresBr);
+        blob = new Blob([sourceCSV], {type: 'text/' + this.extensionSelected});
+      }
+      fileSaver.saveAs(blob, `${this.busRide.id}.${this.extensionSelected}`);
+    }
+  }
+
+  downloadXlsx(idBusRide: string) {
+    this.busRideService.getDownloadableBusRideInfo(idBusRide).subscribe( (data) => {
+        const blobtest = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+        fileSaver.saveAs(blobtest, `${idBusRide}.xlsx`);
+      }, (error) => { this.alertService.error(error); }
+    );
+  }
+
 }

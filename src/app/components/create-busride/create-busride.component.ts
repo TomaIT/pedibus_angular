@@ -42,6 +42,7 @@ export class CreateBusrideComponent implements OnInit {
     const today = new Date();
     $('#date').datepicker({
       dateFormat: 'yy-mm-dd',
+      minDate: today,
       onSelect: (selDate, inst) => {
         this.selectedData = selDate;
       }
