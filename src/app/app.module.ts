@@ -134,6 +134,13 @@ const routes: Routes = [
     }
   },
   {
+    path: 'manageUsers/:id', component: ManageUserComponent,
+    canActivate: [RoleGuardService],
+    data: {
+      rolesPermitted: [Role.admin, Role.sysAdmin]
+    }
+  },
+  {
     path: 'createLine', component: CreateBusrideComponent,
     canActivate: [RoleGuardService],
     data: {
