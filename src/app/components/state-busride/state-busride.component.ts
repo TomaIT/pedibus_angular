@@ -44,6 +44,8 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
   arrExtensions: Array<string>;
   extensionSelected: string;
 
+  isAdmin = false;
+
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
               private router: Router,
@@ -61,6 +63,9 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
       }
     });
 
+    if (this.authenticationService.isAdmin() || this.authenticationService.isSysAdmin()) {
+      this.isAdmin = true;
+    }
     this.arrExtensions = ['xlsx', 'xml', 'json', 'csv'];
     this.extensionSelected = this.arrExtensions[0];
     this.presenceBusRide = new PresenceBusRide();
