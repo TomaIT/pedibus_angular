@@ -19,11 +19,25 @@ export class ComunicationComponent implements OnInit, OnDestroy {
   p = 1;
 
 
+  private equals(a: Message, b: Message): boolean {
+    return a.creationTime === b.creationTime &&
+      a.id === b.id &&
+      a.idUserFrom === a.idUserFrom &&
+      a.idUserTo === b.idUserTo &&
+      a.message === b.message &&
+      a.readConfirm === b.readConfirm &&
+      a.subject === b.subject;
+  }
+
   private refreshMessages() {
     this.messageService.findMessageByIdUser(this.authenticationService.currentUserValue.username)
       .subscribe(
         (data) => {
-          this.messages = data.sort((a, b) => b.creationTime - a.creationTime);
+          if (!this.messages || this.messages.length !== data.length ||
+            data.filter(y => this.messages.findIndex(x => this.equals(x, y)) < 0).length > 0) {
+            this.messages = data.sort((a, b) => b.creationTime - a.creationTime);
+            // alert('refreshed');
+          }
         },
         (error) => {
           this.alertService.error(error);
@@ -39,7 +53,9 @@ export class ComunicationComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-    this.pollingData.unsubscribe();
+    if (this.pollingData) {
+      this.pollingData.unsubscribe();
+    }
   }
 
   ngOnInit() {

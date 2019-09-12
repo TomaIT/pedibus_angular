@@ -62,12 +62,13 @@ export class ManageUsersComponent implements OnInit, OnDestroy {
         (data) => {
           const temp = data.content.sort((a, b) => a.username.localeCompare(b.username));
           temp.forEach(x => x.roles = x.roles.sort((a, b) => a.localeCompare(b)));
-          this.users = temp;
+          // this.users = temp;
 
-          /* if (!this.users || this.users.length !== temp.length ||
+          if (!this.users || this.users.length !== temp.length ||
              temp.filter(y => this.users.findIndex(x => this.equals(x, y)) < 0).length > 0) {
              this.users = temp;
-           }*/
+             // alert('refreshed');
+           }
         },
         (error) => {
           this.alertService.error(error);
