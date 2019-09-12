@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://pedibus.ns0.it/rest',
+  apiUrl: 'http://127.0.0.1/rest',
   intervalTimePolling: 1000, // milliseconds
   intervalAvailCheck: 5000,
   startingInterval: 30 // minutes
