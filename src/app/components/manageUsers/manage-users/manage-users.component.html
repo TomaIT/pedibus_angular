@@ -21,15 +21,14 @@
       </thead>
       <tbody>
       <tr *ngFor="let a of users | paginate: { itemsPerPage: pageSize, currentPage: p }">
-        <td>{{a.username|| '-' }}</td>
-        <td>{{a.firstname || '-' }}</td>
-        <td>{{a.surname || '-' }}</td>
-        <td>{{a.phoneNumber|| '-' }}</td>
-        <td>
-          <select class="form-control">
-            <option *ngFor="let b of a.roles;">{{b}}</option>
-          </select>
-
+        <td align="left">{{a.username|| '-' }}</td>
+        <td align="left">{{a.firstname || '-' }}</td>
+        <td align="left">{{a.surname || '-' }}</td>
+        <td align="left">{{a.phoneNumber|| '-' }}</td>
+        <td align="left">
+          <ul style="margin: auto;">
+            <li *ngFor="let r of a.roles" style="list-style-type: none;">{{r}}</li>
+          </ul>
         </td>
         <td *ngIf="authenticationService.isSysAdmin()">
           <button *ngIf="a.accountNonLocked" [disabled]="a.username === actualUser" (click)="blockUser(a)" type="button" class="btn btn-link" style="color: red;">Blocca</button>
