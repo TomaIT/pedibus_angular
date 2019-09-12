@@ -31,9 +31,11 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
   avbstates: Array<AvailabilityState>;
   pollingData: any;
   busRides: Array<BusRide>;
+  pageSize = 5;
+  p = 1;
 
   ngOnDestroy(): void {
-      this.pollingData.unsubscribe();
+    this.pollingData.unsubscribe();
   }
 
   private pollCounter() {
@@ -46,7 +48,8 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
             this.busRides.push(avl.busRide);
           }
         },
-        (error3) => { this.alertService.error(error3);
+        (error3) => {
+          this.alertService.error(error3);
         }
       );
     }
@@ -68,7 +71,8 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
           this.busRides.push(temp.busRide);
         }
       },
-      (error3) => { this.alertService.error(error3);
+      (error3) => {
+        this.alertService.error(error3);
       }
     );
   }
@@ -86,6 +90,7 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
     }
     return null;
   }
+
   /* visualizeData(time: Date): Date {
     const temp = new Date(time);
     temp.setFullYear(temp.getFullYear(), temp.getMonth(), temp.getDate());
@@ -120,13 +125,13 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
 
 
   delete(avl: Availability) {
-    this.availabilityService.deleteAvailability(avl.id).subscribe( (data) => {
-      const index = this.availabilities.findIndex(x => x.id === avl.id);
-      if (index >= 0) {
-        this.availabilities.splice(index, 1);
-      }
-      this.alertService.success('Disponibilità cancellata con successo.');
-    },
+    this.availabilityService.deleteAvailability(avl.id).subscribe((data) => {
+        const index = this.availabilities.findIndex(x => x.id === avl.id);
+        if (index >= 0) {
+          this.availabilities.splice(index, 1);
+        }
+        this.alertService.success('Disponibilità cancellata con successo.');
+      },
       (error) => {
         this.alertService.error(error);
       });
@@ -151,12 +156,16 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
   showArr(idbr: string, busname: string) {
     for (const temp of this.busRides) {
       if (temp.id === idbr) {
-      if (temp.stopBusType === StopBusType.outward) {
-        return temp.stopBuses[temp.stopBuses.length - 1].name;
-      } else {
-        return busname;
+        if (temp.stopBusType === StopBusType.outward) {
+          return temp.stopBuses[temp.stopBuses.length - 1].name;
+        } else {
+          return busname;
+        }
       }
     }
   }
+
+  onChangePage($event: number) {
+    this.p = $event;
   }
 }
