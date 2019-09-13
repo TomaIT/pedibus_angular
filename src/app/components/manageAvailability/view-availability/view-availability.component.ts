@@ -22,9 +22,6 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
               private alertService: AlertService,
               private busRidesService: BusRideService,
               private router: Router) {
-    this.pollCounter();
-    this.pollingData = interval(environment.intervalAvailCheck)
-      .subscribe((data) => this.pollCounter());
   }
 
   availabilities: Array<Availability>;
@@ -43,7 +40,7 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
       this.availabilityService.getAvailabilitiesByUser(this.authenticationService.currentUserValue.username).subscribe(
         (data) => {
           this.availabilities = data;
-          this.busRides.length = 0;
+          this.busRides = new Array<BusRide>();
           for (const avl of this.availabilities) {
             this.busRides.push(avl.busRide);
           }
@@ -64,7 +61,11 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
     this.avbstates.push(AvailabilityState.confirmed);
     this.avbstates.push(AvailabilityState.readChecked);
 
-    this.availabilityService.getAvailabilitiesByUser(this.authenticationService.currentUserValue.username).subscribe(
+    this.pollCounter();
+    this.pollingData = interval(environment.intervalAvailCheck)
+      .subscribe((data) => this.pollCounter());
+
+    /*this.availabilityService.getAvailabilitiesByUser(this.authenticationService.currentUserValue.username).subscribe(
       (data) => {
         this.availabilities = data;
         for (const temp of this.availabilities) {
@@ -74,7 +75,7 @@ export class ViewAvailabilityComponent implements OnInit, OnDestroy {
       (error3) => {
         this.alertService.error(error3);
       }
-    );
+    );*/
   }
 
   visualizeData(avl: Availability): Date {
