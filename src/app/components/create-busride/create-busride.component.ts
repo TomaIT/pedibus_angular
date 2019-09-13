@@ -20,7 +20,7 @@ declare let $: any;
   styleUrls: ['./create-busride.component.css']
 })
 export class CreateBusrideComponent implements OnInit {
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', {static: false}) myDate: ElementRef;
   busRideForm: FormGroup;
   loading = false;
   submitted = false;

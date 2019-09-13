@@ -12,6 +12,8 @@ import {interval} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import * as fileSaver from 'file-saver';
 import {json2xml} from 'xml-js';
+import {ChildPresenceDialogComponent} from './child-presence-dialog/child-presence-dialog.component';
+import {MatDialog} from '@angular/material';
 
 // jQuery Sign $
 declare let $: any;
@@ -22,7 +24,7 @@ declare let $: any;
   styleUrls: ['./state-busride.component.css']
 })
 export class StateBusrideComponent implements OnInit, OnDestroy {
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', {static: false}) myDate: ElementRef;
 
   lines: Array<LineEnum>;
   busRide: BusRide;
@@ -51,7 +53,8 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
               private router: Router,
               private activatedRoute: ActivatedRoute,
               private busRideService: BusRideService,
-              private lineService: LineService) {
+              private lineService: LineService,
+              public dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -66,7 +69,7 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
     if (this.authenticationService.isAdmin() || this.authenticationService.isSysAdmin()) {
       this.isAdmin = true;
     }
-    this.arrExtensions = ['xlsx', 'xml', 'json', 'csv'];
+    this.arrExtensions = ['xlsx', 'xml', 'json'];
     this.extensionSelected = this.arrExtensions[0];
     this.presenceBusRide = new PresenceBusRide();
     this.presenceBusRide.presenceStopBusGETTreeSet = new Array<PresenceStopBus>();
@@ -225,6 +228,18 @@ export class StateBusrideComponent implements OnInit, OnDestroy {
     const h = date.getHours();
     const m = date.getMinutes();
     return (('0' + h).slice(-2) + ':' + ('0' + m).slice(-2));
+  }
+
+  openPresenceDialog(pres: PresenceChild): void {
+    const dialogRef = this.dialog.open(ChildPresenceDialogComponent, {
+      width: '280px',
+      data: {presenceChild: pres}
+    });
+
+    /*dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.animal = result;
+    });*/
   }
 
   private convertToCSV(presenceBusRide: PresenceBusRide) {

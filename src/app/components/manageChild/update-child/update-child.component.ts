@@ -19,7 +19,7 @@ declare let $: any;
   styleUrls: ['./update-child.component.css']
 })
 export class UpdateChildComponent implements OnInit {
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', {static: false}) myDate: ElementRef;
   form: FormGroup;
   childPath: Child;
   submitted = false;

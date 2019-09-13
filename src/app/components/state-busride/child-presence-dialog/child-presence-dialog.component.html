@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>{{data.presenceChild.nameChild}}</h2>
+<div mat-dialog-content>
+  <div *ngIf="data.presenceChild.getIn !== null">
+    <h5>Salita</h5>
+    <span matTooltip="Orario di salita">{{convertTimestampToTime(data.presenceChild.getIn.epochTime)}}</span><br>
+    <span matTooltip="Email accompagnatore">{{data.presenceChild.getIn.idUser}}</span>
+    <mat-divider></mat-divider>
+    <br>
+  </div>
+  <div *ngIf="data.presenceChild.getOut !== null">
+    <h5>Discesa</h5>
+    <span matTooltip="Orario di discesa">{{convertTimestampToTime(data.presenceChild.getOut.epochTime)}}</span><br>
+    <span matTooltip="Email accompagnatore">{{data.presenceChild.getOut.idUser}}</span>
+    <mat-divider></mat-divider>
+    <br>
+  </div>
+  <div *ngIf="data.presenceChild.absent !== null">
+    <h5>Assenza</h5>
+    <span matTooltip="Orario segnata assenza">{{convertTimestampToTime(data.presenceChild.absent.epochTime)}}</span><br>
+    <span matTooltip="Email accompagnatore">{{data.presenceChild.absent.idUser}}</span>
+    <mat-divider></mat-divider>
+    <br>
+  </div>
+  <div *ngIf="data.presenceChild.getIn === null && data.presenceChild.getOut === null && data.presenceChild.absent === null">
+    <p>Stato del bambino non ancora segnato dall'accompagnatore.</p>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCloseClick()">Close</button>
+</div>
