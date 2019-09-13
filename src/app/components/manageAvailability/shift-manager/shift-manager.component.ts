@@ -176,7 +176,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                         avb.startTime = stop.hours;
                       }
                     }
-                    if (arr.includes(stop.name) === false) {
+                    if (arr.indexOf(stop.name) === -1) {
                       const parsed: GroupedAvailabilities = new GroupedAvailabilities();
                       parsed.stopName = stop.name;
                       parsed.startTime = stop.hours;
@@ -202,7 +202,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
             this.loadingOut = false;
           },
           (error) => {
-            if (error.toString().includes('404')) {
+            if (error.toString().indexOf('404') !== -1) {
               this.loadingOut = false;
               this.avbListOut = undefined;
               this.busRideExistOut = false;
@@ -244,7 +244,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
                         avb.startTime = stop.hours;
                       }
                     }
-                    if (arr.includes(stop.name) === false) {
+                    if (arr.indexOf(stop.name) === -1) {
                       const parsed: GroupedAvailabilities = new GroupedAvailabilities();
                       parsed.stopName = stop.name;
                       parsed.startTime = stop.hours;
@@ -270,7 +270,7 @@ export class ShiftManagerComponent implements OnInit, OnDestroy {
               );
           },
           (error) => {
-            if (error.toString().includes('404')) {
+            if (error.toString().indexOf('404') !== -1) {
               this.loadingRet = false;
               this.avbListRet = undefined;
               this.busRideExistRet = false;
