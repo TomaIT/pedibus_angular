@@ -1,13 +1,14 @@
 import {StopBusType} from './stopbus';
+import {ReservationState} from './reservation';
 
 export class PresenceChild {
   idChild: string;
   nameChild: string;
   booked: boolean;
   idReservation: string;
-  getIn: boolean;
-  getOut: boolean;
-  absent: boolean;
+  getIn: ReservationState;
+  getOut: ReservationState;
+  absent: ReservationState;
 }
 
 export class PresenceStopBus {

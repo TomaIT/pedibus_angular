@@ -35,6 +35,10 @@ import {RoleGuardService} from './services/role-guard.service';
 import {Role} from './models/user';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { CreateBusrideComponent } from './components/create-busride/create-busride.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatButtonModule, MatCardModule, MatDividerModule, MatTooltipModule} from '@angular/material';
+import {MatDialogModule} from '@angular/material';
+import { ChildPresenceDialogComponent } from './components/state-busride/child-presence-dialog/child-presence-dialog.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -219,6 +223,10 @@ const routes: Routes = [
     StateBusrideComponent,
     JwPaginationComponent,
     CreateBusrideComponent,
+    ChildPresenceDialogComponent,
+  ],
+  entryComponents: [
+    ChildPresenceDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -229,6 +237,12 @@ const routes: Routes = [
     AgmCoreModule.forRoot({apiKey: 'AIzaSyCJLZTtvkOWHf2YjAKg0fRZbk9Z-0ksCkM'}),
     AngularOpenlayersModule,
     NgxPaginationModule,
+    BrowserAnimationsModule,
+    MatTooltipModule,
+    MatDialogModule,
+    MatCardModule,
+    MatButtonModule,
+    MatDividerModule,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},

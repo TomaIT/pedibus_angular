@@ -25,7 +25,7 @@ declare let $: any;
 })
 export class ReservationComponent implements OnInit, OnDestroy {
 
-  @ViewChild('myDate') myDate: ElementRef;
+  @ViewChild('myDate', {static: false}) myDate: ElementRef;
   children: Array<Child>;
   childSelected: Child;
   dataSelected: any;
