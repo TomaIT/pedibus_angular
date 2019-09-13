@@ -1,36 +1,45 @@
-<h2 align="center">Elenco disponibilità</h2>
-<div class="row">
-  <table class="table table-responsive table-striped" style="font-family: Lato;">
-    <thead>
-    <tr>
-      <th scope="col" width="auto">Nome Linea</th>
-      <th scope="col" width="auto">Fermata Partenza</th>
-      <th scope="col" width="auto">Fermata Arrivo</th>
-      <th scope="col" width="auto">Data</th>
-      <th scope="col" width="auto">Stato</th>
-      <th scope="col" width="8%">Conferma</th>
-      <th scope="col" width="8%">Delete</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let a of availabilities;">
-      <td>{{a.lineNameOfBusRide || '-' }}</td>
-      <td>{{showDep(a.idBusRide, a.stopBusName) || '-' }}</td>
-      <td>{{showArr(a.idBusRide, a.stopBusName) || '-' }}</td>
-      <!--<td>{{visualizeData(a.startDateOfBusRide) | date:'HH:mm - dd/MM/yy'}}</td>-->
-      <td>{{visualizeData(a) | date:'HH:mm - dd/MM/yy'}}</td>
-      <td>{{a.state || '-'}}</td>
-      <td>
-        <button *ngIf="checkConfirm(a.state)" (click)="confirm(a)">Conferma</button>
-        <p *ngIf="checkAvail(a.state)" disabled>Attesa conferma Admin</p>
-        <label *ngIf="checkDel(a.state)" disabled>Turno chiuso</label>
-        <label *ngIf="checkrc(a.state)" disabled>Attesa completamento Admin</label>
-      </td>
-      <td>
-        <img *ngIf="!checkDel(a.state)" (click)="delete(a)" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
-        <label *ngIf="checkDel(a.state)" (click)="confirm(a)" disabled>Contatta l'amministratore per cancellare</label>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+<!--<h2 align="center">Elenco disponibilità</h2>
+<div class="row">-->
+<div class="card text-center m-3">
+  <h3 class="card-header">Elenco disponibilità</h3>
+
+  <div class="card-body" style="width: 100%;height: 100%;box-sizing: border-box;">
+    <table class="table table-responsive table-striped" style="font-family: Lato;">
+      <thead>
+      <tr>
+        <th scope="col" width="auto">Nome Linea</th>
+        <th scope="col" width="auto">Fermata Partenza</th>
+        <th scope="col" width="auto">Fermata Arrivo</th>
+        <th scope="col" width="auto">Data</th>
+        <th scope="col" width="auto">Stato</th>
+        <th scope="col" width="8%">Conferma</th>
+        <th scope="col" width="8%">Delete</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let a of availabilities | paginate: { itemsPerPage: pageSize, currentPage: p }">
+        <td>{{a.lineNameOfBusRide || '-' }}</td>
+        <td>{{showDep(a.idBusRide, a.stopBusName) || '-' }}</td>
+        <td>{{showArr(a.idBusRide, a.stopBusName) || '-' }}</td>
+        <!--<td>{{visualizeData(a.startDateOfBusRide) | date:'HH:mm - dd/MM/yy'}}</td>-->
+        <td>{{visualizeData(a) | date:'HH:mm - dd/MM/yy'}}</td>
+        <td>{{a.state || '-'}}</td>
+        <td>
+          <button *ngIf="checkConfirm(a.state)" (click)="confirm(a)">Conferma</button>
+          <p *ngIf="checkAvail(a.state)" disabled>Attesa conferma Admin</p>
+          <label *ngIf="checkDel(a.state)" disabled>Turno chiuso</label>
+          <label *ngIf="checkrc(a.state)" disabled>Attesa completamento Admin</label>
+        </td>
+        <td>
+          <img *ngIf="!checkDel(a.state)" (click)="delete(a)" src="../../../../assets/images/delete.png" style="margin-left: 13px;cursor: pointer;min-width: 25px;" width="50%" height="auto">
+          <label *ngIf="checkDel(a.state)" (click)="confirm(a)" disabled>Contatta l'amministratore per cancellare</label>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer pb-0 pt-3">
+    <pagination-controls (pageChange)="onChangePage($event)"></pagination-controls>
+  </div>
 </div>
+<!--</div>-->
