@@ -36,9 +36,8 @@ import {Role} from './models/user';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { CreateBusrideComponent } from './components/create-busride/create-busride.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatButtonModule, MatCardModule, MatDividerModule, MatTooltipModule} from '@angular/material';
-import {MatDialogModule} from '@angular/material';
 import { ChildPresenceDialogComponent } from './components/state-busride/child-presence-dialog/child-presence-dialog.component';
+import {MatButtonModule, MatCardModule, MatDialogModule, MatDividerModule, MatTooltipModule} from '@angular/material';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},

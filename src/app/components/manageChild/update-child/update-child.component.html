@@ -58,7 +58,7 @@
         <label >Linea di Andata</label>
 
         <select class="form-control" formControlName="outwardLine"
-                [ngClass]="{ 'is-invalid': submitted && f.outwardLine.errors }"  (change)="changeOutLine($event)">
+                [ngClass]="{ 'is-invalid': submitted && f.outwardLine.errors }"  [(ngModel)]="idOutLineSelected" (ngModelChange)="changeOutLine()">
           <option [value]="a.idLine" *ngFor="let a of lineEnum" [selected]="a.idLine === defaultLineOut">
             {{a.lineName}}
           </option>
@@ -72,14 +72,16 @@
 
       </div>
 
-      <div class="form-group" *ngIf="outStopBuses !== undefined">
+      <div class="form-group" *ngIf="outStopBuses !== undefined && defaultStopOut">
         <label >Fermata di Andata</label>
 
         <select class="form-control" formControlName="outwardStopBus"
                 [ngClass]="{ 'is-invalid': submitted && f.outwardStopBus.errors }">
-          <option [value]="a.id" *ngFor="let a of outStopBuses" [selected]="a.id === defaultStopOut">
+          <ng-container *ngIf="outStopBuses">
+          <option *ngFor="let a of outStopBuses" [value]="a.id" [selected]="a.id === defaultStopOut">
             {{a.name}}
           </option>
+          </ng-container>
         </select>
 
         <div *ngIf="submitted && f.outwardStopBus.errors" class="invalid-feedback">
@@ -92,8 +94,8 @@
         <label >Linea di Ritorno</label>
 
         <select class="form-control" formControlName="returnLine"
-                [ngClass]="{ 'is-invalid': submitted && f.returnLine.errors }" (change)="changeRetLine($event)" >
-          <option [value]="a.idLine" *ngFor="let a of lineEnum" [selected]="a.idLine === defaultLineRet">
+                [ngClass]="{ 'is-invalid': submitted && f.returnLine.errors }" [(ngModel)]="idRetLineSelected" (ngModelChange)="changeRetLine()" >
+          <option [value]="a.idLine" *ngFor="let a of lineEnum" [selected]="a.idLine == defaultLineRet">
             {{a.lineName}}
           </option>
         </select>
@@ -112,7 +114,7 @@
 
         <select class="form-control" formControlName="returnStopBus"
                 [ngClass]="{ 'is-invalid': submitted && f.returnStopBus.errors }">
-          <option [value]="a.id" *ngFor="let a of retStopBuses" [selected]="a.id === defaultStopRet">
+          <option [value]="a.id" *ngFor="let a of retStopBuses" [attr.selected]="a.id === defaultStopRet">
             {{a.name}}
           </option>
         </select>

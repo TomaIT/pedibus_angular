@@ -38,6 +38,8 @@ export class UpdateChildComponent implements OnInit {
   maxDate: Date = new Date(this.today.getUTCFullYear() - 3, 11, 31);
   minDate: Date = new Date(this.today.getUTCFullYear() - 11, 11, 31);
   selectedDate: Date;
+  idOutLineSelected: string;
+  idRetLineSelected: string;
 
   constructor(private alertService: AlertService,
               private childService: ChildService,
@@ -172,34 +174,6 @@ export class UpdateChildComponent implements OnInit {
           this.alertService.error(error);
         }
       );
-    this.stopBusService.getStopBusByType(StopBusType.outward)
-      .subscribe(
-        (data) => {
-          this.outStopBuses = data.sort((a, b) => {
-            if (a.idLine === b.idLine) {
-              return a.hours - b.hours;
-            }
-            return a.idLine.localeCompare(b.idLine);
-          });
-        },
-        (error) => {
-          this.alertService.error(error);
-        }
-      );
-    this.stopBusService.getStopBusByType(StopBusType.return)
-      .subscribe(
-        (data) => {
-          this.retStopBuses = data.sort((a, b) => {
-            if (a.idLine === b.idLine) {
-              return a.hours - b.hours;
-            }
-            return a.idLine.localeCompare(b.idLine);
-          });
-        },
-        (error) => {
-          this.alertService.error(error);
-        }
-      );
     this.initForm(null);
     this.activatedRoute.paramMap.subscribe((params: ParamMap) => this.onChangePath(params));
   }
@@ -216,7 +190,11 @@ export class UpdateChildComponent implements OnInit {
           this.defaultLineRet = this.childPath.stopBusRetDef.idLine;
           this.defaultStopRet = this.childPath.stopBusRetDef.id;
           this.retIsChange = true;
-          this.initForm(data);
+          this.idOutLineSelected = this.defaultLineOut;
+          this.idRetLineSelected = this.defaultLineRet;
+          this.changeOutLine();
+          this.changeRetLine();
+          this.initForm(this.childPath);
         },
         (error) => {
           this.alertService.error(error);
@@ -283,13 +261,12 @@ export class UpdateChildComponent implements OnInit {
     return null;
   }
 
-  changeOutLine(event) {
-    const id = event.target.value;
+  changeOutLine() {
     this.stopBusService.getStopBusByType(StopBusType.outward)
       .subscribe(
         (data) => {
           this.outStopBuses = data.filter( stop =>
-            stop.idLine === id);
+            stop.idLine === this.idOutLineSelected);
           this.outStopBuses.sort((a, b) =>
             a.hours - b.hours);
           this.outIsChange = true;
@@ -300,13 +277,12 @@ export class UpdateChildComponent implements OnInit {
       );
   }
 
-  changeRetLine(event) {
-    const id = event.target.value;
+  changeRetLine() {
     this.stopBusService.getStopBusByType(StopBusType.return)
       .subscribe(
         (data) => {
-          this.retStopBuses = data.filter( stop =>
-            stop.idLine === id);
+          this.retStopBuses = data.filter(stop =>
+            stop.idLine === this.idRetLineSelected);
           this.retStopBuses.sort((a, b) =>
             a.hours - b.hours);
           this.retIsChange = true;
