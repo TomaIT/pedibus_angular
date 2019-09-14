@@ -9,7 +9,7 @@ import {BusRideService} from '../../services/bus-ride.service';
 import {StopBus, StopBusType} from '../../models/stopbus';
 import {environment} from '../../../environments/environment';
 
-
+// TODO: paginazione
 @Component({
   selector: 'app-escort-busrides',
   templateUrl: './escort-busrides.component.html',
@@ -18,6 +18,8 @@ import {environment} from '../../../environments/environment';
 export class EscortBusridesComponent implements OnInit {
 
   confirmedAvailabilities: Array<Availability>;
+  pageSize = 5;
+  p = 1;
 
   constructor(private alertService: AlertService,
               private authenticationService: AuthenticationService,
@@ -105,5 +107,9 @@ export class EscortBusridesComponent implements OnInit {
     } else {
       return availability.busRide.stopBuses.filter(sb => sb.id === availability.idStopBus).pop();
     }
+  }
+
+  onChangePage(event: number) {
+    this.p = event;
   }
 }
