@@ -268,7 +268,11 @@ export class UpdateChildComponent implements OnInit {
             stop.idLine === idLine);
           this.outStopBuses.sort((a, b) =>
             a.hours - b.hours);
+          this.outStopBuses.splice(this.outStopBuses.length - 1, 1);
           this.outIsChange = true;
+          if (this.f && idLine !== this.defaultLineOut) {
+            this.f.outwardStopBus.setValue(this.outStopBuses[0].id);
+          }
         },
         (error) => {
           this.alertService.error(error);
@@ -284,7 +288,11 @@ export class UpdateChildComponent implements OnInit {
             stop.idLine === idLine);
           this.retStopBuses.sort((a, b) =>
             a.hours - b.hours);
+          this.retStopBuses.splice(0, 1);
           this.retIsChange = true;
+          if (this.f && idLine !== this.defaultLineRet) {
+            this.f.returnStopBus.setValue(this.retStopBuses[0].id);
+          }
         },
         (error) => {
           this.alertService.error(error);
