@@ -58,8 +58,8 @@
         <label >Linea di Andata</label>
 
         <select class="form-control" formControlName="outwardLine"
-                [ngClass]="{ 'is-invalid': submitted && f.outwardLine.errors }"  [(ngModel)]="idOutLineSelected" (ngModelChange)="changeOutLine()">
-          <option [value]="a.idLine" *ngFor="let a of lineEnum" [selected]="a.idLine === defaultLineOut">
+                [ngClass]="{ 'is-invalid': submitted && f.outwardLine.errors }" (change)="changeOutLine($event)">
+          <option [value]="a.idLine" *ngFor="let a of lineEnum">
             {{a.lineName}}
           </option>
         </select>
@@ -92,8 +92,8 @@
         <label >Linea di Ritorno</label>
 
         <select class="form-control" formControlName="returnLine"
-                [ngClass]="{ 'is-invalid': submitted && f.returnLine.errors }" [(ngModel)]="idRetLineSelected" (ngModelChange)="changeRetLine()" >
-          <option [value]="a.idLine" *ngFor="let a of lineEnum" [selected]="a.idLine == defaultLineRet">
+                [ngClass]="{ 'is-invalid': submitted && f.returnLine.errors }" (change)="changeRetLine($event)" >
+          <option [value]="a.idLine" *ngFor="let a of lineEnum">
             {{a.lineName}}
           </option>
         </select>

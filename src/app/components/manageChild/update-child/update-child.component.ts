@@ -82,7 +82,7 @@ export class UpdateChildComponent implements OnInit {
             Validators.required
           ]
         )],
-        outwardLine: ['', Validators.compose(
+        outwardLine: [child.stopBusOutDef.idLine, Validators.compose(
           [Validators.required
           ]
         )],
@@ -91,7 +91,7 @@ export class UpdateChildComponent implements OnInit {
             Validators.required
           ]
         )],
-        returnLine: ['', Validators.compose(
+        returnLine: [child.stopBusRetDef.idLine, Validators.compose(
           [Validators.required
           ]
         )],
@@ -190,10 +190,9 @@ export class UpdateChildComponent implements OnInit {
           this.defaultStopOut = this.childPath.stopBusOutDef.id;
           this.defaultLineRet = this.childPath.stopBusRetDef.idLine;
           this.defaultStopRet = this.childPath.stopBusRetDef.id;
-          this.idOutLineSelected = this.defaultLineOut;
           this.idRetLineSelected = this.defaultLineRet;
-          this.changeOutLine();
-          this.changeRetLine();
+          this.filterOutStop(this.defaultLineOut);
+          this.filterRetStop(this.defaultLineRet);
           this.initForm(this.childPath);
         },
         (error) => {
@@ -261,12 +260,12 @@ export class UpdateChildComponent implements OnInit {
     return null;
   }
 
-  changeOutLine() {
+  filterOutStop(idLine: string) {
     this.stopBusService.getStopBusByType(StopBusType.outward)
       .subscribe(
         (data) => {
           this.outStopBuses = data.filter( stop =>
-            stop.idLine === this.idOutLineSelected);
+            stop.idLine === idLine);
           this.outStopBuses.sort((a, b) =>
             a.hours - b.hours);
           this.outIsChange = true;
@@ -277,12 +276,12 @@ export class UpdateChildComponent implements OnInit {
       );
   }
 
-  changeRetLine() {
+  filterRetStop(idLine: string) {
     this.stopBusService.getStopBusByType(StopBusType.return)
       .subscribe(
         (data) => {
           this.retStopBuses = data.filter(stop =>
-            stop.idLine === this.idRetLineSelected);
+            stop.idLine === idLine);
           this.retStopBuses.sort((a, b) =>
             a.hours - b.hours);
           this.retIsChange = true;
@@ -291,6 +290,16 @@ export class UpdateChildComponent implements OnInit {
           this.alertService.error(error);
         }
       );
+  }
+
+  changeOutLine(event) {
+    const id = event.target.value;
+    this.filterOutStop(id);
+  }
+
+  changeRetLine(event) {
+    const id = event.target.value;
+    this.filterRetStop(id);
   }
 
   checkInsertedDate() {
