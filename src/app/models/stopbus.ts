@@ -19,3 +19,8 @@ export class StopBus {
   lineName: string;
   idLine: string;
 }
+
+export class SelectedStopBus {
+  stopBus: StopBus;
+  selected: boolean;
+}

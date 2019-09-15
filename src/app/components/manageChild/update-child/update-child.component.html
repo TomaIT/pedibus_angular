@@ -75,13 +75,11 @@
       <div class="form-group" *ngIf="outStopBuses !== undefined && defaultStopOut">
         <label >Fermata di Andata</label>
 
-        <select class="form-control" formControlName="outwardStopBus"
+        <select  class="form-control" formControlName="outwardStopBus"
                 [ngClass]="{ 'is-invalid': submitted && f.outwardStopBus.errors }">
-          <ng-container *ngIf="outStopBuses">
-          <option *ngFor="let a of outStopBuses" [value]="a.id" [selected]="a.id === defaultStopOut">
+          <option *ngFor="let a of outStopBuses" [value]="a.id">
             {{a.name}}
           </option>
-          </ng-container>
         </select>
 
         <div *ngIf="submitted && f.outwardStopBus.errors" class="invalid-feedback">
@@ -112,9 +110,9 @@
       <div class="form-group" *ngIf="retStopBuses !== undefined">
         <label >Fermata di Ritorno</label>
 
-        <select class="form-control" formControlName="returnStopBus"
+        <select matNativeControl class="form-control" formControlName="returnStopBus"
                 [ngClass]="{ 'is-invalid': submitted && f.returnStopBus.errors }">
-          <option [value]="a.id" *ngFor="let a of retStopBuses" [attr.selected]="a.id === defaultStopRet">
+          <option [value]="a.id" *ngFor="let a of retStopBuses">
             {{a.name}}
           </option>
         </select>

@@ -26,6 +26,8 @@ export class UpdateChildComponent implements OnInit {
   loading = false;
   outStopBuses: Array<StopBus>;
   retStopBuses: Array<StopBus>;
+  totoutStopBuses: Array<StopBus>;
+  totretStopBuses: Array<StopBus>;
   genders: Array<string>;
   lineEnum: Array<LineEnum>;
   outIsChange = false;
@@ -84,7 +86,7 @@ export class UpdateChildComponent implements OnInit {
           [Validators.required
           ]
         )],
-        outwardStopBus: ['', Validators.compose(
+        outwardStopBus: [child.idStopBusOutDef, Validators.compose(
           [
             Validators.required
           ]
@@ -93,7 +95,7 @@ export class UpdateChildComponent implements OnInit {
           [Validators.required
           ]
         )],
-        returnStopBus: ['', Validators.compose(
+        returnStopBus: [child.idStopBusRetDef, Validators.compose(
           [
             Validators.required
           ]
@@ -186,10 +188,8 @@ export class UpdateChildComponent implements OnInit {
           this.childPath = data;
           this.defaultLineOut = this.childPath.stopBusOutDef.idLine;
           this.defaultStopOut = this.childPath.stopBusOutDef.id;
-          this.outIsChange = true;
           this.defaultLineRet = this.childPath.stopBusRetDef.idLine;
           this.defaultStopRet = this.childPath.stopBusRetDef.id;
-          this.retIsChange = true;
           this.idOutLineSelected = this.defaultLineOut;
           this.idRetLineSelected = this.defaultLineRet;
           this.changeOutLine();

@@ -237,7 +237,7 @@ const routes: Routes = [
     AngularOpenlayersModule,
     NgxPaginationModule,
     BrowserAnimationsModule,
-    MatTooltipModule,
+    //MatTooltipModule,
     MatDialogModule,
     MatCardModule,
     MatButtonModule,
